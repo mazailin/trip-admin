@@ -4,7 +4,7 @@
     <groupId>com.ulplanet.trip</groupId>
     <artifactId>trip-admin</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <name>trip-admin</name>
 
     <!-- 项目属性 -->
