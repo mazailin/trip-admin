@@ -1,10 +1,10 @@
 package com.ulplanet.trip.modules.crm.service;
 
-import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.DateUtils;
-import com.ulplanet.trip.modules.sys.dao.LogDao;
-import com.ulplanet.trip.modules.sys.entity.Log;
+import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.modules.crm.dao.CustomerDao;
+import com.ulplanet.trip.modules.crm.entity.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,20 +12,23 @@ import org.springframework.stereotype.Service;
  * Created by zhangxd on 15/10/20.
  */
 @Service
-public class CustomerService extends CrudService<LogDao, Log> {
+public class CustomerService extends CrudService<CustomerDao, Customer> {
 
-	public Page<Log> findPage(Page<Log> page, Log log) {
+    @Autowired
+    private CustomerDao customerDao;
 
-		// 设置默认时间范围，默认当前月
-		if (log.getBeginDate() == null){
-			log.setBeginDate(DateUtils.setDays(DateUtils.parseDate(DateUtils.getDate()), 1));
-		}
-		if (log.getEndDate() == null){
-			log.setEndDate(DateUtils.addMonths(log.getBeginDate(), 1));
-		}
+    public Customer getUserByName(String name) {
+        return customerDao.findByName(new Customer(null, name));
+    }
 
-		return super.findPage(page, log);
-
-	}
-
+    public void saveCustomer(Customer customer) {
+        if (StringUtils.isBlank(customer.getId())){
+            customer.preInsert();
+            customerDao.insert(customer);
+        }else{
+            // 更新用户数据
+            customer.preUpdate();
+            customerDao.update(customer);
+        }
+    }
 }

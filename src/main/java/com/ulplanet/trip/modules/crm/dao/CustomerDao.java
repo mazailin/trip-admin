@@ -10,4 +10,7 @@ import com.ulplanet.trip.modules.crm.entity.Customer;
  */
 @MyBatisDao
 public interface CustomerDao extends CrudDao<Customer> {
+
+    Customer findByName(Customer customer);
+
 }
