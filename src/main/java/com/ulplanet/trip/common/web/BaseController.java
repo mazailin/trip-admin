@@ -42,12 +42,6 @@ public abstract class BaseController {
 	protected String adminPath;
 	
 	/**
-	 * 前端基础路径
-	 */
-	@Value("${frontPath}")
-	protected String frontPath;
-	
-	/**
 	 * 前端URL后缀
 	 */
 	@Value("${urlSuffix}")
@@ -71,7 +65,7 @@ public abstract class BaseController {
 		}catch(ConstraintViolationException ex){
 			List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
 			list.add(0, "数据验证失败：");
-			addMessage(model, list.toArray(new String[]{}));
+			addMessage(model, list.toArray(new String[list.size()]));
 			return false;
 		}
 		return true;
@@ -89,7 +83,7 @@ public abstract class BaseController {
 		}catch(ConstraintViolationException ex){
 			List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
 			list.add(0, "数据验证失败：");
-			addMessage(redirectAttributes, list.toArray(new String[]{}));
+			addMessage(redirectAttributes, list.toArray(new String[list.size()]));
 			return false;
 		}
 		return true;
@@ -107,7 +101,7 @@ public abstract class BaseController {
 	
 	/**
 	 * 添加Model消息
-	 * @param message
+	 * @param messages
 	 */
 	protected void addMessage(Model model, String... messages) {
 		StringBuilder sb = new StringBuilder();
@@ -119,7 +113,7 @@ public abstract class BaseController {
 	
 	/**
 	 * 添加Flash消息
-	 * @param message
+	 * @param messages
 	 */
 	protected void addMessage(RedirectAttributes redirectAttributes, String... messages) {
 		StringBuilder sb = new StringBuilder();
@@ -198,11 +192,6 @@ public abstract class BaseController {
 			public void setAsText(String text) {
 				setValue(DateUtils.parseDate(text));
 			}
-//			@Override
-//			public String getAsText() {
-//				Object value = getValue();
-//				return value != null ? DateUtils.formatDateTime((Date)value) : "";
-//			}
 		});
 	}
 	
