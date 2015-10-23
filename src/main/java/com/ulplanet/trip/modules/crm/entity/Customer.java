@@ -35,7 +35,7 @@ public class Customer extends DataEntity<Customer> {
         this.name = name;
     }
 
-    @Length(min=0, max=255, message="手机长度必须介于 1 和 255 之间")
+    @Length(min=0, max=255, message="描述长度必须介于 1 和 255 之间")
     public String getDescription() {
         return description;
     }

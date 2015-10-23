@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>客户管理</title>
+	<title>国家管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		function page(n,s){
@@ -15,10 +15,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/crm/customer/list">客户列表</a></li>
-		<shiro:hasPermission name="crm:customer:edit"><li><a href="${ctx}/crm/customer/form">用户添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/tim/country/list">国家列表</a></li>
+		<shiro:hasPermission name="tim:country:edit"><li><a href="${ctx}/tim/country/form">国家添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="customer" action="${ctx}/crm/customer/list" method="post" class="breadcrumb form-search ">
+	<form:form id="searchForm" modelAttribute="country" action="${ctx}/tim/country/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
@@ -30,16 +30,15 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th class="sort-column name">名称</th><th>描述</th><th>是否可用</th><shiro:hasPermission name="crm:customer:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th class="sort-column name">名称</th><th>描述</th><shiro:hasPermission name="tim:country:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="customer">
 			<tr>
-				<td><a href="${ctx}/crm/customer/form?id=${customer.id}">${customer.name}</a></td>
+				<td><a href="${ctx}/tim/country/form?id=${customer.id}">${customer.name}</a></td>
 				<td>${customer.description}</td>
-                <td>${fns:getDictLabel(customer.active, 'yes_no', '否')}</td>
-				<shiro:hasPermission name="crm:customer:edit"><td>
-    				<a href="${ctx}/crm/customer/form?id=${customer.id}">修改</a>
-					<a href="${ctx}/crm/customer/delete?id=${customer.id}" onclick="return confirmx('确认要删除该客户吗？', this.href)">删除</a>
+				<shiro:hasPermission name="tim:country:edit"><td>
+    				<a href="${ctx}/tim/country/form?id=${customer.id}">修改</a>
+					<a href="${ctx}/tim/country/delete?id=${customer.id}" onclick="return confirmx('确认要删除该国家吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
