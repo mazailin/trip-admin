@@ -35,6 +35,11 @@ public abstract class BaseController {
 	 */
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 查询列表全部项
+     */
+    protected final String SEARCHER_ITEM_ALL = "--全部--";
+
 	/**
 	 * 管理基础路径
 	 */
