@@ -11,11 +11,11 @@
             buttons:{"确定":"ok", "清除":"clear", "关闭":true}, submit:function(v, h, f){
                 if (v=="ok"){
                 	var icon = h.find("iframe")[0].contentWindow.$("#icon").val().trim();
-                	$("#${id}Icon").attr("class", "icon-"+icon);
+                	$("#${id}Icon").attr("class", "fa fa-"+icon);
 	                $("#${id}IconLabel").text(icon);
 	                $("#${id}").val(icon);
                 }else if (v=="clear"){
-	                $("#${id}Icon").attr("class", "icon- hide");
+	                $("#${id}Icon").attr("class", "fa fa- hide");
 	                $("#${id}IconLabel").text("无");
 	                $("#${id}").val("");
                 }
