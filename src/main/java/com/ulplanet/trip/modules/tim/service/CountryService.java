@@ -17,7 +17,7 @@ public class CountryService extends CrudService<CountryDao, Country> {
     @Autowired
     private CountryDao countryDao;
 
-    public Country getUserByName(String name) {
+    public Country getCountryByName(String name) {
         return countryDao.findByName(new Country(null, name));
     }
 
@@ -26,7 +26,6 @@ public class CountryService extends CrudService<CountryDao, Country> {
             country.preInsert();
             countryDao.insert(country);
         }else{
-            // 更新用户数据
             country.preUpdate();
             countryDao.update(country);
         }

@@ -84,7 +84,7 @@ public class CountryController extends BaseController {
     public String checkName(String oldName, String name) {
         if (oldName != null && oldName.equals(name)) {
             return "true";
-        } else if (name != null && countryService.getUserByName(name) == null) {
+        } else if (name != null && countryService.getCountryByName(name) == null) {
             return "true";
         }
         return "false";

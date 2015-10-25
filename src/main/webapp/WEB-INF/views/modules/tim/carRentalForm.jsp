@@ -2,29 +2,11 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>城市管理</title>
+	<title>租车管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#inputForm").validate({
-				rules: {
-					name: {
-                        remote: {
-                            url: "${ctx}/tim/city/checkName",
-                            type: "get",
-                            dataType: 'json',
-                            data: {
-                                'oldName': encodeURIComponent('${city.name}'),
-                                'country.id': function () {
-                                    return $('#country').val();
-                                }
-                            }
-                        }
-                    }
-				},
-				messages: {
-                    name: {remote: "城市已存在"}
-				},
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
 					form.submit();
@@ -44,36 +26,38 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/tim/city/list">城市列表</a></li>
-		<li class="active"><a href="${ctx}/tim/city/form?id=${customer.id}">城市<shiro:hasPermission name="tim:city:edit">${not empty city.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:city:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/tim/car/list">租车列表</a></li>
+		<li class="active"><a href="${ctx}/tim/car/form?id=${customer.id}">租车<shiro:hasPermission name="tim:car:edit">${not empty carRental.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:car:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="city" action="${ctx}/tim/city/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="carRental" action="${ctx}/tim/car/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
         <div class="control-group">
             <label class="control-label">国家:</label>
             <div class="controls">
-                <form:select id="country" path="country.id" style="width: 100px;">
+                <form:select path="country.id" style="width: 150px;">
                     <form:options items="${countryList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
                 <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">名称:</label>
+            <label class="control-label">类型:</label>
             <div class="controls">
-				<form:input id="name" path="name" htmlEscape="false" maxlength="64" class="required"/>
+                <form:select path="type" style="width: 150px;">
+                    <form:options items="${fns:getDictList('car_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+                </form:select>
                 <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
 		<div class="control-group">
-			<label class="control-label">描述:</label>
+			<label class="control-label">电话:</label>
 			<div class="controls">
-				<form:textarea path="description" htmlEscape="false" rows="3" maxlength="255" class="input-xlarge"/>
+				<form:input path="phone" htmlEscape="false" maxlength="64"/>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="tim:city:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="tim:car:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

@@ -70,7 +70,7 @@ public class CityController extends BaseController {
             return form(city, model);
         }
         cityService.saveCity(city);
-        addMessage(redirectAttributes, "保存国家'" + city.getName() + "'成功");
+        addMessage(redirectAttributes, "保存城市'" + city.getName() + "'成功");
         return "redirect:" + adminPath + "/tim/city/list?repage";
     }
 
@@ -78,14 +78,14 @@ public class CityController extends BaseController {
     @RequestMapping(value = "delete")
     public String delete(City city, RedirectAttributes redirectAttributes) {
         cityService.delete(city);
-        addMessage(redirectAttributes, "删除国家" + city.getName() + "成功");
+        addMessage(redirectAttributes, "删除城市" + city.getName() + "成功");
         return "redirect:" + adminPath + "/tim/city/list?repage";
     }
 
     /**
      * 验证名称是否有效
      * @param oldName
-     * @param name
+     * @param city
      * @return
      */
     @ResponseBody
@@ -95,7 +95,7 @@ public class CityController extends BaseController {
         String name = city.getName();
         if (oldName != null && oldName.equals(name)) {
             return "true";
-        } else if (name != null && cityService.getUserByName(city) == null) {
+        } else if (name != null && cityService.getCityByName(city) == null) {
             return "true";
         }
         return "false";

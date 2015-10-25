@@ -17,7 +17,7 @@ public class CityService extends CrudService<CityDao, City> {
     @Autowired
     private CityDao cityDao;
 
-    public City getUserByName(City city) {
+    public City getCityByName(City city) {
         return cityDao.findByName(city);
     }
 
@@ -26,7 +26,6 @@ public class CityService extends CrudService<CityDao, City> {
             city.preInsert();
             cityDao.insert(city);
         } else {
-            // 更新用户数据
             city.preUpdate();
             cityDao.update(city);
         }
