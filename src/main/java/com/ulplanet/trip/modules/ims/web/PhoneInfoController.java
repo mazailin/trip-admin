@@ -37,6 +37,14 @@ public class PhoneInfoController extends BaseController {
         }
     }
 
+    /**
+     * 查询列表
+     * @param phoneInfo
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
     @RequestMapping(value = {"/list",""})
     public String list(PhoneInfo phoneInfo, HttpServletRequest request, HttpServletResponse response, Model model){
         Page<PhoneInfo> page = this.phoneInfoService.findPage(new Page<>(request, response), phoneInfo);
@@ -52,6 +60,13 @@ public class PhoneInfoController extends BaseController {
         return "modules/ims/phoneList";
     }
 
+    /**
+     * 保存
+     * @param phoneInfo
+     * @param model
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public String save(PhoneInfo phoneInfo,Model model, RedirectAttributes redirectAttributes) {
 
@@ -70,6 +85,12 @@ public class PhoneInfoController extends BaseController {
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
 
+    /**
+     * 报废
+     * @param phoneInfo
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public String delete(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
         phoneInfo.setStatus(9000);
@@ -80,6 +101,12 @@ public class PhoneInfoController extends BaseController {
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
 
+    /**
+     * 退换货
+     * @param phoneInfo
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/refund",method = RequestMethod.GET)
     public String refund(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
         phoneInfo = this.phoneInfoService.startRefund(phoneInfo);
@@ -89,12 +116,23 @@ public class PhoneInfoController extends BaseController {
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
 
+    /**
+     * 查询表单
+     * @param phoneInfo
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String form(PhoneInfo phoneInfo,Model model) {
         model.addAttribute("order", phoneInfo);
         return "modules/ims/phoneForm";
     }
 
+    /**
+     * 获取指定订单下的到货手机数量
+     * @param stockOrderId
+     * @return
+     */
     @RequestMapping(value = "/count",method = RequestMethod.GET)
     @ResponseBody
     public String count(@RequestParam("stockOrderId")String stockOrderId) {

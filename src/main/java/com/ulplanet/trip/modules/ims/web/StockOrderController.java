@@ -63,7 +63,7 @@ public class StockOrderController  extends BaseController {
         return "redirect:" + adminPath + "/ims/phoneOrder/list/?repage";
     }
 
-    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public String delete(StockOrder stockOrder, RedirectAttributes redirectAttributes) {
         stockOrder.setStatus(0);
         this.stockOrderService.updateOrder(stockOrder);

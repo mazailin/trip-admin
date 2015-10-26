@@ -75,9 +75,12 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
             return phoneInfo;
         }
         phoneInfo.setStatus(9999);
-        if(stockOrderService.refund(phoneInfo.getStockOrderId()) <= 0){
-            return null;
+        if("1".equals(phoneInfo.getRefundFlag())){//退货时，库存数量减1
+            if(stockOrderService.refund(phoneInfo.getStockOrderId()) <= 0){
+                return null;
+            }
         }
+
         phoneInfo.preUpdate();
         if(phoneInfoDao.update(phoneInfo)>0){
             return phoneInfo;
