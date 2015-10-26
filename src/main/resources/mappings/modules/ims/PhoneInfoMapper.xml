@@ -224,10 +224,10 @@
         <where>
             status != 0
             <if test="code!=null">
-              AND  code != ${code}
+              AND  code = #{code}
             </if>
             <if test="id!=null">
-                AND  id != ${id}
+                AND  id = #{id}
             </if>
             <if test="stockOrderId != null and stockOrderId != ''">
                 AND stock_order_id = #{stockOrderId}

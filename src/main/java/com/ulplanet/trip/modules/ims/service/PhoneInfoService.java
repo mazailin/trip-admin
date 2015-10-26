@@ -70,9 +70,9 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
     }
 
     public PhoneInfo startRefund(PhoneInfo phoneInfo) {
-        phoneInfo = phoneInfoDao.getById(phoneInfo.getId());
-        if(phoneInfo.getStatus().intValue()==9999) {
-            return phoneInfo;
+        PhoneInfo p = phoneInfoDao.getById(phoneInfo.getId());
+        if(p.getStatus().intValue()==9999) {
+            return p;
         }
         phoneInfo.setStatus(9999);
         if("1".equals(phoneInfo.getRefundFlag())){//退货时，库存数量减1
