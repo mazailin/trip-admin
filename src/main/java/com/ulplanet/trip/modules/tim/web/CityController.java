@@ -49,7 +49,7 @@ public class CityController extends BaseController {
         Page<City> page = cityService.findPage(new Page<>(request, response), city);
         model.addAttribute("page", page);
         List<Country> countryList = countryService.findList(new Country());
-        countryList.add(0, new Country("", SEARCHER_ITEM_ALL));
+        countryList.add(0, new Country("", ""));
         model.addAttribute("countryList", countryList);
         return "modules/tim/cityList";
     }

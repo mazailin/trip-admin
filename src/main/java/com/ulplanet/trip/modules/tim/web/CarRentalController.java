@@ -48,7 +48,7 @@ public class CarRentalController extends BaseController {
         Page<CarRental> page = carRentalService.findPage(new Page<>(request, response), carRental);
         model.addAttribute("page", page);
         List<Country> countryList = countryService.findList(new Country());
-        countryList.add(0, new Country("", SEARCHER_ITEM_ALL));
+        countryList.add(0, new Country("", ""));
         model.addAttribute("countryList", countryList);
         return "modules/tim/carRentalList";
     }
