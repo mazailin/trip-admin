@@ -15,7 +15,7 @@
 		<tr><th>角色名称</th><th>系统数据</th><th>是否可用</th><shiro:hasPermission name="sys:role:edit"><th>操作</th></shiro:hasPermission></tr>
 		<c:forEach items="${list}" var="role">
 			<tr>
-				<td><a href="form?id=${role.id}">${role.name}</a></td>
+				<td><a href="${ctx}/sys/role/form?id=${role.id}">${role.name}</a></td>
 				<td>${fns:getDictLabel(role.sysData, 'yes_no', '是')}</td>
 				<td>${fns:getDictLabel(role.useable, 'yes_no', '是')}</td>
 				<shiro:hasPermission name="sys:role:edit"><td>
