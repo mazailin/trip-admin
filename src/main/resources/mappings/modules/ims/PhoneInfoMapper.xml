@@ -176,12 +176,16 @@
 
     <select id="queryDeliverPhone" resultType="java.lang.Integer">
         SELECT count(id)
-        <![CDATA[
 		    FROM phone_info
-	        WHERE
-		        stock_order_id = #{stockOrderId}
+	        <where>
+	        <if test="stockOrderId!=null">
+		        AND stock_order_id = #{stockOrderId}
+            </if>
+            <if test="code!=null">
+                AND code = #{code}
+            </if>
 		        and status != 9999
-	    ]]>
+            </where>
     </select>
 
 

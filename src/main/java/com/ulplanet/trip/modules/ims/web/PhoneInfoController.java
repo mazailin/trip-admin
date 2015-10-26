@@ -135,9 +135,15 @@ public class PhoneInfoController extends BaseController {
      */
     @RequestMapping(value = "/count",method = RequestMethod.GET)
     @ResponseBody
-    public String count(@RequestParam("stockOrderId")String stockOrderId) {
+    public String count(@RequestParam(value = "stockOrderId",required = false)String stockOrderId,
+                        @RequestParam(value = "code",required = false)String code) {
         PhoneInfo phoneInfo = new PhoneInfo();
-        phoneInfo.setStockOrderId(stockOrderId);
+        if(StringUtils.isNotBlank(code)){
+            phoneInfo.setCode(code);
+        }
+        if(StringUtils.isNotBlank(stockOrderId)){
+            phoneInfo.setStockOrderId(stockOrderId);
+        }
         int num = phoneInfoService.queryDeliverPhone(phoneInfo);
         return "{\"count\":\"" + num + "\"}";
     }

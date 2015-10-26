@@ -16,8 +16,23 @@
       $("#value").focus();
       $("#inputForm").validate({
         submitHandler: function(form){
-          loading('正在提交，请稍等...');
-          form.submit();
+          $.ajax({
+            url : "${ctx}/ims/phone/count?code="+$("#code").val(),
+            type:"get",
+            dataType:"json",
+            success:function(data){
+              if(data.count > 0){
+                swal("插入失败", "手机编号已存在 :)", "error");
+                e.preventDefault();
+                return false;
+
+              }
+              loading('正在提交，请稍等...');
+              form.submit();
+            }
+          });
+
+
         },
         errorContainer: "#messageBox",
         errorPlacement: function(error, element) {
@@ -74,5 +89,14 @@
     <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
   </div>
 </form:form>
+<script type="text/javascript">
+  $(function(){
+    $(":submit[id=inputForm]").submit(function(e){
+
+
+    });
+  })
+
+</script>
 </body>
 </html>
