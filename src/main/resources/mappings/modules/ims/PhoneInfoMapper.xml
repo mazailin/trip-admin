@@ -48,9 +48,6 @@
             <if test="createDate != null and createDate != ''">
                 AND create_date = #{createDate}
             </if>
-            <if test="updateBy.id != null and updateBy.id != ''">
-                AND update_by = #{updateBy.id}
-            </if>
             <if test="remarks != null and remarks != ''">
                 AND remarks = #{remarks}
             </if>
@@ -81,9 +78,6 @@
             <if test="createBy.id!=null and createBy.id!=''">
                 create_by ,
             </if>
-            <if test="updateBy.id!=null and updateBy.id!=''">
-                update_by ,
-            </if>
             update_date ,
             create_date ,
             remarks ,
@@ -104,14 +98,11 @@
                 #{stockOrderId} ,
             </if>
             <if test="comment!=null and comment!=''">
-                #{provider} ,
+                #{comment} ,
             </if>
 
             <if test="createBy.id!=null and createBy.id!=''">
                 #{createBy.id} ,
-            </if>
-            <if test="updateBy.id!=null and updateBy.id!=''">
-                #{updateBy.id} ,
             </if>
             #{updateDate} ,
             #{createDate} ,
@@ -145,9 +136,6 @@
             <if test="createDate != null">
                 create_date = #{createDate},
             </if>
-            <if test="createBy.id != null">
-                create_by = #{createBy.id},
-            </if>
             <if test="updateBy.id != null">
                 update_by = #{updateBy.id},
             </if>
@@ -155,7 +143,19 @@
                 remarks = #{remarks}
             </if>
         </set>
-        where code = #{code}
+        <where>
+            <choose>
+                <when test="id!=null">
+                    id = #{id}
+                </when>
+                <otherwise>
+                    code = #{code}
+                </otherwise>
+
+            </choose>
+
+        </where>
+
     </update>
 
     <delete id="delete">
@@ -197,19 +197,26 @@
         <include refid="BaseWhere"/>
     </select>
 
-    <select id="get" resultMap="PhoneInfo">
+    <select id="get" parameterType="java.lang.String" resultMap="PhoneInfo">
         SELECT <include refid="BaseColumns" />
         FROM phone_info
-        <where>
-
-            <if test="id != null and id != ''">
-                AND id = #{id}
-            </if>
-            <if test="code != null and code != ''">
-                AND code = #{code}
-            </if>
-        </where>
+        WHERE
+             id = #{id}
     </select>
+
+    <!--<select id="get" resultMap="PhoneInfo">-->
+        <!--SELECT <include refid="BaseColumns" />-->
+        <!--FROM phone_info-->
+        <!--<where>-->
+
+            <!--<if test="id != null and id != ''">-->
+                <!--AND id = #{id}-->
+            <!--</if>-->
+            <!--<if test="code != null and code != ''">-->
+                <!--AND code = #{code}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
 
     <select id="findList" resultMap="PhoneInfo">
         SELECT <include refid="BaseColumns" />

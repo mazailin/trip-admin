@@ -12,7 +12,7 @@ public class StockOrder  extends DataEntity<StockOrder> implements java.io.Seria
 	private Double unitPrice;
 	private Integer quantity;
 	private Double totalPrice;
-	private String provider;
+	private String insurance = "Y";
 	private String model;
 	private String buyer;
 	private String buyingTime;
@@ -68,19 +68,24 @@ public class StockOrder  extends DataEntity<StockOrder> implements java.io.Seria
 
 	@NotNull
 	public Double getTotalPrice() {
-		return totalPrice;
+		if(unitPrice!=null&&quantity!=null) {
+			return unitPrice * quantity;
+		}else {
+			return totalPrice;
+		}
 	}
 
 	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	public void setProvider(String value) {
-		this.provider = value;
+
+	public String getInsurance() {
+		return insurance;
 	}
-	
-	public String getProvider() {
-		return this.provider;
+
+	public void setInsurance(String insurance) {
+		this.insurance = insurance;
 	}
 
 	public void setModel(String value) {

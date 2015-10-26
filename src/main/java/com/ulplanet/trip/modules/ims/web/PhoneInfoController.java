@@ -1,60 +1,106 @@
 package com.ulplanet.trip.modules.ims.web;
 
+import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
+import com.ulplanet.trip.modules.ims.bo.PhoneInfoBo;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
+import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.ims.service.PhoneInfoService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by makun on 2015/10/13.
  */
-//@Controller
-//@RequestMapping(value = "${adminPath}/ims/phone")
+@Controller
+@RequestMapping(value = "${adminPath}/ims/phone")
 public class PhoneInfoController extends BaseController {
-//    @Resource
-//    private PhoneInfoService phoneInfoService;
-//
-//    @RequestMapping(value = "/findPhoneInfos")
-//    @ResponseBody
-//    public String findPhoneInfos(@RequestParam("page") int page,
-//                                               @RequestParam("limit") int size, @RequestParam(value = "searchValue", required = false) String searchValue) {
-//        return this.phoneInfoService.findPhoneInfos(page, size, searchValue);
-//    }
-//
-//    @RequestMapping(value = "/save",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String savePhoneInfo(PhoneInfo phoneInfo) {
-//        if(StringUtils.isNotBlank(phoneInfo.getId())){
-//            return  this.phoneInfoService.updatePhoneInfo(phoneInfo);
-//        }
-//        return this.phoneInfoService.addPhoneInfo(phoneInfo);
-//    }
-//
-//    @RequestMapping(value = "/delete",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String updatePhoneInfo(PhoneInfo phoneInfo) {
-//        phoneInfo.setStatus(0);
-//        return this.phoneInfoService.updatePhoneInfo(phoneInfo);
-//    }
-//
-//    @RequestMapping(value = "/refund",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String refund(PhoneInfo phoneInfo) {
-//        return this.phoneInfoService.startRefund(phoneInfo);
-//    }
-//
-//    @RequestMapping(value = "/form",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String form(PhoneInfo phoneInfo) {
-//        return this.phoneInfoService.get(phoneInfo);
-//    }
+    @Resource
+    private PhoneInfoService phoneInfoService;
 
+    @ModelAttribute
+    public PhoneInfo get(@RequestParam(required=false) String id) {
+        if (StringUtils.isNotBlank(id)){
+            return phoneInfoService.get(id);
+        }else{
+            return new PhoneInfo();
+        }
+    }
+
+    @RequestMapping(value = {"/list",""})
+    public String list(PhoneInfo phoneInfo, HttpServletRequest request, HttpServletResponse response, Model model){
+        Page<PhoneInfo> page = this.phoneInfoService.findPage(new Page<>(request, response), phoneInfo);
+        List<PhoneInfoBo> phoneInfoBos = new ArrayList<>();
+        for(PhoneInfo phone : page.getList()){
+            PhoneInfoBo phoneInfoBo = new PhoneInfoBo(phone);
+            phoneInfoBos.add(phoneInfoBo);
+        }
+        Page<PhoneInfoBo> page1 =  new Page<>(request, response);
+        page1.setList(phoneInfoBos);
+
+        model.addAttribute("page",page1);
+        return "modules/ims/phoneList";
+    }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public String save(PhoneInfo phoneInfo,Model model, RedirectAttributes redirectAttributes) {
+
+        if (!beanValidator(model, phoneInfo)){
+            return form(phoneInfo, model);
+        }
+        if(StringUtils.isNotBlank(phoneInfo.getId())){
+            phoneInfo = this.phoneInfoService.updatePhoneInfo(phoneInfo);
+        }else {
+            phoneInfo = this.phoneInfoService.addPhoneInfo(phoneInfo);
+        }
+
+        if(phoneInfo!=null){
+            addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"成功");
+        }
+        return "redirect:" + adminPath + "/ims/phone/list/?repage";
+    }
+
+    @RequestMapping(value = "/delete",method = RequestMethod.GET)
+    public String delete(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
+        phoneInfo.setStatus(9000);
+        phoneInfo = this.phoneInfoService.updatePhoneInfo(phoneInfo);
+        if(phoneInfo!=null) {
+            addMessage(redirectAttributes, "报废" + phoneInfo.getId() + "成功");
+        }
+        return "redirect:" + adminPath + "/ims/phone/list/?repage";
+    }
+
+    @RequestMapping(value = "/refund",method = RequestMethod.GET)
+    public String refund(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
+        phoneInfo = this.phoneInfoService.startRefund(phoneInfo);
+        if(phoneInfo!=null) {
+            addMessage(redirectAttributes, "退货" + phoneInfo.getId() + "成功");
+        }
+        return "redirect:" + adminPath + "/ims/phone/list/?repage";
+    }
+
+    @RequestMapping(value = "/form",method = RequestMethod.GET)
+    public String form(PhoneInfo phoneInfo,Model model) {
+        model.addAttribute("order", phoneInfo);
+        return "modules/ims/phoneForm";
+    }
+
+    @RequestMapping(value = "/count",method = RequestMethod.GET)
+    @ResponseBody
+    public String count(@RequestParam("stockOrderId")String stockOrderId) {
+        PhoneInfo phoneInfo = new PhoneInfo();
+        phoneInfo.setStockOrderId(stockOrderId);
+        int num = phoneInfoService.queryDeliverPhone(phoneInfo);
+        return "{\"count\":\"" + num + "\"}";
+    }
 }

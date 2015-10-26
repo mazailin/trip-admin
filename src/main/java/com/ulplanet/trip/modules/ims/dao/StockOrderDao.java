@@ -11,5 +11,4 @@ import java.util.List;
 public interface  StockOrderDao extends CrudDao<StockOrder> {
 	List<StockOrder> findListByParams(StockOrder stockOrder);
 	StockOrder getById(@Param("id") String id);
-
 }

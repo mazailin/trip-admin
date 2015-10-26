@@ -22,10 +22,10 @@
 </head>
 <body>
   <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/sys/dict/">订单列表</a></li>
-    <li><a href="${ctx}/sys/dict/form?sort=10">订单添加</a></li>
+    <li class="active"><a href="${ctx}/ims/phoneOrder/">订单列表</a></li>
+    <li><a href="${ctx}/ims/phoneOrder/form?sort=10">订单添加</a></li>
   </ul>
-  <form:form id="searchForm" modelAttribute="dict" action="${ctx}/sys/dict/" method="post" class="breadcrumb form-search">
+  <form:form id="searchForm" modelAttribute="stockOrder" action="${ctx}/ims/phoneOrder/" method="post" class="breadcrumb form-search">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <label>订单号 ：</label><form:input path="orderId" htmlEscape="false" maxlength="50" class="input-medium"/>
@@ -33,7 +33,7 @@
   </form:form>
   <sys:message content="${message}"/>
   <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>订单号</th><th>手机型号</th><th>单价</th><th>总价</th><th>数量</th><th>备注</th><th>操作</th></tr></thead>
+    <thead><tr><th>订单号</th><th>手机型号</th><th>单价</th><th>总价</th><th>数量</th><th>订单状态</th><th>保险</th><th>备注</th><th>操作</th></tr></thead>
     <tbody>
     <c:forEach items="${page.list}" var="order">
       <tr>
@@ -42,17 +42,33 @@
         <td>${order.unitPrice}</td>
         <td>${order.totalPrice}</td>
         <td>${order.quantity}</td>
+        <td>${order.status==3?'已完成':'未完成'}</td>
+        <td>${order.insurance}</td>
         <td>${order.comment}</td>
-        <td>
+        <td nowrap="nowrap">
           <a href="${ctx}/ims/phoneOrder/form?id=${order.id}">修改</a>
-          <a href="${ctx}/ims/phoneOrder/delete?id=${order.id}&type=${dict.type}" onclick="return confirmx('确认要删除该字典吗？', this.href)">删除</a>
-          <a href="<c:url value='${fns:getAdminPath()}/sys/dict/form?type=${dict.type}&sort=${dict.sort+10}'><c:param name='description' value='${dict.description}'/></c:url>">添加键值</a>
+          <a href="${ctx}/ims/phoneOrder/delete?id=${order.id}" onclick="return confirmx('确认要删除该订单吗？', this.href)">删除</a>
+          <a href="javascript:void(0)" onclick="aog('${order.id}');">已到货数量</a>
         </td>
       </tr>
     </c:forEach>
     </tbody>
   </table>
   <div class="pagination">${page}</div>
+  <script type="text/javascript">
+    function aog(id){
+      $.ajax({
+        url : "${ctx}/ims/phone/count?stockOrderId="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+          swal("已到货数量为:"+data.count);
+        }
+      });
+    }
 
+
+
+  </script>
 </body>
 </html>

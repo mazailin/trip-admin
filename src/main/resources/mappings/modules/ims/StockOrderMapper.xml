@@ -9,7 +9,7 @@
         <result property="unitPrice" column="unit_price"/>
         <result property="quantity" column="quantity"/>
         <result property="totalPrice" column="total_price"/>
-        <result property="provider" column="provider"/>
+        <result property="insurance" column="insurance"/>
         <result property="model" column="model"/>
         <result property="buyer" column="buyer"/>
         <result property="buyingTime" column="buying_time"/>
@@ -25,7 +25,7 @@
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,order_id,unit_price,quantity,total_price,provider,model,buyer,buying_time,comment,remarks,status,email
+            id,order_id,unit_price,quantity,total_price,insurance,model,buyer,buying_time,comment,remarks,status,email
 	    ]]>
 	</sql>
 
@@ -46,8 +46,8 @@
         <if test="totalPrice != null and totalPrice != ''">
             AND total_price = #{totalPrice}
         </if>
-        <if test="provider != null and provider != ''">
-            AND provider = #{provider}
+        <if test="insurance != null and insurance != ''">
+            AND insurance = #{insurance}
         </if>
         <if test="model != null and model != ''">
             AND model = #{model}
@@ -66,12 +66,6 @@
         </if>
         <if test="createDate != null and createDate != ''">
             AND create_date = #{createDate}
-        </if>
-        <if test="createBy.id != null and createBy.id != ''">
-            AND create_by = #{createBy.id}
-        </if>
-        <if test="updateBy.id != null and updateBy.id != ''">
-            AND update_by = #{updateBy.id}
         </if>
         <if test="remarks != null and remarks != ''">
             AND remarks = #{remarks}
@@ -104,8 +98,8 @@
               <if test="totalPrice!=null and totalPrice!=''">
                     total_price ,
               </if>
-              <if test="provider!=null and provider!=''">
-                    provider ,
+              <if test="insurance!=null and insurance!=''">
+                    insurance ,
               </if>
               <if test="model!=null and model!=''">
                     model ,
@@ -123,9 +117,6 @@
                     create_date ,
               <if test="createBy.id!=null">
                   create_by,
-              </if>
-              <if test="updateBy.id!=null">
-                  update_by,
               </if>
                     remarks ,
               <if test="status!=null and status!=''">
@@ -150,8 +141,8 @@
               <if test="totalPrice!=null and totalPrice!=''">
                   #{totalPrice} ,
               </if>
-              <if test="provider!=null and provider!=''">
-                  #{provider} ,
+              <if test="insurance!=null and insurance!=''">
+                  #{insurance} ,
               </if>
               <if test="model!=null and model!=''">
                   #{model} ,
@@ -169,9 +160,6 @@
               #{createDate} ,
                 <if test="createBy.id!=null">
                     #{createBy.id} ,
-                </if>
-                <if test="updateBy.id!=null">
-                    #{updateBy.id} ,
                 </if>
               #{remarks} ,
               <if test="status!=null and status!=''">
@@ -200,8 +188,8 @@
                  <if test="totalPrice != null">
                       total_price = #{totalPrice},
                   </if>
-                 <if test="provider != null">
-                      provider = #{provider},
+                 <if test="insurance != null">
+                      insurance = #{insurance},
                   </if>
                  <if test="model != null">
                       model = #{model},
@@ -221,9 +209,6 @@
                  <if test="createDate != null">
                       create_date = #{createDate},
                   </if>
-                 <if test="createBy.id != null">
-                     create_by = #{createBy.id},
-                 </if>
                  <if test="updateBy.id != null">
                       update_by = #{updateBy.id},
                   </if>
@@ -272,11 +257,8 @@
     <select id="get" resultMap="StockOrder">
         SELECT <include refid="BaseColumns" />
         FROM stock_order
-        <where>
-            <if test="id != null and id != ''">
-                id = #{id}
-            </if>
-        </where>
+        WHERE
+         id = #{id}
     </select>
 
     <select id="findList" resultMap="StockOrder">
