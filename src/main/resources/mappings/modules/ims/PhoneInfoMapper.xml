@@ -221,7 +221,18 @@
     <select id="findList" resultMap="PhoneInfo">
         SELECT <include refid="BaseColumns" />
         FROM phone_info
-        where status != 0
+        <where>
+            status != 0
+            <if test="code!=null">
+              AND  code != ${code}
+            </if>
+            <if test="id!=null">
+                AND  id != ${id}
+            </if>
+            <if test="stockOrderId != null and stockOrderId != ''">
+                AND stock_order_id = #{stockOrderId}
+            </if>
+        </where>
     </select>
 
 

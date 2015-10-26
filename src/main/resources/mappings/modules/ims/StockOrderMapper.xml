@@ -264,7 +264,17 @@
     <select id="findList" resultMap="StockOrder">
         SELECT <include refid="BaseColumns" />
         FROM stock_order
-        where status != 0
+        <where>
+            status != 0
+            <if test="id!=null">
+                AND id = ${id}
+            </if>
+            <if test="orderId!=null">
+                AND order_id = ${orderId}
+            </if>
+
+        </where>
+
     </select>
 
 	

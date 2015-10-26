@@ -49,6 +49,7 @@
           <a href="${ctx}/ims/phoneOrder/form?id=${order.id}">修改</a>
           <a href="${ctx}/ims/phoneOrder/delete?id=${order.id}" onclick="return confirmx('确认要删除该订单吗？', this.href)">删除</a>
           <a href="javascript:void(0)" onclick="aog('${order.id}');">已到货数量</a>
+          <a href="${ctx}/ims/phone/list?stockOrderId=${order.id}">查看订单下所有手机</a>
         </td>
       </tr>
     </c:forEach>
