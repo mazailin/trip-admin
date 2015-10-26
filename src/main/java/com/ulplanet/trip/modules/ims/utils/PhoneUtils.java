@@ -29,8 +29,8 @@ public class PhoneUtils {
     public static List<StockOrder> getOrderIds(){
         StockOrder stockOrder = new StockOrder();
         stockOrder.setStatus(1);
+        stockOrder.setInsurance(null);
         List<StockOrder> list = stockOrderDao.findListByParams(stockOrder);
-        EhCacheUtils.put("phoneOrderIds",list);
         return list;
     }
 }
