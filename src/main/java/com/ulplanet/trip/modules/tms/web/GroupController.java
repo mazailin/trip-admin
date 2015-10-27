@@ -52,7 +52,7 @@ public class GroupController  extends BaseController {
         Page<Group> page = this.groupService.findPage(new Page<>(request, response), group);
 
         model.addAttribute("page",page);
-        return "modules/ims/phoneList";
+        return "modules/tms/groupList";
     }
 
     /**
@@ -75,7 +75,7 @@ public class GroupController  extends BaseController {
 
         addMessage(redirectAttributes,responseBo.getMsg());
         if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/ims/phone/list/?repage";
+            return "redirect:" + adminPath + "/tms/group/list/?repage";
         }
         return form(group, model);
     }
@@ -83,7 +83,7 @@ public class GroupController  extends BaseController {
     @RequestMapping(value = "form",method = RequestMethod.GET)
     public String form(Group group,Model model) {
         model.addAttribute("group", group);
-        return "modules/ims/groupForm";
+        return "modules/tms/groupForm";
     }
 
 

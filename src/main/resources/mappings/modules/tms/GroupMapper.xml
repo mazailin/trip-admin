@@ -27,7 +27,11 @@
             chat_id
         FROM
             `group`
-        WHERE `group`.name LIKE CONCAT('%', #{name}, '%')
+        <where>
+            <if test="name!=null and name!=''">
+                AND name like concat('%',#{name},'%')
+            </if>
+        </where>
         ORDER BY `group`.update_date
     </select>
 
@@ -71,21 +75,7 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateGroups">
-        <foreach item="item" index="index" collection="list" open="" close="" separator=";">
-            UPDATE `group`
-            <set>
-                name = #{item.name},
-                from_date = #{item.fromDate},
-                to_date = #{item.toDate},
-                description = #{item.description},
-                update_by = #{item.updateBy.id},
-                update_date = #{item.updateDate},
-                remarks = #{item.remarks}
-            </set>
-            where id = #{item.id}
-        </foreach>
-    </update>
+
 
     <delete id="delete">
         DELETE FROM `group` WHERE id = #{id}

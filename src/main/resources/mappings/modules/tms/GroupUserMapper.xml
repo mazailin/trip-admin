@@ -27,6 +27,28 @@
         ORDER BY group_user.update_date
     </select>
 
+
+    <select id="get" resultType="GroupUser">
+        SELECT
+        group_user.id,
+        group_user.`group`,
+        group_user.user,
+        group_user.code,
+        group_user.type,
+        user.name,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.email
+        FROM
+        user
+        JOIN group_user ON user.id = group_user.user
+        <where>
+            group_user.`id` = #{id}
+        </where>
+    </select>
+
     <insert id="insertGroupUser">
         INSERT INTO group_user(
             id,
@@ -137,7 +159,7 @@
             LEFT JOIN `group` ON `group`.id = group_user.group
         <where>
             <if test="id != null and id != ''">
-                AND user.passport LIKE concat(#{id},'%')
+                AND user.passport = #{id}
             </if>
             <if test="group!=null and group!=''">
                 AND `group`.id = #{group}

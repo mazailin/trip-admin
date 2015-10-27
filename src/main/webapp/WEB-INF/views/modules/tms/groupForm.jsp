@@ -52,14 +52,14 @@
     <label class="control-label">开始日期:</label>
     <div class="controls">
       <input id="fromDate" name="fromDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
-             value="<fmt:formatDate value="${fromDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+             value="<fmt:formatDate value="${group.fromDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label">结束日期:</label>
     <div class="controls">
       <input id="toDate" name="toDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
-             value="<fmt:formatDate value="${toDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+             value="<fmt:formatDate value="${group.toDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
     </div>
   </div>
   <div class="control-group">
