@@ -227,10 +227,10 @@
         FROM phone_info
         <where>
             status != 0
-            <if test="code!=null">
+            <if test="code!=null and code!=''">
               AND  code = #{code}
             </if>
-            <if test="id!=null">
+            <if test="id!=null and id!=''">
                 AND  id = #{id}
             </if>
             <if test="stockOrderId != null and stockOrderId != ''">
