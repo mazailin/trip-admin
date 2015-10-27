@@ -15,7 +15,12 @@
     $(document).ready(function() {
       $("#value").focus();
       $("#inputForm").validate({
+
         submitHandler: function(form){
+          if($("#id").val()!=null&&$("#id").val()!=''){
+            form.submit();
+            return;
+          }
           $.ajax({
             url : "${ctx}/ims/phone/count?code="+$("#code").val(),
             type:"get",
@@ -89,14 +94,5 @@
     <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
   </div>
 </form:form>
-<script type="text/javascript">
-  $(function(){
-    $(":submit[id=inputForm]").submit(function(e){
-
-
-    });
-  })
-
-</script>
 </body>
 </html>

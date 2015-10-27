@@ -54,8 +54,10 @@ public class PhoneInfoController extends BaseController {
             phoneInfoBos.add(phoneInfoBo);
         }
         Page<PhoneInfoBo> page1 =  new Page<>(request, response);
+        page1.setCount(page.getCount());
+        page1.setPageNo(page.getPageNo());
+        page1.setPageSize(page.getPageSize());
         page1.setList(phoneInfoBos);
-
         model.addAttribute("page",page1);
         return "modules/ims/phoneList";
     }
