@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupFlightDao">
+
+    <select id="findList" resultType="GroupFlight">
+        SELECT
+            id,
+            `group`,
+            code,
+            from_time,
+            to_time,
+            `from`,
+            `to`,
+            `starting`,
+            destination
+        FROM
+            group_flight
+        WHERE
+            `group` = #{group}
+        AND group_flight.code LIKE CONCAT('%', #{code}, '%')
+        ORDER BY update_date
+    </select>
+
+    <insert id="insert">
+        INSERT INTO group_flight (
+            id,
+            `group`,
+            code,
+            from_time,
+            to_time,
+            `from`,
+            `to`,
+            `starting`,
+            destination,
+            create_date,
+            update_by,
+            create_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{group},
+            #{code},
+            #{fromTime},
+            #{toTime},
+            #{from},
+            #{to},
+            #{starting},
+            #{destination},
+            #{createDate},
+            #{createBy.id},
+            #{updateDate},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE group_flight SET
+            code = #{code},
+            from_time = #{fromTime},
+            to_time = #{toTime},
+            `from` = #{from},
+            `to` = #{to},
+            `starting` = #{starting},
+            destination = #{destination},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM group_flight WHERE id = #{id}
+    </delete>
+
+</mapper>

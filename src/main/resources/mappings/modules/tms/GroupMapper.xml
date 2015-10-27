@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupDao">
+
+    <select id="get" resultType="Group">
+        SELECT
+        id,
+        name,
+        description,
+        customer,
+        from_date,
+        to_date,
+        chat_id
+        FROM
+        `group`
+        WHERE `group`.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Group">
+        SELECT
+            id,
+            name,
+            description,
+            customer,
+            from_date,
+            to_date,
+            chat_id
+        FROM
+            `group`
+        WHERE `group`.name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY `group`.update_date
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `group`(
+            id,
+            name,
+            customer,
+            from_date,
+            to_date,
+            description,
+            chat_id,
+            create_by,
+            create_date,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{name},
+            #{customer},
+            #{fromDate},
+            #{toDate},
+            #{description},
+            #{chatId},
+            #{createBy.id},
+            #{createDate},
+            #{updateDate},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE `group` SET
+            name = #{name},
+            from_date = #{fromDate},
+            to_date = #{toDate},
+            description = #{description},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateGroups">
+        <foreach item="item" index="index" collection="list" open="" close="" separator=";">
+            UPDATE `group`
+            <set>
+                name = #{item.name},
+                from_date = #{item.fromDate},
+                to_date = #{item.toDate},
+                description = #{item.description},
+                update_by = #{item.updateBy.id},
+                update_date = #{item.updateDate},
+                remarks = #{item.remarks}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM `group` WHERE id = #{id}
+    </delete>
+
+</mapper>

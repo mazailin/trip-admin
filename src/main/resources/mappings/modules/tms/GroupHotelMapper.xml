@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupHotelDao">
+
+    <select id="findList" resultType="GroupHotel">
+        SELECT
+            id,
+            `name`,
+            `group`,
+            address,
+            phone,
+            time
+        FROM
+            group_hotel
+        WHERE
+            `group` = #{group}
+        AND name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY update_date
+    </select>
+
+    <insert id="insert">
+        INSERT INTO group_hotel (
+            id,
+            `group`,
+            name,
+            address,
+            time,
+            phone,
+            create_by,
+            create_date,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{group},
+            #{name},
+            #{address},
+            #{time},
+            #{phone},
+            #{createBy.id},
+            #{createDate},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE group_hotel SET
+            name = #{name},
+            address = #{address},
+            phone = #{phone},
+            time = #{time},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM group_hotel WHERE id = #{id}
+    </delete>
+
+</mapper>

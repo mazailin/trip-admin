@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.CustUserDao">
+	<select id="get" resultType="CustUser">
+		SELECT 
+			custuser.id,
+			custuser.name,
+			custuser.password,
+			custuser.description,
+			custuser.customer,
+			customer.name as custname,
+			custuser.active 
+		FROM custuser
+		JOIN customer
+		ON custuser.customer = customer.id
+		WHERE custuser.name = #{name}
+	</select>
+</mapper>
