@@ -7,6 +7,8 @@
 	<resultMap id="JourneyPlan" type="com.ulplanet.trip.modules.tms.entity.JourneyPlan">
             <result property="id" column="id"/>
             <result property="dayId" column="day_id"/>
+            <result property="infoId" column="info_id"/>
+            <result property="cityIds" column="city_ids"/>
             <result property="type" column="type"/>
             <result property="name" column="name"/>
             <result property="time" column="time"/>
@@ -107,6 +109,12 @@
                       <if test="type != null and type != ''">
                           type,
                       </if>
+                      <if test="cityIds != null and cityIds != ''">
+                          city_ids,
+                      </if>
+                      <if test="infoId != null and infoId != ''">
+                          info_id,
+                      </if>
                       <if test="name != null and name != ''">
                           name,
                       </if>
@@ -157,6 +165,12 @@
                     </if>
                     <if test="type != null and type != ''">
                         #{type},
+                    </if>
+                    <if test="cityIds != null and cityIds != ''">
+                        #{cityIds},
+                    </if>
+                    <if test="infoId != null and infoId != ''">
+                        #{infoId},
                     </if>
                     <if test="name != null and name != ''">
                         #{name},
@@ -210,6 +224,12 @@
                  <if test="type != null and type!=''">
                       type = #{type},
                   </if>
+                 <if test="cityIds != null and cityIds!=''">
+                     city_ids = #{cityIds},
+                 </if>
+                 <if test="infoId != null and infoId!=''">
+                     info_id = #{infoId},
+                 </if>
                  <if test="name != null and name!=''">
                       name = #{name},
                   </if>
@@ -251,10 +271,15 @@
 	</update>
 
     <delete id="delete">
-        <![CDATA[
-            DELETE FROM journey_plan WHERE
-            id = #{id} 
-        ]]>
+            DELETE FROM journey_plan
+            <where>
+                <if test="id!=null and id!=''">
+                    id = #{id}
+                </if>
+                <if test="dayId!=null and dayId!=''">
+                    day_id = #{dayId}
+                </if>
+            </where>
     </delete>
     
     <select id="getById" resultMap="JourneyPlan">

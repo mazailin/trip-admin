@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.tms.web;
 
-import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -54,7 +51,7 @@ public class JourneyDayController  extends BaseController {
         }
         List<JourneyDayBo> journeyDayBos = journeyDayService.queryList(journeyDay.getGroupId());
         model.addAttribute("list", journeyDayBos);
-        model.addAttribute("groupId",journeyDay.getGroupId());
+        model.addAttribute("groupId", journeyDay.getGroupId());
         return "modules/tms/journeyDayList";
     }
 
@@ -63,6 +60,13 @@ public class JourneyDayController  extends BaseController {
         this.journeyDayService.save(journeyDay);
         addMessage(redirectAttributes, "添加成功");
         return "redirect:" + adminPath + "/tms/journeyDay/list/?groupId=" + journeyDay.getGroupId() + "&repage";
+    }
+
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public Object delete(JourneyDay journeyDay) {
+        this.journeyDayService.delete(journeyDay);
+        return "{\"status\":\"1\"}";
     }
 
 

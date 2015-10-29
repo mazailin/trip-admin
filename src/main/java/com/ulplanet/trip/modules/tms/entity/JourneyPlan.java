@@ -14,6 +14,7 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 	private String typeValue;
 	private String name;
 	private String time;
+	private String infoId;
 	private Integer timeFlag = 0;
 	private String description;
 	private String message;
@@ -29,6 +30,14 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 		String id
 	){
 		this.id = id;
+	}
+
+	public String getInfoId() {
+		return infoId;
+	}
+
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
 	}
 
 	public String getLongitude() {

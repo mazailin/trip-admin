@@ -28,9 +28,9 @@
       text-align: center;
       vertical-align:middle;
       background-color: #939595;
-      opacity: 0.6;
+      opacity: 0.9;
       z-index: 10001;
-      filter:Alpha(opacity=60);
+      filter:Alpha(opacity=90);
       position:fixed;
     }
 
@@ -90,6 +90,7 @@
       padding: 5px 0 0 0;
       margin-right: 10px;
     }
+
   </style>
 </head>
 <body>
@@ -101,24 +102,31 @@
 <sys:message content="${message}"/>
 <div style="margin-left: auto;margin-right: auto">
   <button id="addJourneyDay" type="button" class="btn btn-lg btn-primary">添加一天行程</button>&nbsp;&nbsp;&nbsp;
-  <button id="importJourney" type="button" class="btn btn-lg btn-warning">导入其他旅行团行程</button>
   <div style="margin-left: 10%;margin-top: 10px">
     <p>
       <label style="color: #dd1f26">当前团队行程：</label>
-      <label style="color: #dd1f26;margin-left: 318px">备用团队行程：</label>
+      <label style="color: #dd1f26;margin-left: 318px">团队行程模板：
+        <form:select path="template">
+          <form:options items="${fns:phoneOrderIds()}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
+        </form:select>
+      </label>
     </p>
     <ul id="sortable1" class="connectedSortable">
       <c:forEach items="${list}" var="journeyDay">
           <li style="list-style-type:none;">
-            <div style="width:400px;background-color: #ECECEC">
+            <div style="width:400px;background-color: #ECECEC" id="${journeyDay.id}">
               <div class="title">
-                <p class="p-header-top">${journeyDay.title}</p>
+                <p class="p-header-top">
+                  ${journeyDay.title}
+                  <i class="fa fa-times" style="float: right;margin-right: 10px;"></i>
+                </p>
+
               </div>
               <div class="content">
                 <ul class="sortable-content">
                 <c:forEach items="${journeyDay.list}" var="plan">
                   <li>
-                    <div class="border">
+                    <div id="${plan.id}" class="border">
                       <p class="p-header">${plan.name}</p>
                       <c:if test="${plan.timeFlag==1}">
                         <p class='p-message'>${plan.time}</p>
@@ -145,21 +153,17 @@
 </div>
 <div id="journeyList" style="display: none" class="popup">
   <div style="position:fixed;left:35%;top:50%;background-color: white;padding-top: 20px;padding-bottom: 20px">
-  <form:form id="inputForm" modelAttribute="journeyDay" action="${ctx}/tms/journeyDay/save" method="post" class="form-horizontal">
-    <form:hidden path="id"/>
-    <form:hidden path="groupId"/>
-    <sys:message content="${message}"/>
-    <label style="font-size: 15px;font-weight:bold;">名称:</label>
-    <form:input path="title" htmlEscape="false" maxlength="50" class="required"/><br>
-    <input id="btnSubmit" class="btn btn-default" type="submit" value="保 存"/>&nbsp;
-    <input id="btnCancel" class="btn" type="button" value="返 回" />
+    <form:form id="inputForm" modelAttribute="journeyDay" action="${ctx}/tms/journeyDay/save" method="post" class="form-horizontal">
+      <form:hidden path="id"/>
+      <form:hidden path="groupId"/>
+      <sys:message content="${message}"/>
+      <label style="font-size: 15px;font-weight:bold;">名称:</label>
+      <form:input path="title" htmlEscape="false" maxlength="50" class="required"/><br>
+      <input id="btnSubmit" class="btn btn-default" type="submit" value="保 存"/>&nbsp;
+      <input id="btnCancel" class="btn" type="button" value="返 回" />
 
-  </form:form>
+    </form:form>
   </div>
-</div>
-<div id="modelList" style="display: none" class="popup">
-
-
 </div>
 
 <script type="text/javascript">
@@ -190,7 +194,27 @@
     $(".sortable-content" ).sortable({
       connectWith: ".sortable-content"
     }).disableSelection();
-
+    $(".fa-times").mouseover(function(){
+      $(this).addClass("fa-spin");
+    });
+    $(".fa-times").mouseout(function(){
+      $(this).removeClass("fa-spin");
+    });
+    $(".fa-times").click(function(){
+      var _div = $(this).parent().parent().parent();
+      var id = _div.attr("id");
+      $.ajax({
+        url:"${ctx}/tms/journeyDay/delete?id="+id,
+        type:"get",
+        success:function(data){
+          data = eval("("+data+")");
+          if(data.status == 1){
+            _div.parent().remove();
+          }
+        }
+      })
+    });
+    $(".journeyTemplate").select2();
 
   });
 

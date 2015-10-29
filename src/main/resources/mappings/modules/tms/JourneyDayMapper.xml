@@ -145,7 +145,7 @@
         order by day_number ASC
     </select>
     
-    <select id="getById" resultMap="JourneyDay">
+    <select id="get" resultMap="JourneyDay">
 		SELECT <include refid="BaseColumns" />
 	    <![CDATA[
 		    FROM journey_day 
