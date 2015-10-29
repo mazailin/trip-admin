@@ -71,7 +71,7 @@
     <label class="control-label">订单号:</label>
     <div class="controls">
       <form:select path="stockOrderId">
-        <form:options items="${fns:phoneOrderIds()}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
+        <form:options items="${fns:phoneOrderIds(phoneInfo.stockOrderId==null?'':phoneInfo.stockOrderId)}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
       </form:select>
     </div>
   </div>

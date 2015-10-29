@@ -225,7 +225,7 @@
     <description>手机订单对象获取</description>
     <name>phoneOrderIds</name>
     <function-class>com.ulplanet.trip.modules.ims.utils.PhoneUtils</function-class>
-    <function-signature>java.util.List getOrderIds()</function-signature>
+    <function-signature>java.util.List getOrderIds(java.lang.String))</function-signature>
     <example>${fns:phoneOrderIds()}</example>
   </function>
 </taglib>

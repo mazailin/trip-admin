@@ -83,6 +83,8 @@ public class PhoneInfoController extends BaseController {
 
         if(phoneInfo!=null){
             addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"成功");
+        }else{
+            addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"失败");
         }
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
