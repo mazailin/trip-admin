@@ -24,7 +24,7 @@
               AND user.name LIKE CONCAT('%', #{name}, '%')
             </if>
         </where>
-        ORDER BY group_user.update_date
+        ORDER BY group_user.update_date DESC
     </select>
 
 
@@ -144,6 +144,7 @@
     <select id="findUserByPassport" resultType="GroupUser">
         SELECT
             MAX(`group`.to_date) as toDate,
+            MIN(`group`.from_date) as fromDate,
             group_user.id,
             group_user.`group`,
             user.id as `user`,

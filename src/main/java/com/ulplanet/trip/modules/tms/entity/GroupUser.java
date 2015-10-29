@@ -19,14 +19,14 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String phone;
     private String email;
     private String toDate;
-    private String flag;
+    private String fromDate;
 
-    public String getFlag() {
-        return flag;
+    public String getFromDate() {
+        return fromDate;
     }
 
-    public void setFlag(String flag) {
-        this.flag = flag;
+    public void setFromDate(String fromDate) {
+        this.fromDate = fromDate;
     }
 
     public String getToDate() {

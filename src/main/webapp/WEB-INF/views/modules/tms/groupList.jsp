@@ -33,17 +33,18 @@
 </form:form>
 <sys:message content="${message}"/>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-  <thead><tr><th>名称</th><th>开始日期</th><th>结束日期</th><th>描述</th><th>操作</th></tr></thead>
+  <thead><tr><th>名称</th><th>开始日期</th><th>结束日期</th><th>旅行社</th><th>描述</th><th>操作</th></tr></thead>
   <tbody>
   <c:forEach items="${page.list}" var="group">
     <tr>
       <td>${group.name}</td>
       <td><fmt:formatDate value="${group.fromDate}" pattern="yyyy-MM-dd"/></td>
       <td><fmt:formatDate value="${group.toDate}" pattern="yyyy-MM-dd"/></td>
+      <td>${group.customerName  }</td>
       <td>${group.description}</td>
       <td>
         <a href="${ctx}/tms/group/form?id=${group.id}">修改</a>
-        <a href="${ctx}/tms/groupUser/list?group=${group.id}">管理用户</a>
+        <a href="${ctx}/tms/groupUser/list?group=${group.id}">团队管理</a>
         <a href="${ctx}/tms/group/delete?id=${group.id}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
       </td>
     </tr>

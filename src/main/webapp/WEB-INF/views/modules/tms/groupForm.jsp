@@ -14,9 +14,34 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $("#value").focus();
+      $.validator.addMethod(
+        "compareDate",
+        function (value, element) {
+          var start=new Date($("#fromDate").val().replace("-", "/").replace("-", "/"));
+          var endTime=$("#toDate").val();
+          var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+          if(end<start){
+            return false;
+          }
+          return true;
+        },
+        "结束日期必须大于开始日期"
+      );
       $("#inputForm").validate({
 
+        rules : {
+          toDate:{
+            compareDate : true
+          }
+        },
+        message :{
+          toDate:{
+            compareDate : "开始日期必须小于结束日期"
+          }
+        },
+
         submitHandler: function(form){
+
           loading('正在提交，请稍等...');
           form.submit();
         },
@@ -60,6 +85,14 @@
     <div class="controls">
       <input id="toDate" name="toDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
              value="<fmt:formatDate value="${group.toDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">旅行社:</label>
+    <div class="controls">
+      <form:select path="customer">
+        <form:options items="${fns:customerList()}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+      </form:select>
     </div>
   </div>
   <div class="control-group">

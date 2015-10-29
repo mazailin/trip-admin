@@ -73,6 +73,16 @@ public class GroupController  extends BaseController {
             responseBo = this.groupService.addGroup(group);
         }
 
+        addMessage(redirectAttributes, responseBo.getMsg());
+        if(responseBo.getStatus()==1) {
+            return "redirect:" + adminPath + "/tms/group/list/?repage";
+        }
+        return form(group, model);
+    }
+
+    @RequestMapping(value = "/delete")
+    public String delete(Group group,Model model, RedirectAttributes redirectAttributes) {
+        ResponseBo responseBo = this.groupService.deleteGroup(group);
         addMessage(redirectAttributes,responseBo.getMsg());
         if(responseBo.getStatus()==1) {
             return "redirect:" + adminPath + "/tms/group/list/?repage";

@@ -38,6 +38,7 @@
 <ul class="nav nav-tabs">
   <li><a href="${ctx}/tms/groupUser/?group=${groupUser.group}">旅游团用户列表</a></li>
   <li class="active"><a href="${ctx}/tms/groupUser/form?id=${groupUser.id}">旅游团用户${not empty groupUser.id?'修改':'添加'}</a></li>
+  <li><a href="${ctx}/tms/journeyDay/?groupId=${groupUser.group}">旅游团行程</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="groupUser" action="${ctx}/tms/groupUser/save" method="post" class="form-horizontal">
   <form:hidden path="id"/>
@@ -86,14 +87,14 @@
   <div class="control-group">
     <label class="control-label">电话:</label>
     <div class="controls">
-      <form:input path="phone" htmlEscape="false" maxlength="50" class="required"/>
+      <form:input path="phone" htmlEscape="false" maxlength="50" class=""/>
     </div>
   </div>
 
   <div class="control-group">
     <label class="control-label">邮件:</label>
     <div class="controls">
-      <form:input path="email" htmlEscape="false" maxlength="50" class="required"/>
+      <form:input path="email" htmlEscape="false" maxlength="50" class=""/>
     </div>
   </div>
 
@@ -110,16 +111,30 @@
     }else{
       $("#passport").attr("disabled",false);
     }
-    $("#passport").blur(function(){
+    $("#passport").blur(function(e){
+      if(e.target.value.length < 5)return true;
       $.ajax({
-        url:"${ctx}/tms/groupUser/getPassport?query="+$("#passport").val(),
+        url:"${ctx}/tms/groupUser/getPassport?query="+$("#passport").val()+"&group=${groupUser.group}",
         dataType:"json",
         type:"get",
         success:function(data){
-          data = eval(data);
           if(data.id!=null&&data.id.length>0){
-
+            if(data.code == 0){
+              swal("用户已存在", "用户已存在于本团队或其他团队中", "error");
+              $("#btnSubmit").attr("readonly","true");
+              return false;
+            }
+            $("#passport").val(e.target.value);
+            $("#user").val(data.user);
+            $("#name").val(data.name);
+            $("#type").val(data.type);
+            $("#gender").val(data.gender);
+            $("#phone").val(data.phone);
+            $("#email").val(data.email);
+            $("#passport").attr("readonly","true");
           }
+          $("#btnSubmit").removeAttr("disabled");
+
         }
       })
     })

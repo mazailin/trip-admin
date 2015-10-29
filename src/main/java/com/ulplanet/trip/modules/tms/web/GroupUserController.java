@@ -46,14 +46,19 @@ public class GroupUserController  extends BaseController {
             return form(groupUser, model);
         }
         ResponseBo responseBo;
-        if("1".equals(groupUser.getFlag())){
+        if(StringUtils.isBlank(groupUser.getCode())){//添加用户
             responseBo = groupUserService.addUser(groupUser);
+            if(responseBo.getStatus()==1){//添加用户到团队中
+                responseBo = groupUserService.addGroupUser(groupUser);
+            }
         }else{
+            groupUser.preUpdate();
             responseBo = groupUserService.updateUser(groupUser);
         }
+
         addMessage(redirectAttributes,responseBo.getMsg());
         if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?repage";
+            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
         }
         return form(groupUser, model);
     }
@@ -63,7 +68,7 @@ public class GroupUserController  extends BaseController {
         ResponseBo responseBo = this.groupUserService.deleteUser(groupUser);
         addMessage(redirectAttributes,responseBo.getMsg());
         if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?repage";
+            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
         }
         return form(groupUser, model);
     }
@@ -79,9 +84,10 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/getPassport")
     @ResponseBody
-    public String getPassport(
-            @RequestParam(value = "query", required = false) String searchValue) {
-        return JSONUtils.toJSONString(this.groupUserService.getPassport(searchValue));
+    public Object getPassport(
+            @RequestParam(value = "query", required = false) String searchValue,
+            @RequestParam(value = "group", required = false) String group) {
+        return this.groupUserService.getPassport(searchValue,group);
     }
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)

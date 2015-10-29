@@ -1,74 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupFlightDao">
+    <resultMap id="GroupFlight" type="com.ulplanet.trip.modules.tms.entity.GroupFlight">
+        <result property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="flightId" column="flight_id"/>
+        <result property="flightDate" column="flight_date"/>
+        <result property="common" column="common"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
 
-    <select id="findList" resultType="GroupFlight">
-        SELECT
-            id,
-            `group`,
-            code,
-            from_time,
-            to_time,
-            `from`,
-            `to`,
-            `starting`,
-            destination
-        FROM
-            group_flight
-        WHERE
-            `group` = #{group}
-        AND group_flight.code LIKE CONCAT('%', #{code}, '%')
-        ORDER BY update_date
-    </select>
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="BaseColumns">
+        <![CDATA[
+            id,group_id,flight_id,flight_date,common,remarks
+	    ]]>
+    </sql>
+
+    <sql id="BaseWhere">
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND group_id = #{groupId}
+            </if>
+            <if test="flightId != null and flightId != ''">
+                AND flight_id = #{flightId}
+            </if>
+            <if test="flightDate != null and flightDate != ''">
+                AND flight_date = #{flightDate}
+            </if>
+            <if test="common != null and common != ''">
+                AND common = #{common}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND remarks = #{remarks}
+            </if>
+        </where>
+
+    </sql>
+
 
     <insert id="insert">
-        INSERT INTO group_flight (
-            id,
-            `group`,
-            code,
-            from_time,
-            to_time,
-            `from`,
-            `to`,
-            `starting`,
-            destination,
-            create_date,
-            update_by,
-            create_date,
-            remarks
-        ) VALUES (
-            #{id},
-            #{group},
-            #{code},
-            #{fromTime},
-            #{toTime},
-            #{from},
-            #{to},
-            #{starting},
-            #{destination},
-            #{createDate},
-            #{createBy.id},
-            #{updateDate},
-            #{remarks}
-        )
+        <![CDATA[
+                INSERT INTO group_flight (
+                    id ,
+                    group_id,
+                    flight_id ,
+                    flight_date ,
+                    common ,
+                    create_by ,
+                    create_date ,
+                    update_date ,
+                    remarks
+                ) VALUES (
+                    #{id} ,
+                    #{groupId},
+                    #{flightId} ,
+                    #{flightDate} ,
+                    #{common} ,
+                    #{createBy.id} ,
+                    #{createDate} ,
+                    #{updateDate} ,
+                    #{remarks}
+                )
+            ]]>
+
     </insert>
 
-    <update id="update">
-        UPDATE group_flight SET
-            code = #{code},
-            from_time = #{fromTime},
-            to_time = #{toTime},
-            `from` = #{from},
-            `to` = #{to},
-            `starting` = #{starting},
-            destination = #{destination},
-            update_by = #{updateBy.id},
-            update_date = #{updateDate},
-            remarks = #{remarks}
+    <update id="update" >
+        UPDATE group_flight
+        <set>
+            <if test="groupId != null">
+                group_id = #{groupId},
+            </if>
+            <if test="flightId != null">
+                flight_id = #{flightId},
+            </if>
+            <if test="flightDate != null">
+                flight_date = #{flightDate},
+            </if>
+            <if test="common != null">
+                common = #{common},
+            </if>
+            <if test="updateBy.id != null">
+                update_by = #{updateBy.id},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks}
+            </if>
+        </set>
         WHERE id = #{id}
     </update>
+
     <delete id="delete">
-        DELETE FROM group_flight WHERE id = #{id}
+        <![CDATA[
+            DELETE FROM group_flight WHERE
+            id = #{id}
+        ]]>
     </delete>
+
+    <select id="get" resultMap="GroupFlight">
+        SELECT <include refid="BaseColumns" />
+        <![CDATA[
+		    FROM group_flight
+	        WHERE
+		        id = #{id}
+	    ]]>
+    </select>
+
+
+    <select id="findList" resultMap="GroupFlight">
+        SELECT <include refid="BaseColumns" />
+        FROM group_flight
+        <include refid="BaseWhere"/>
+    </select>
+
 
 </mapper>

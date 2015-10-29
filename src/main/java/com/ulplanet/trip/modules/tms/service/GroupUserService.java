@@ -9,7 +9,6 @@ import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
-import com.ulplanet.trip.modules.tms.utils.ChatIdMaker;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
@@ -33,25 +32,19 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     public ResponseBo addUser(GroupUser groupUser){
         String userCode = this.getUserCode(groupUser.getGroup());
-        Group group = groupService.get(groupUser.getGroup());
-        String chatId = group.getChatId();
-        if (ChatIdMaker.inviteJoinGroup(chatId, userCode)) {
-            groupUser.preInsert();
-            groupUser.setCode(userCode);
-            if(StringUtils.isNotBlank(groupUser.getId())){
-                return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
-            }else {
-                groupUser.setUser(IdGen.uuid());
-                this.groupUserDao.insertUser(groupUser);
-                this.groupUserDao.insertGroupUser(groupUser);
-                return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
-            }
-        }
-        return new ResponseBo(0,"新增用户失败");
+        groupUser.preInsert();
+        groupUser.setCode(userCode);
+        groupUser.setUser(IdGen.uuid());
+        return ResponseBo.getResult(groupUserDao.insertUser(groupUser));
+    }
+
+    public ResponseBo addGroupUser(GroupUser groupUser){
+        return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
     }
 
     public ResponseBo updateUser(GroupUser groupUser){
         groupUser.preUpdate();
+        groupUserDao.updateGroupUser(groupUser);
         return ResponseBo.getResult(groupUserDao.updateUser(groupUser));
     }
 
@@ -59,16 +52,35 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
     }
 
-    public GroupUser getPassport(String passport) {
-        Map<String, Object> result = new HashMap<>();
+    public GroupUser getPassport(String passport,String group) {
         GroupUser groupUser;
         List<GroupUser> list = groupUserDao.findUserByPassport(passport,null);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        if(list.size()==0){
-            return new GroupUser();
+        if(list.size()>0){
+            Group group1 = groupService.get(group);
+            Date toDate = group1.getToDate();
+            Date fromDate = group1.getFromDate();
+
+            for(GroupUser g : list){
+                if(StringUtils.isNotBlank(g.getToDate())){
+                    try {
+                        Date fDate = DateUtils.parseDate(g.getFromDate(),"yyyy-MM-dd");
+                        Date tDate = DateUtils.parseDate(g.getToDate(),"yyyy-MM-dd");
+                        if(isIn(fDate,tDate,fromDate,toDate)){
+                            g.setCode("0");
+                            return g;
+                        }else{
+                            g.setCode("1");
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            groupUser = list.get(0);
+            return groupUser;
         }
-        groupUser = list.get(0);
-        return groupUser;
+        return new GroupUser();
+
     }
 
     private String getUserCode(String groupid) {
@@ -94,6 +106,13 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             code = NumberUtils.toLong(code) + 1 + "";
         }
         return code;
+    }
+
+    private boolean isIn(Date oldSDate,Date oldEDate,Date newSDate,Date newEDate){
+        if(oldSDate.before(newSDate) && oldEDate.after(newSDate))return true;
+        if(oldSDate.before(newEDate) && oldEDate.after(newEDate))return true;
+        if(oldSDate.after(newSDate) && oldEDate.before(newEDate))return true;
+        return false;
     }
 
 }

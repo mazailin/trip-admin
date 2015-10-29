@@ -5,7 +5,6 @@ import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
-import com.ulplanet.trip.modules.tms.utils.ChatIdMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +22,6 @@ public class GroupService extends CrudService<GroupDao,Group> {
     private GroupDao groupDao;
 
     public ResponseBo addGroup(Group group) {
-        ResponseBo responseBo = new ResponseBo();
-        String chatId = ChatIdMaker.makeChatId(group.getName(), group.getDescription());
-        if (StringUtils.isEmpty(chatId)) {
-            responseBo.setStatus(0);
-            responseBo.setMsg("加入聊天组失败");
-            return responseBo;
-        }
-        group.setChatId(chatId);
         group.preInsert();
         return ResponseBo.getResult(this.groupDao.insert(group));
     }

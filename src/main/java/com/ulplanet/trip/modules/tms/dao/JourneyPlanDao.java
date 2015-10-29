@@ -4,7 +4,7 @@ package com.ulplanet.trip.modules.tms.dao;
 import com.ulplanet.trip.common.persistence.CrudDao;
 import com.ulplanet.trip.common.persistence.annotation.MyBatisDao;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
-import com.ulplanet.trip.modules.tms.entity.JourneyPlans;
+import com.ulplanet.trip.modules.tms.bo.JourneyPlans;
 
 import java.util.List;
 

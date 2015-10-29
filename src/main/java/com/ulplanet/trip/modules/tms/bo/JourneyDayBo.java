@@ -2,6 +2,7 @@ package com.ulplanet.trip.modules.tms.bo;
 
 
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
+import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class JourneyDayBo {
     private String groupId;
     private Integer dayNumber;
     private String title;
-    private List<JourneyPlanBo> list = new ArrayList<>();
+    private List<JourneyPlan> list = new ArrayList<>();
 
     public JourneyDayBo(){}
 
@@ -57,11 +58,11 @@ public class JourneyDayBo {
         this.title = title;
     }
 
-    public List<JourneyPlanBo> getList() {
+    public List<JourneyPlan> getList() {
         return list;
     }
 
-    public void setList(List<JourneyPlanBo> list) {
+    public void setList(List<JourneyPlan> list) {
         this.list = list;
     }
 }

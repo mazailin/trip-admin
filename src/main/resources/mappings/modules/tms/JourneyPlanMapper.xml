@@ -15,13 +15,13 @@
             <result property="message" column="message"/>
             <result property="messageFlag" column="message_flag"/>
             <result property="sort" column="sort"/>
-            <result property="remark" column="remark"/>
+            <result property="remarks" column="remarks"/>
             <result property="typeValue" column="typeValue"/>
             <result property="longitude" column="longitude"/>
             <result property="latitude" column="latitude"/>
 	</resultMap>
 
-    <resultMap id="JourneyPlans" type="com.ulplanet.trip.modules.tms.entity.JourneyPlans">
+    <resultMap id="JourneyPlans" type="com.ulplanet.trip.modules.tms.bo.JourneyPlans">
         <result property="dayNumber" column="dayNumber"/>
         <result property="dayTitle" column="dayTitle"/>
         <result property="type" column="type"/>
@@ -50,7 +50,7 @@
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,day_id,type,name,time,time_flag,description,message,message_flag,sort,remark,longitude,latitude
+            id,day_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
 	    ]]>
 	</sql>
 
@@ -86,8 +86,8 @@
                 <if test="sort != null and sort != ''">
                     AND sort = #{sort}
                 </if>
-                <if test="remark != null and remark != ''">
-                    AND remark = #{remark}
+                <if test="remarks != null and remarks != ''">
+                    AND remarks = #{remarks}
                 </if>
     </where>
 
@@ -143,8 +143,8 @@
                       <if test="updateDate != null and updateDate != ''">
                         update_date,
                       </if>
-                      <if test="remark != null and remark != ''">
-                        remark,
+                      <if test="remarks != null and remarks != ''">
+                        remarks,
                       </if>
                   </trim>
                 ) VALUES (
@@ -194,8 +194,8 @@
                     <if test="updateDate != null and updateDate != ''">
                         #{updateDate},
                     </if>
-                    <if test="remark != null and remark != ''">
-                        #{remark},
+                    <if test="remarks != null and remarks != ''">
+                        #{remarks},
                     </if>
                   </trim>
                 )
@@ -243,8 +243,8 @@
                  <if test="updateDate != null">
                       update_date = #{updateDate},
                   </if>
-                 <if test="remark != null">
-                      remark = #{remark}
+                 <if test="remarks != null">
+                      remarks = #{remarks}
                   </if>
         </set>
         where id = #{id}

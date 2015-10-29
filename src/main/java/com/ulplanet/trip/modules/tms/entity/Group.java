@@ -3,6 +3,7 @@ package com.ulplanet.trip.modules.tms.entity;
 import com.ulplanet.trip.common.persistence.DataEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -13,12 +14,22 @@ public class Group extends DataEntity<Group> {
     private String name;
     private String description;
     private String customer;
+    private String customerName;
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private Date fromDate;
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private Date toDate;
     private String chatId;
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    @NotNull
     public String getName() {
         return name;
     }
@@ -43,6 +54,7 @@ public class Group extends DataEntity<Group> {
         this.customer = customer;
     }
 
+    @NotNull
     public Date getFromDate() {
         return fromDate;
     }
@@ -51,6 +63,7 @@ public class Group extends DataEntity<Group> {
         this.fromDate = fromDate;
     }
 
+    @NotNull
     public Date getToDate() {
         return toDate;
     }

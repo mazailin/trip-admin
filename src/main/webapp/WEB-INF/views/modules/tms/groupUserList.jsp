@@ -24,6 +24,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><a href="${ctx}/tms/groupUser/?group=${groupId}">旅游团用户列表</a></li>
   <li><a href="${ctx}/tms/groupUser/form?group=${groupId}&sort=10">旅游团用户添加</a></li>
+  <li><a href="${ctx}/tms/journeyDay/?groupId=${groupId}">旅游团行程</a></li>
 </ul>
 <form:form id="searchForm" modelAttribute="groupUser" action="${ctx}/tms/groupUser/" method="post" class="breadcrumb form-search">
   <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -43,8 +44,8 @@
       <td>${fns:getDictLabel(groupUser.type, 'tourist_type', '')}</td>
       <td>${groupUser.phone}</td>
       <td>
-        <a href="${ctx}/tms/groupUser/form?id=${groupUser.id}">修改</a>
-        <a href="${ctx}/tms/groupUser/delete?id=${groupUser.id}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
+        <a href="${ctx}/tms/groupUser/form?id=${groupUser.id}&&group=${groupUser.group}">修改</a>
+        <a href="${ctx}/tms/groupUser/delete?id=${groupUser.id}&&group=${groupUser.group}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
       </td>
     </tr>
   </c:forEach>

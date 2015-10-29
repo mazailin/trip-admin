@@ -18,21 +18,23 @@
 
     <select id="findList" resultType="Group">
         SELECT
-            id,
-            name,
-            description,
-            customer,
-            from_date,
-            to_date,
-            chat_id
+        `group`.id,
+        `group`.name,
+        `group`.description,
+        `group`.customer,
+        `group`.from_date,
+        `group`.to_date,
+        `group`.chat_id,
+        `customer`.name as customerName
         FROM
             `group`
+        LEFT JOIN `customer` on `group`.customer = `customer`.id
         <where>
             <if test="name!=null and name!=''">
                 AND name like concat('%',#{name},'%')
             </if>
         </where>
-        ORDER BY `group`.update_date
+        ORDER BY `group`.from_date DESC
     </select>
 
     <insert id="insert">
@@ -43,7 +45,6 @@
             from_date,
             to_date,
             description,
-            chat_id,
             create_by,
             create_date,
             update_date,
@@ -55,7 +56,6 @@
             #{fromDate},
             #{toDate},
             #{description},
-            #{chatId},
             #{createBy.id},
             #{createDate},
             #{updateDate},

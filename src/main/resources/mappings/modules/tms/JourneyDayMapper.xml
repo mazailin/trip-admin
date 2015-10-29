@@ -12,13 +12,13 @@
             <result property="title" column="title"/>
             <result property="createDate" column="create_date"/>
             <result property="updateDate" column="update_date"/>
-            <result property="remark" column="remark"/>
+            <result property="remarks" column="remarks"/>
 	</resultMap>
 	
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,group_id,day_number,title,remark
+            id,group_id,day_number,title,remarks
 	    ]]>
 	</sql>
 
@@ -42,8 +42,8 @@
                 <if test="updateDate != null and updateDate != ''">
                     AND update_date = #{updateDate}
                 </if>
-                <if test="remark != null and remark != ''">
-                    AND remark = #{remark}
+                <if test="remarks != null and remarks != ''">
+                    AND remarks = #{remarks}
                 </if>
     </where>
 
@@ -66,8 +66,8 @@
                 <if test="updateDate != null and updateDate != ''">
                     AND update_date = #{updateDate},
                 </if>
-                <if test="remark != null and remark != ''">
-                    AND remark = #{remark}
+                <if test="remarks != null and remarks != ''">
+                    AND remarks = #{remarks}
                 </if>
         </where>
 
@@ -83,7 +83,7 @@
                     create_by ,
                     create_date ,
                     update_date ,
-                    remark 
+                    remarks 
                 ) VALUES (
                     #{id} ,
                     #{groupId} ,
@@ -92,7 +92,7 @@
                     #{createBy.id} ,
                     #{createDate} ,
                     #{updateDate} ,
-                    #{remark} 
+                    #{remarks} 
                 )
             ]]>
 
@@ -119,8 +119,8 @@
                  <if test="updateDate != null">
                       update_date = #{updateDate},
                   </if>
-                 <if test="remark != null">
-                      remark = #{remark}
+                 <if test="remarks != null">
+                      remarks = #{remarks}
                   </if>
         </set>
               where id = #{id}

@@ -3,55 +3,47 @@ package com.ulplanet.trip.modules.tms.entity;
 
 import com.ulplanet.trip.common.persistence.DataEntity;
 
+import java.util.Date;
+
 /**
  * Created by zhangxd on 15/8/11.
  */
 public class GroupHotel extends DataEntity<GroupHotel> {
 
-    private String group;
-    private String time;
-    private String name;
-    private String address;
-    private String phone;
+    private String flightId;
+    private String hotelId;
+    private Date checkDate;
+    private String common;
 
-    public String getGroup() {
-        return group;
+    public String getFlightId() {
+        return flightId;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
     }
 
-    public String getTime() {
-        return time;
+    public String getCommon() {
+        return common;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setCommon(String common) {
+        this.common = common;
     }
 
-    public String getName() {
-        return name;
+    public Date getCheckDate() {
+        return checkDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCheckDate(Date checkDate) {
+        this.checkDate = checkDate;
     }
 
-    public String getAddress() {
-        return address;
+    public String getHotelId() {
+        return hotelId;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setHotelId(String hotelId) {
+        this.hotelId = hotelId;
     }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
 }

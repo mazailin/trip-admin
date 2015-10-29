@@ -14,10 +14,10 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 	private String typeValue;
 	private String name;
 	private String time;
-	private Integer timeFlag;
+	private Integer timeFlag = 0;
 	private String description;
 	private String message;
-	private Integer messageFlag;
+	private Integer messageFlag = 0;
 	private Integer sort;
 	private String longitude;
 	private String latitude;

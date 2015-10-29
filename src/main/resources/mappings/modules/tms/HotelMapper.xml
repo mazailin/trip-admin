@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.HotelDao">
+
+	<resultMap id="Hotel" type="com.ulplanet.trip.modules.tms.entity.Hotel">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="address" column="address"/>
+            <result property="phone" column="phone"/>
+            <result property="longitude" column="longitude"/>
+            <result property="latitude" column="latitude"/>
+            <result property="common" column="common"/>
+            <result property="remarks" column="remarks"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="BaseColumns">
+	    <![CDATA[
+            id,name,address,phone,longitude,latitude,common,remarks
+	    ]]>
+	</sql>
+
+<sql id="BaseWhere">
+    <where>
+                <if test="id != null and id != ''">
+                    AND id = #{id}
+                </if>
+                <if test="name != null and name != ''">
+                    AND name = #{name}
+                </if>
+                <if test="address != null and address != ''">
+                    AND address = #{address}
+                </if>
+                <if test="phone != null and phone != ''">
+                    AND phone = #{phone}
+                </if>
+                <if test="longitude != null and longitude != ''">
+                    AND longitude = #{longitude}
+                </if>
+                <if test="latitude != null and latitude != ''">
+                    AND latitude = #{latitude}
+                </if>
+                <if test="common != null and common != ''">
+                    AND common = #{common}
+                </if>
+                <if test="remarks != null and remarks != ''">
+                    AND remarks = #{remarks}
+                </if>
+    </where>
+
+ </sql>
+
+
+	<insert id="insert">
+            <![CDATA[
+                INSERT INTO hotel (
+                    id ,
+                    name ,
+                    address ,
+                    phone ,
+                    longitude ,
+                    latitude ,
+                    common ,
+                    create_by ,
+                    create_date ,
+                    update_by ,
+                    update_date ,
+                    remarks 
+                ) VALUES (
+                    #{id} ,
+                    #{name} ,
+                    #{address} ,
+                    #{phone} ,
+                    #{longitude} ,
+                    #{latitude} ,
+                    #{common} ,
+                    #{createBy.id} ,
+                    #{createDate} ,
+                    #{updateBy.id} ,
+                    #{updateDate} ,
+                    #{remarks} 
+                )
+            ]]>
+
+	</insert>
+    
+	<update id="update" >
+        UPDATE hotel
+         <set>
+                 <if test="name != null">
+                      name = #{name},
+                  </if>
+                 <if test="address != null">
+                      address = #{address},
+                  </if>
+                 <if test="phone != null">
+                      phone = #{phone},
+                  </if>
+                 <if test="longitude != null">
+                      longitude = #{longitude},
+                  </if>
+                 <if test="latitude != null">
+                      latitude = #{latitude},
+                  </if>
+                 <if test="common != null">
+                      common = #{common},
+                  </if>
+                 <if test="updateBy.id != null">
+                      update_by = #{updateBy.id},
+                  </if>
+                 <if test="updateDate != null">
+                      update_date = #{updateDate},
+                  </if>
+                 <if test="remarks != null">
+                      remarks = #{remarks}
+                  </if>
+        </set>
+        WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+        <![CDATA[
+            DELETE FROM hotel WHERE
+            id = #{id} 
+        ]]>
+    </delete>
+    
+    <select id="get" resultMap="Hotel">
+		SELECT <include refid="BaseColumns" />
+	    <![CDATA[
+		    FROM hotel 
+	        WHERE 
+		        id = #{id} 
+	    ]]>
+	</select>
+	
+
+		
+
+    <select id="findList" resultMap="Hotel">
+    	SELECT <include refid="BaseColumns" />
+	    FROM hotel 
+		<include refid="BaseWhere"/>
+    </select>
+
+	
+</mapper>
+
