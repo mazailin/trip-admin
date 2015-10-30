@@ -45,7 +45,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/tim/city/list">城市列表</a></li>
-		<li class="active"><a href="${ctx}/tim/city/form?id=${customer.id}">城市<shiro:hasPermission name="tim:city:edit">${not empty city.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:city:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/city/form?id=${city.id}">城市<shiro:hasPermission name="tim:city:edit">${not empty city.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:city:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="city" action="${ctx}/tim/city/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.tim.web;
 
+import com.google.common.collect.Lists;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.*;
 
 /**
  * 城市Controller
@@ -99,6 +100,49 @@ public class CityController extends BaseController {
             return "true";
         }
         return "false";
+    }
+
+    /**
+     * 获取城市JSON数据。
+     * @param extId 排除的ID
+     * @return
+     */
+    @RequiresPermissions("user")
+    @ResponseBody
+    @RequestMapping(value = "treeData")
+    public List<Map<String, String>> treeData(@RequestParam(required=false) String extId) {
+        List<Map<String, String>> mapList = Lists.newArrayList();
+        List<Country> countryList = countryService.findList(new Country());
+        List<City> cityList = cityService.findList(new City());
+        List<Map<String, String>> list = new ArrayList<>();
+        Set<String> countryIdMap = new HashSet<>();
+        for (City city : cityList) {
+            String pId = city.getCountry().getId();
+            countryIdMap.add(pId);
+            Map<String, String> treeMap = new HashMap<>();
+            treeMap.put("id", city.getId());
+            treeMap.put("pId", city.getCountry().getId());
+            treeMap.put("pIds", city.getCountry().getId());
+            treeMap.put("name", city.getName());
+            list.add(treeMap);
+        }
+        for (Country country : countryList) {
+            Map<String, String> treeMap = new HashMap<>();
+            String id = country.getId();
+            if (countryIdMap.contains(id)) {
+                treeMap.put("id", country.getId());
+                treeMap.put("pId", "");
+                treeMap.put("pIds", "");
+                treeMap.put("name", country.getName());
+                list.add(treeMap);
+            }
+        }
+        for (Map<String, String> treeMap : list){
+            if (StringUtils.isBlank(extId) || (!extId.equals(treeMap.get("id")) && !treeMap.get("pIds").contains("," + extId + ","))) {
+                mapList.add(treeMap);
+            }
+        }
+        return mapList;
     }
 
 }
