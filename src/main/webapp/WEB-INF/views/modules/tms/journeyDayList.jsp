@@ -223,15 +223,23 @@
 
 <script type="text/javascript">
   $(function(){
-
-    $("#plan-type").on("select2:select", function (e) {
+    $("#plan-type").change(function (e) {
       var dayId = $("#dayId").val();
       var type = e.target.value;
       $.ajax({
         url:"${ctx}/tms/journeyPlan/findTypeList",
         dataType:"json",
         type:"post",
-        data:{}
+        data:{"dayId":dayId,"type":type},
+        success:function(data){
+          $("#plan-list").empty();
+          var str = '';
+          for(var n in data){
+            var obj = data[n];
+            str += "<option value=\"" + obj.id + "\"/>" +obj.name+ "/>"
+          }
+          $("#plan-list").append(str);
+        }
       })
     });
 

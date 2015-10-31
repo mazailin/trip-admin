@@ -5,7 +5,9 @@ import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.bo.InfoBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
+import com.ulplanet.trip.modules.tms.entity.JourneyDay;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
+import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import com.ulplanet.trip.modules.tms.service.JourneyPlanService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +27,8 @@ import java.util.List;
 public class JourneyPlanController  extends BaseController {
     @Resource
     private JourneyPlanService journeyPlanService;
+    @Resource
+    private JourneyDayService journeyDayService;
 
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -55,6 +59,8 @@ public class JourneyPlanController  extends BaseController {
     @RequestMapping(value = "/findTypeList",method = RequestMethod.POST)
     @ResponseBody
     public List<InfoBo> findTypeList(JourneyPlan journeyPlan){
+        JourneyDay journeyDay = journeyDayService.get(journeyPlan.getDayId());
+        journeyPlan.setCityIds(journeyDay.getCityIds());
         return journeyPlanService.getInfoList(journeyPlan.getType(),journeyPlan.getCityIds());
     }
 
