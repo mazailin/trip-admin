@@ -85,7 +85,13 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		Principal principal = (Principal) getAvailablePrincipal(principals);
+		Object obj = getAvailablePrincipal(principals);
+		Principal principal = null;
+		try {
+			principal = (Principal) obj;
+		}catch(Exception e){
+			return null;
+		}
 		// 获取当前已登录的用户
 		if (!Global.TRUE.equals(Global.getConfig("user.multiAccountLogin"))){
 			Collection<Session> sessions = getSystemService().getSessionDao().getActiveSessions(true, principal, UserUtils.getSession());
