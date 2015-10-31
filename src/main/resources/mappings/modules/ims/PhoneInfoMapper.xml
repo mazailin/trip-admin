@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.ulplanet.trip.modules.ims.dao.PhoneInfoDao">
+
+    <resultMap id="PhoneInfo" type="com.ulplanet.trip.modules.ims.entity.PhoneInfo">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="status" column="status"/>
+        <result property="leaseholder" column="leaseholder"/>
+        <result property="stockOrderId" column="stock_order_id"/>
+        <result property="comment" column="comment"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="createDate" column="create_date"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="BaseColumns">
+        <![CDATA[
+            id,code,status,leaseholder,stock_order_id,comment,remarks
+	    ]]>
+    </sql>
+
+    <sql id="BaseWhere">
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="code != null and code != ''">
+                AND code = #{code}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="leaseholder != null and leaseholder != ''">
+                AND leaseholder = #{leaseholder}
+            </if>
+            <if test="stockOrderId != null and stockOrderId != ''">
+                AND stock_order_id = #{stockOrderId}
+            </if>
+            <if test="comment != null and comment != ''">
+                AND comment = #{comment}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND update_date = #{updateDate}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND create_date = #{createDate}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND remarks = #{remarks}
+            </if>
+        </where>
+
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO phone_info (
+        <trim suffix="" suffixOverrides=",">
+            id,
+            <if test="code!=null and code!=''">
+                code ,
+            </if>
+            <if test="status!=null and status!=''">
+                status ,
+            </if>
+            <if test="leaseholder!=null and leaseholder!=''">
+                leaseholder ,
+            </if>
+            <if test="stockOrderId!=null and stockOrderId!=''">
+                stock_order_id ,
+            </if>
+            <if test="comment!=null and comment!=''">
+                comment ,
+            </if>
+
+            <if test="createBy.id!=null and createBy.id!=''">
+                create_by ,
+            </if>
+            update_date ,
+            create_date ,
+            remarks ,
+        </trim>
+        ) VALUES (
+        <trim suffix="" suffixOverrides=",">
+            #{id},
+            <if test="code!=null and code!=''">
+                #{code} ,
+            </if>
+            <if test="status!=null and status!=''">
+                #{status} ,
+            </if>
+            <if test="leaseholder!=null and leaseholder!=''">
+                #{leaseholder} ,
+            </if>
+            <if test="stockOrderId!=null and stockOrderId!=''">
+                #{stockOrderId} ,
+            </if>
+            <if test="comment!=null and comment!=''">
+                #{comment} ,
+            </if>
+
+            <if test="createBy.id!=null and createBy.id!=''">
+                #{createBy.id} ,
+            </if>
+            #{updateDate} ,
+            #{createDate} ,
+            #{remarks} ,
+        </trim>
+        )
+
+    </insert>
+
+    <update id="update" >
+        UPDATE phone_info
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="leaseholder != null">
+                leaseholder = #{leaseholder},
+            </if>
+            <if test="stockOrderId != null">
+                stock_order_id = #{stockOrderId},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateBy.id != null">
+                update_by = #{updateBy.id},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks}
+            </if>
+        </set>
+        <where>
+            <choose>
+                <when test="id!=null">
+                    id = #{id}
+                </when>
+                <otherwise>
+                    code = #{code}
+                </otherwise>
+
+            </choose>
+
+        </where>
+
+    </update>
+
+    <delete id="delete">
+        <![CDATA[
+            DELETE FROM phone_info WHERE
+            id = #{id}
+        ]]>
+    </delete>
+
+    <select id="getById" resultMap="PhoneInfo">
+        SELECT <include refid="BaseColumns" />
+        <![CDATA[
+		    FROM phone_info
+	        WHERE
+		        id = #{id}
+	    ]]>
+    </select>
+
+    <select id="queryDeliverPhone" resultType="java.lang.Integer">
+        SELECT count(id)
+		    FROM phone_info
+	        <where>
+	        <if test="stockOrderId!=null">
+		        AND stock_order_id = #{stockOrderId}
+            </if>
+            <if test="code!=null">
+                AND code = #{code}
+            </if>
+		        and status != 9999
+            </where>
+    </select>
+
+
+
+    <select id="findPageCount" resultType="long">
+        SELECT count(1) FROM phone_info
+        <include refid="BaseWhere"/>
+    </select>
+
+    <select id="findListByParams" resultMap="PhoneInfo">
+        SELECT <include refid="BaseColumns" />
+        FROM phone_info
+        <include refid="BaseWhere"/>
+    </select>
+
+    <select id="get" parameterType="java.lang.String" resultMap="PhoneInfo">
+        SELECT <include refid="BaseColumns" />
+        FROM phone_info
+        WHERE
+             id = #{id}
+    </select>
+
+    <!--<select id="get" resultMap="PhoneInfo">-->
+        <!--SELECT <include refid="BaseColumns" />-->
+        <!--FROM phone_info-->
+        <!--<where>-->
+
+            <!--<if test="id != null and id != ''">-->
+                <!--AND id = #{id}-->
+            <!--</if>-->
+            <!--<if test="code != null and code != ''">-->
+                <!--AND code = #{code}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <select id="findList" resultMap="PhoneInfo">
+        SELECT <include refid="BaseColumns" />
+        FROM phone_info
+        <where>
+            status != 0
+            <if test="code!=null and code!=''">
+              AND  code = #{code}
+            </if>
+            <if test="id!=null and id!=''">
+                AND  id = #{id}
+            </if>
+            <if test="stockOrderId != null and stockOrderId != ''">
+                AND stock_order_id = #{stockOrderId}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
+

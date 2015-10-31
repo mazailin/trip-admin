@@ -33,7 +33,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/crm/customer/list">客户列表</a></li>
-		<li class="active"><a href="${ctx}/crm/customer/form?id=${customer.id}">用户<shiro:hasPermission name="crm:customer:edit">${not empty customer.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="crm:customer:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/crm/customer/form?id=${customer.id}">客户<shiro:hasPermission name="crm:customer:edit">${not empty customer.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="crm:customer:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="customer" action="${ctx}/crm/customer/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

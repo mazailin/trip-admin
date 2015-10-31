@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.sys.listener;
 
+import com.ulplanet.trip.common.utils.ServletContextHolder;
 import com.ulplanet.trip.modules.sys.service.SystemService;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -9,6 +10,9 @@ public class WebContextListener extends org.springframework.web.context.ContextL
 	
 	@Override
 	public WebApplicationContext initWebApplicationContext(ServletContext servletContext) {
+
+        ServletContextHolder.setServletContext(servletContext);
+
 		if (!SystemService.printKeyLoadMessage()){
 			return null;
 		}

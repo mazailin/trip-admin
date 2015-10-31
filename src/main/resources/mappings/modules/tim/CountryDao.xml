@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.CountryDao">
+
+    <sql id="countryColumns">
+        id,
+        name,
+        description,
+        ambulance,
+        police,
+        fire,
+        sea_emerg,
+        road_emerg,
+        unionpay_call,
+        embassy_call,
+        embassy_time,
+        embassy_addr,
+        embassy_city
+    </sql>
+	<select id="findList" resultType="Country">
+		SELECT
+            <include refid="countryColumns"/>
+        FROM country
+        WHERE 1 = 1
+        <if test="name != null and name != ''">
+            AND name like CONCAT('%', #{name}, '%')
+        </if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY name
+            </otherwise>
+        </choose>
+	</select>
+    <select id="get" resultType="Country">
+        SELECT
+        <include refid="countryColumns"/>
+        FROM country
+        WHERE id = #{id}
+    </select>
+	<select id="findByName" resultType="Country">
+		SELECT
+		    <include refid="countryColumns"/>
+        FROM country
+        WHERE name = #{name}
+	</select>
+	<insert id="insert">
+        INSERT INTO country(
+            id,
+            name,
+            description,
+            ambulance,
+            police,
+            fire,
+            sea_emerg,
+            road_emerg,
+            unionpay_call,
+            embassy_call,
+            embassy_time,
+            embassy_addr,
+            embassy_city,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{name},
+            #{description},
+            #{ambulance},
+            #{police},
+            #{fire},
+            #{seaEmerg},
+            #{roadEmerg},
+            #{unionpayCall},
+            #{embassyCall},
+            #{embassyTime},
+            #{embassyAddr},
+            #{embassyCity},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks}
+        )
+	</insert>
+	
+	<update id="update">
+        UPDATE country SET
+            name = #{name},
+            description = #{description},
+            ambulance = #{ambulance},
+            police = #{police},
+            fire = #{fire},
+            sea_emerg = #{seaEmerg},
+            road_emerg = #{roadEmerg},
+            unionpay_call = #{unionpayCall},
+            embassy_call = #{embassyCall},
+            embassy_time = #{embassyTime},
+            embassy_addr = #{embassyAddr},
+            embassy_city = #{embassyCity},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+	</update>
+	<delete id="delete">
+		DELETE FROM country WHERE id = #{id}
+	</delete>
+</mapper>

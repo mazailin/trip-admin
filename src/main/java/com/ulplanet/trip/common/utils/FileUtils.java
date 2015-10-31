@@ -1,18 +1,9 @@
 package com.ulplanet.trip.common.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
-import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  * 文件操作工具类
@@ -21,6 +12,8 @@ import org.slf4j.LoggerFactory;
 public class FileUtils extends org.apache.commons.io.FileUtils {
 	
 	private static Logger log = LoggerFactory.getLogger(FileUtils.class);
+
+    public static final int BUF_SIZE = 1024 * 100;
 
 	/**
 	 * 复制单个文件，如果目标文件存在，则不覆盖
@@ -379,7 +372,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
 	/**
 	 * 写入文件
-	 * @param file 要写入的文件
+	 * @param fileName 要写入的文件
 	 */
 	public static void writeToFile(String fileName, String content, boolean append) {
 		try {
@@ -392,7 +385,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
 	/**
 	 * 写入文件
-	 * @param file 要写入的文件
+	 * @param fileName 要写入的文件
 	 */
 	public static void writeToFile(String fileName, String content, String encoding, boolean append) {
 		try {
@@ -402,183 +395,10 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 			log.debug("文件 " + fileName + " 写入失败! " + e.getMessage());
 		}
 	}
-	
-	/**
-	 * 压缩文件或目录
-	 * @param srcDirName 压缩的根目录
-	 * @param fileName 根目录下的待压缩的文件名或文件夹名，其中*或""表示跟目录下的全部文件
-	 * @param descFileName 目标zip文件
-	 */
-	public static void zipFiles(String srcDirName, String fileName,
-			String descFileName) {
-		// 判断目录是否存在
-		if (srcDirName == null) {
-			log.debug("文件压缩失败，目录 " + srcDirName + " 不存在!");
-			return;
-		}
-		File fileDir = new File(srcDirName);
-		if (!fileDir.exists() || !fileDir.isDirectory()) {
-			log.debug("文件压缩失败，目录 " + srcDirName + " 不存在!");
-			return;
-		}
-		String dirPath = fileDir.getAbsolutePath();
-		File descFile = new File(descFileName);
-		try {
-			ZipOutputStream zouts = new ZipOutputStream(new FileOutputStream(
-					descFile));
-			if ("*".equals(fileName) || "".equals(fileName)) {
-				FileUtils.zipDirectoryToZipFile(dirPath, fileDir, zouts);
-			} else {
-				File file = new File(fileDir, fileName);
-				if (file.isFile()) {
-					FileUtils.zipFilesToZipFile(dirPath, file, zouts);
-				} else {
-					FileUtils
-							.zipDirectoryToZipFile(dirPath, file, zouts);
-				}
-			}
-			zouts.close();
-			log.debug(descFileName + " 文件压缩成功!");
-		} catch (Exception e) {
-			log.debug("文件压缩失败：" + e.getMessage());
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * 解压缩ZIP文件，将ZIP文件里的内容解压到descFileName目录下
-	 * @param zipFileName 需要解压的ZIP文件
-	 * @param descFileName 目标文件
-	 */
-	public static boolean unZipFiles(String zipFileName, String descFileName) {
-		String descFileNames = descFileName;
-		if (!descFileNames.endsWith(File.separator)) {
-			descFileNames = descFileNames + File.separator;
-		}		
-        try {
-			// 根据ZIP文件创建ZipFile对象
-			ZipFile zipFile = new ZipFile(zipFileName);
-			ZipEntry entry = null;
-			String entryName = null;
-			String descFileDir = null;
-			byte[] buf = new byte[4096];
-			int readByte = 0;
-			// 获取ZIP文件里所有的entry
-			@SuppressWarnings("rawtypes")
-			Enumeration enums = zipFile.getEntries();
-			// 遍历所有entry
-			while (enums.hasMoreElements()) {
-				entry = (ZipEntry) enums.nextElement();
-				// 获得entry的名字
-				entryName = entry.getName();
-				descFileDir = descFileNames + entryName;
-				if (entry.isDirectory()) {
-					// 如果entry是一个目录，则创建目录
-					new File(descFileDir).mkdirs();
-					continue;
-				} else {
-					// 如果entry是一个文件，则创建父目录
-					new File(descFileDir).getParentFile().mkdirs();
-				}
-				File file = new File(descFileDir);
-				// 打开文件输出流
-				OutputStream os = new FileOutputStream(file);
-				// 从ZipFile对象中打开entry的输入流
-		        InputStream is = zipFile.getInputStream(entry);
-				while ((readByte = is.read(buf)) != -1) {
-					os.write(buf, 0, readByte);
-				}
-				os.close();
-				is.close();
-			}
-			zipFile.close();
-			log.debug("文件解压成功!");
-			return true;
-		} catch (Exception e) {
-			log.debug("文件解压失败：" + e.getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * 将目录压缩到ZIP输出流
-	 * @param dirPath 目录路径
-	 * @param fileDir 文件信息
-	 * @param zouts 输出流
-	 */
-	public static void zipDirectoryToZipFile(String dirPath, File fileDir,
-			ZipOutputStream zouts) {
-		if (fileDir.isDirectory()) {
-			File[] files = fileDir.listFiles();
-			// 空的文件夹
-			if (files.length == 0) {
-				// 目录信息
-				ZipEntry entry = new ZipEntry(getEntryName(dirPath, fileDir));
-				try {
-					zouts.putNextEntry(entry);
-					zouts.closeEntry();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return;
-			}
-
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].isFile()) {
-					// 如果是文件，则调用文件压缩方法
-					FileUtils
-							.zipFilesToZipFile(dirPath, files[i], zouts);
-				} else {
-					// 如果是目录，则递归调用
-					FileUtils.zipDirectoryToZipFile(dirPath, files[i],
-							zouts);
-				}
-			}
-
-		}
-
-	}
-
-	/**
-	 * 将文件压缩到ZIP输出流
-	 * @param dirPath 目录路径
-	 * @param file 文件
-	 * @param zouts 输出流
-	 */
-	public static void zipFilesToZipFile(String dirPath, File file,
-			ZipOutputStream zouts) {
-		FileInputStream fin = null;
-		ZipEntry entry = null;
-		// 创建复制缓冲区
-		byte[] buf = new byte[4096];
-		int readByte = 0;
-		if (file.isFile()) {
-			try {
-				// 创建一个文件输入流
-				fin = new FileInputStream(file);
-				// 创建一个ZipEntry
-				entry = new ZipEntry(getEntryName(dirPath, file));
-				// 存储信息到压缩文件
-				zouts.putNextEntry(entry);
-				// 复制字节到压缩文件
-				while ((readByte = fin.read(buf)) != -1) {
-					zouts.write(buf, 0, readByte);
-				}
-				zouts.closeEntry();
-				fin.close();
-				System.out
-						.println("添加文件 " + file.getAbsolutePath() + " 到zip文件中!");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
 
 	/**
 	 * 获取待压缩文件在ZIP文件中entry的名字，即相对于跟目录的相对路径名
-	 * @param dirPat 目录名
+	 * @param dirPath 目录名
 	 * @param file entry文件名
 	 * @return
 	 */
@@ -614,4 +434,191 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		return p;
 	}
 
+    /**
+     * 关闭流.
+     *
+     * @param closeable
+     */
+    public static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 拷贝一个文件或目录,成功返回true. 如果是目录,是深度拷贝,即对于目录中原有的子元素(文件),如果和新拷贝数据没冲突,不会被覆盖.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    public static boolean copy(File source, File target) {
+        if (source == null || !source.exists()) {
+            throw new RuntimeException("Source file/folder is null or not exists.");
+        }
+        return source.isFile() ? _copyFile(source, target) : _copyFolder(source, target);
+    }
+
+    /**
+     * Stream copy, use default buf_size.
+     *
+     * @param is
+     * @param os
+     * @throws IOException
+     */
+    public static void copy(InputStream is, OutputStream os) throws IOException {
+        copy(is, os, BUF_SIZE);
+    }
+
+    /**
+     * copy data from reader to writer.
+     *
+     * @param reader
+     * @param writer
+     * @throws IOException
+     */
+    public static void copy(Reader reader, Writer writer) throws IOException {
+        char[] buf = new char[BUF_SIZE];
+        int len;
+        try {
+            while ((len = reader.read(buf)) != -1) {
+                writer.write(buf, 0, len);
+            }
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            close(reader);
+        }
+
+    }
+
+    /**
+     * Stream copy.
+     *
+     * @param is
+     * @param os
+     * @param bufsize
+     * @throws IOException
+     */
+    public static void copy(InputStream is, OutputStream os, int bufsize) throws IOException {
+        byte[] buf = new byte[bufsize];
+        int c;
+        try {
+            while ((c = is.read(buf)) != -1) {
+                os.write(buf, 0, c);
+            }
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            close(is);
+        }
+    }
+
+    /**
+     * 删除一个file对象,无论是file还是folder(也无论是否为空),
+     *
+     * @param folder
+     * @return
+     */
+    public static boolean delete(File folder) {
+        if (!folder.exists()) {
+            return true;
+        }
+
+        return folder.isFile() ? _deleteFile(folder) : _deleteFolder(folder);
+    }
+
+    /**
+     * 将目标的文件或目录移动到新位置上.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    public static boolean move(File source, File target) {
+        return copy(source, target) && delete(source);
+    }
+
+    public static String read(Reader reader) throws IOException {
+        CharArrayWriter writer = new CharArrayWriter();
+        copy(reader, writer);
+        return writer.toString();
+    }
+
+    /**
+     * 文件拷贝,成功返回true.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    private static boolean _copyFile(File source, File target) {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            fis = new FileInputStream(source);
+            if (!target.getParentFile().exists()) {
+                target.getParentFile().mkdirs();
+            }
+            fos = new FileOutputStream(target);
+
+            byte[] buffer = new byte[BUF_SIZE];
+            int size;
+            while ((size = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, size);
+            }
+
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            close(fis);
+            close(fos);
+        }
+
+    }
+
+    /**
+     * 目录拷贝,成功返回true 这个是个深度拷贝:只覆盖存在的文件.
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    private static boolean _copyFolder(File source, File target) {
+        if (!target.exists()) {
+            target.mkdirs();
+        }
+
+        for (File child : source.listFiles()) {
+            File nchild = new File(target, child.getName());
+            boolean flag = child.isFile() ? _copyFile(child, nchild) : _copyFolder(child, nchild);
+            if (!flag) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean _deleteFile(File file) {
+        return file.delete();
+    }
+
+    private static boolean _deleteFolder(File folder) {
+        for (File child : folder.listFiles()) {
+            boolean flag = child.isFile() ? _deleteFile(child) : _deleteFolder(child);
+            if (!flag) {
+                return false;
+            }
+        }
+
+        return folder.delete();
+    }
 }

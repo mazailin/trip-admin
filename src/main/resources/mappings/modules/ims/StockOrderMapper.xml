@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.ulplanet.trip.modules.ims.dao.StockOrderDao">
+
+	<resultMap id="StockOrder" type="com.ulplanet.trip.modules.ims.entity.StockOrder">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="insurance" column="insurance"/>
+        <result property="model" column="model"/>
+        <result property="buyer" column="buyer"/>
+        <result property="buyingTime" column="buying_time"/>
+        <result property="comment" column="comment"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="createDate" column="create_date"/>
+        <result property="remarks" column="remarks"/>
+        <result property="status" column="status"/>
+        <result property="email" column="email"/>
+
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="BaseColumns">
+	    <![CDATA[
+            id,order_id,unit_price,quantity,total_price,insurance,model,buyer,buying_time,comment,remarks,status,email
+	    ]]>
+	</sql>
+
+<sql id="BaseWhere">
+    <where>
+        <if test="id != null and id != ''">
+            AND id = #{id}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="unitPrice != null and unitPrice != ''">
+            AND unit_price = #{unitPrice}
+        </if>
+        <if test="quantity != null and quantity != ''">
+            AND quantity = #{quantity}
+        </if>
+        <if test="totalPrice != null and totalPrice != ''">
+            AND total_price = #{totalPrice}
+        </if>
+        <if test="insurance != null and insurance != ''">
+            AND insurance = #{insurance}
+        </if>
+        <if test="model != null and model != ''">
+            AND model = #{model}
+        </if>
+        <if test="buyer != null and buyer != ''">
+            AND buyer = #{buyer}
+        </if>
+        <if test="buyingTime != null and buyingTime != ''">
+            AND buying_time = #{buyingTime}
+        </if>
+        <if test="comment != null and comment != ''">
+            AND comment = #{comment}
+        </if>
+        <if test="updateDate != null and updateDate != ''">
+            AND update_date = #{updateDate}
+        </if>
+        <if test="createDate != null and createDate != ''">
+            AND create_date = #{createDate}
+        </if>
+        <if test="remarks != null and remarks != ''">
+            AND remarks = #{remarks}
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="email != null and email != ''">
+            AND email = #{email}
+        </if>
+    </where>
+
+ </sql>
+
+
+	<insert id="insert">
+        INSERT INTO stock_order (
+
+          <trim suffix="" suffixOverrides=",">
+              id,
+              <if test="orderId!=null and orderId!=''">
+                    order_id ,
+              </if>
+              <if test="unitPrice!=null and unitPrice!=''">
+                    unit_price ,
+              </if>
+              <if test="quantity!=null and quantity!=''">
+                    quantity ,
+              </if>
+              <if test="totalPrice!=null and totalPrice!=''">
+                    total_price ,
+              </if>
+              <if test="insurance!=null and insurance!=''">
+                    insurance ,
+              </if>
+              <if test="model!=null and model!=''">
+                    model ,
+              </if>
+              <if test="buyer!=null and buyer!=''">
+                    buyer ,
+              </if>
+              <if test="buyingTime!=null and buyingTime!=''">
+                    buying_time ,
+              </if>
+              <if test="comment!=null and comment!=''">
+                    comment ,
+              </if>
+                    update_date ,
+                    create_date ,
+              <if test="createBy.id!=null">
+                  create_by,
+              </if>
+                    remarks ,
+              <if test="status!=null and status!=''">
+                    status,
+              </if>
+              <if test="email!=null and email!=''">
+                    email,
+              </if>
+         </trim>
+        ) VALUES (
+        <trim suffix="" suffixOverrides=",">
+            #{id},
+              <if test="orderId!=null and orderId!=''">
+                  #{orderId} ,
+              </if>
+              <if test="unitPrice!=null and unitPrice!=''">
+                  #{unitPrice} ,
+              </if>
+              <if test="quantity!=null and quantity!=''">
+                  #{quantity} ,
+              </if>
+              <if test="totalPrice!=null and totalPrice!=''">
+                  #{totalPrice} ,
+              </if>
+              <if test="insurance!=null and insurance!=''">
+                  #{insurance} ,
+              </if>
+              <if test="model!=null and model!=''">
+                  #{model} ,
+              </if>
+              <if test="buyer!=null and buyer!=''">
+                  #{buyer} ,
+              </if>
+              <if test="buyingTime!=null and buyingTime!=''">
+                  #{buyingTime} ,
+              </if>
+              <if test="comment!=null and comment!=''">
+                  #{comment} ,
+              </if>
+              #{updateDate} ,
+              #{createDate} ,
+                <if test="createBy.id!=null">
+                    #{createBy.id} ,
+                </if>
+              #{remarks} ,
+              <if test="status!=null and status!=''">
+                  #{status},
+              </if>
+            <if test="email!=null and email!=''">
+                #{email},
+            </if>
+          </trim>
+        )
+
+	</insert>
+    
+	<update id="update" >
+        UPDATE stock_order
+         <set>
+                 <if test="orderId != null">
+                      order_id = #{orderId},
+                  </if>
+                 <if test="unitPrice != null">
+                      unit_price = #{unitPrice},
+                  </if>
+                 <if test="quantity != null">
+                      quantity = #{quantity},
+                  </if>
+                 <if test="totalPrice != null">
+                      total_price = #{totalPrice},
+                  </if>
+                 <if test="insurance != null">
+                      insurance = #{insurance},
+                  </if>
+                 <if test="model != null">
+                      model = #{model},
+                  </if>
+                 <if test="buyer != null">
+                      buyer = #{buyer},
+                  </if>
+                 <if test="buyingTime != null">
+                      buying_time = #{buyingTime},
+                  </if>
+                 <if test="comment != null">
+                      comment = #{comment},
+                  </if>
+                 <if test="updateDate != null">
+                      update_date = #{updateDate},
+                  </if>
+                 <if test="createDate != null">
+                      create_date = #{createDate},
+                  </if>
+                 <if test="updateBy.id != null">
+                      update_by = #{updateBy.id},
+                  </if>
+                 <if test="remarks != null">
+                      remarks = #{remarks},
+                  </if>
+                 <if test="status != null">
+                     status = #{status},
+                 </if>
+                 <if test="email != null">
+                     email = #{email}
+                 </if>
+        </set>
+        	where id = #{id}
+	</update>
+
+    <delete id="delete">
+        <![CDATA[
+            DELETE FROM stock_order WHERE
+            id = #{id} 
+        ]]>
+    </delete>
+    
+    <select id="getById" resultMap="StockOrder">
+		SELECT <include refid="BaseColumns" />
+	    <![CDATA[
+		    FROM stock_order 
+	        WHERE 
+		        id = #{id} 
+	    ]]>
+	</select>
+	
+
+		
+    <select id="findPageCount" resultType="long">
+        SELECT count(1) FROM stock_order
+		<include refid="BaseWhere"/>
+    </select>
+
+    <select id="findListByParams" resultMap="StockOrder">
+    	SELECT <include refid="BaseColumns" />
+	    FROM stock_order 
+		<include refid="BaseWhere"/>
+    </select>
+
+    <select id="get" resultMap="StockOrder">
+        SELECT <include refid="BaseColumns" />
+        FROM stock_order
+        WHERE
+         id = #{id}
+    </select>
+
+    <select id="findList" resultMap="StockOrder">
+        SELECT <include refid="BaseColumns" />
+        FROM stock_order
+        <where>
+            status != 0
+            <if test="id!=null and id!=''">
+                AND id = #{id}
+            </if>
+            <if test="orderId!=null and orderId!=''">
+                AND order_id = #{orderId}
+            </if>
+
+        </where>
+
+    </select>
+
+	
+</mapper>
+
