@@ -91,7 +91,7 @@
     <label class="control-label">旅行社:</label>
     <div class="controls">
       <form:select path="customer">
-        <form:options items="${fns:customerList()}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+        <form:options items="${fns:getCustomer()}" itemLabel="name" itemValue="id" htmlEscape="false"/>
       </form:select>
     </div>
   </div>

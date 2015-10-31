@@ -8,7 +8,7 @@ public class JourneyDay extends DataEntity<JourneyDay> implements java.io.Serial
 	
 
 	
-
+	private String cityIds;
 	private String groupId;
 	private Integer dayNumber;
 	private String title;
@@ -22,7 +22,13 @@ public class JourneyDay extends DataEntity<JourneyDay> implements java.io.Serial
 		this.id = id;
 	}
 
+	public String getCityIds() {
+		return cityIds;
+	}
 
+	public void setCityIds(String cityIds) {
+		this.cityIds = cityIds;
+	}
 
 	public String getGroupId() {
 		return groupId;

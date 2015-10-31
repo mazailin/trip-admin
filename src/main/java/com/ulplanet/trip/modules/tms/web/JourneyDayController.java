@@ -37,6 +37,12 @@ public class JourneyDayController  extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/get")
+    @ResponseBody
+    public JourneyDay get(@RequestParam(value = "id") String id) {
+            return journeyDayService.get(id);
+    }
+
     @RequestMapping(value = "/queryList")
     @ResponseBody
     public Object queryList(@RequestParam(value = "id")String id){
@@ -56,10 +62,14 @@ public class JourneyDayController  extends BaseController {
     }
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    public String save(JourneyDay journeyDay,Model model, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public Object save(JourneyDay journeyDay) {
+        String cityName = journeyDay.getTitle().replaceAll(",","-");
+        journeyDay.setTitle(cityName);
+        if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
         this.journeyDayService.save(journeyDay);
-        addMessage(redirectAttributes, "添加成功");
-        return "redirect:" + adminPath + "/tms/journeyDay/list/?groupId=" + journeyDay.getGroupId() + "&repage";
+        return new JourneyDayBo(journeyDay);
+
     }
 
     @RequestMapping(value = "/delete")
@@ -67,6 +77,13 @@ public class JourneyDayController  extends BaseController {
     public Object delete(JourneyDay journeyDay) {
         this.journeyDayService.delete(journeyDay);
         return "{\"status\":\"1\"}";
+    }
+
+    @RequestMapping(value = "/getTemplate")
+    @ResponseBody
+    public Object getTemplate(@RequestParam(value = "groupId")String groupId){
+        List<JourneyDayBo> journeyDayBos = journeyDayService.queryList(groupId);
+        return journeyDayBos;
     }
 
 

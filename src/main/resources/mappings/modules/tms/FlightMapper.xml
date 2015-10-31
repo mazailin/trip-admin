@@ -4,6 +4,7 @@
 
 	<resultMap id="Flight" type="com.ulplanet.trip.modules.tms.entity.Flight">
             <result property="id" column="id"/>
+            <result property="city" column="city"/>
             <result property="flightNo" column="flight_no"/>
             <result property="company" column="company"/>
             <result property="departureTerminal" column="departure_terminal"/>
@@ -15,11 +16,16 @@
             <result property="common" column="common"/>
             <result property="remarks" column="remarks"/>
 	</resultMap>
+
+    <resultMap id="InfoBo" type="com.ulplanet.trip.modules.tms.bo.InfoBo">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
 	
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,flight_no,company,departure_terminal,arrival_terminal,departure_time,arrival_time,departure_city,arrival_city,common,remarks
+            id,city,flight_no,company,departure_terminal,arrival_terminal,departure_time,arrival_time,departure_city,arrival_city,common,remarks
 	    ]]>
 	</sql>
 
@@ -27,6 +33,9 @@
     <where>
                 <if test="id != null and id != ''">
                     AND id = #{id}
+                </if>
+                <if test="city != null and city != ''">
+                    AND city = #{city}
                 </if>
                 <if test="flightNo != null and flightNo != ''">
                     AND flight_no = #{flightNo}
@@ -52,12 +61,6 @@
                 <if test="arrivalCity != null and arrivalCity != ''">
                     AND arrival_city = #{arrivalCity}
                 </if>
-                <if test="common != null and common != ''">
-                    AND common = #{common}
-                </if>
-                <if test="remarks != null and remarks != ''">
-                    AND remarks = #{remarks}
-                </if>
     </where>
 
  </sql>
@@ -67,6 +70,7 @@
             <![CDATA[
                 INSERT INTO flight (
                     id ,
+                    city,
                     flight_no ,
                     company ,
                     departure_terminal ,
@@ -81,6 +85,7 @@
                     remarks
                 ) VALUES (
                     #{id} ,
+                    #{city},
                     #{flightNo} ,
                     #{company} ,
                     #{departureTerminal} ,
@@ -103,6 +108,9 @@
          <set>
                  <if test="flightNo != null">
                       flight_no = #{flightNo},
+                  </if>
+                  <if test="city != null">
+                      city = #{city},
                   </if>
                  <if test="company != null">
                       company = #{company},
@@ -160,10 +168,18 @@
 
 		
 
-    <select id="findList" resultMap="Flight">
-    	SELECT <include refid="BaseColumns" />
+    <select id="findList" resultMap="InfoBo">
+    	SELECT id,flight_no as name
 	    FROM flight 
-		<include refid="BaseWhere"/>
+		<where>
+            <if test="ids!=null">
+                AND city IN
+                <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
     </select>
 
 	

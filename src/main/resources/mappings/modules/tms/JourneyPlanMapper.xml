@@ -23,36 +23,21 @@
             <result property="latitude" column="latitude"/>
 	</resultMap>
 
-    <resultMap id="JourneyPlans" type="com.ulplanet.trip.modules.tms.bo.JourneyPlans">
-        <result property="dayNumber" column="dayNumber"/>
-        <result property="dayTitle" column="dayTitle"/>
-        <result property="type" column="type"/>
+    <resultMap id="InfoBo" type="com.ulplanet.trip.modules.tms.bo.InfoBo">
+        <result property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="hasTime" column="hasTime"/>
-        <result property="time" column="time"/>
-        <result property="description" column="description"/>
-        <result property="hasMessage" column="hasMessage"/>
-        <result property="message" column="message"/>
-        <result property="sort" column="sort"/>
+        <result property="address" column="address"/>
+        <result property="phone" column="phone"/>
         <result property="longitude" column="longitude"/>
         <result property="latitude" column="latitude"/>
+        <result property="description" column="description"/>
     </resultMap>
 
-    <select id="queryAllPlanByJourneyId" resultMap="JourneyPlans">
-        select jd.day_number as dayNumber,jd.title as dayTitle,
-                jp.type as type,jp.name as name,jp.time_flag as hasTime,
-                jp.time as time,jp.description as description,jp.message_flag as hasMessage,
-                jp.message as message,jp.sort as sort,jp.longitude as longitude,jp.latitude as latitude
-        from group_user j
-              LEFT JOIN journey_day jd on jd.group_id = j.group
-              LEFT JOIN journey_plan jp on jp.day_id = jd.id
-        where j.id = #{id}
-    </select>
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,day_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
+            id,day_id,city_ids,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
 	    ]]>
 	</sql>
 
@@ -282,7 +267,7 @@
             </where>
     </delete>
     
-    <select id="getById" resultMap="JourneyPlan">
+    <select id="get" resultMap="JourneyPlan">
 		SELECT <include refid="BaseColumns" />
 	    <![CDATA[
 		    FROM journey_plan 
@@ -307,9 +292,19 @@
 	
 
 		
-    <select id="findPageCount" resultType="long">
-        SELECT count(1) FROM journey_plan
-		<include refid="BaseWhere"/>
+    <select id="findInfoByTableName" resultMap="InfoBo">
+        SELECT id,name,address,city,phone,longitude,latitude,description FROM ${table}
+        <where>
+            <if test="ids!=null">
+                AND city IN
+                <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="infoId!=null">
+                AND id = #{infoId}
+            </if>
+        </where>
     </select>
 
     <select id="findPage" resultMap="JourneyPlan">
@@ -317,6 +312,8 @@
 	    FROM journey_plan 
 		<include refid="BaseWhere"/>
     </select>
+
+
 
 	
 </mapper>

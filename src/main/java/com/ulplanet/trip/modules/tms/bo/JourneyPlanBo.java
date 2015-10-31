@@ -2,7 +2,11 @@ package com.ulplanet.trip.modules.tms.bo;
 
 
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.modules.tms.entity.Flight;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/9/22.
@@ -10,6 +14,8 @@ import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 public class JourneyPlanBo {
     private String id;
     private String dayId;
+    private String infoId;
+    private String cityIds;
     private Integer type;
     private String typeValue;
     private String name;
@@ -23,6 +29,8 @@ public class JourneyPlanBo {
     private String minute;
     private String longitude;
     private String latitude;
+    private List<InfoBo> infos = new ArrayList<>();
+    private List<Flight> flights = new ArrayList<>();
 
     public JourneyPlanBo(){}
 
@@ -30,6 +38,8 @@ public class JourneyPlanBo {
         this.id = journeyPlan.getId();
         this.dayId = journeyPlan.getDayId();
         this.type = journeyPlan.getType();
+        this.cityIds = journeyPlan.getCityIds();
+        this.infoId = journeyPlan.getInfoId();
         this.typeValue = journeyPlan.getTypeValue();
         this.name = journeyPlan.getName();
         setTime(journeyPlan.getTime());
@@ -40,6 +50,38 @@ public class JourneyPlanBo {
         this.sort = journeyPlan.getSort();
         this.longitude = journeyPlan.getLongitude();
         this.latitude = journeyPlan.getLatitude();
+    }
+
+    public List<Flight> getFlights() {
+        return flights;
+    }
+
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
+    }
+
+    public String getInfoId() {
+        return infoId;
+    }
+
+    public void setInfoId(String infoId) {
+        this.infoId = infoId;
+    }
+
+    public List<InfoBo> getInfos() {
+        return infos;
+    }
+
+    public void setInfos(List<InfoBo> infos) {
+        this.infos = infos;
+    }
+
+    public String getCityIds() {
+        return cityIds;
+    }
+
+    public void setCityIds(String cityIds) {
+        this.cityIds = cityIds;
     }
 
     public String getLongitude() {

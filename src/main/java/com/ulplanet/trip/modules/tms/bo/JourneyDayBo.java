@@ -15,6 +15,7 @@ public class JourneyDayBo {
     private String groupId;
     private Integer dayNumber;
     private String title;
+    private String cityIds;
     private List<JourneyPlan> list = new ArrayList<>();
 
     public JourneyDayBo(){}
@@ -24,6 +25,11 @@ public class JourneyDayBo {
         this.groupId = journeyDay.getGroupId();
         this.dayNumber = journeyDay.getDayNumber();
         this.title = journeyDay.getTitle();
+        this.cityIds = journeyDay.getCityIds();
+    }
+
+    public String getCityIds() {
+        return cityIds;
     }
 
     public String getId() {

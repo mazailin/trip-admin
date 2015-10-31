@@ -11,14 +11,6 @@
 <head>
   <title>旅游团用户管理</title>
   <meta name="decorator" content="default"/>
-  <script type="text/javascript">
-    function page(n,s){
-      $("#pageNo").val(n);
-      $("#pageSize").val(s);
-      $("#searchForm").submit();
-      return false;
-    }
-  </script>
   <style type="text/css">
     .popup{
       top:0%;
@@ -32,6 +24,9 @@
       z-index: 10001;
       filter:Alpha(opacity=90);
       position:fixed;
+    }
+    .select2-drop{
+      z-index: 11000;
     }
 
     .p-header-top{
@@ -55,7 +50,7 @@
       word-break:break-all;
     }
     .title{
-      FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#b8c4cb,endColorStr=#f6f6f8); /*IE 6 7 8*/
+      /*FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#b8c4cb,endColorStr=#f6f6f8); /!*IE 6 7 8*!/*/
 
       background: -ms-linear-gradient(top, #b8c4cb,#f6f6f8);        /* IE 10 */
 
@@ -106,9 +101,12 @@
     <p>
       <label style="color: #dd1f26">当前团队行程：</label>
       <label style="color: #dd1f26;margin-left: 318px">团队行程模板：
-        <form:select path="template">
-          <form:options items="${fns:phoneOrderIds()}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
-        </form:select>
+        <select id="template" name="template" style="width:200px">
+            <option value="" selected>清除行程模板</option>
+          <c:forEach items="${fns:getGroupList()}" var="t">
+            <option value="${t.id}">${t.name}</option>iug
+          </c:forEach>
+        </select>
       </label>
     </p>
     <ul id="sortable1" class="connectedSortable">
@@ -118,16 +116,21 @@
               <div class="title">
                 <p class="p-header-top">
                   ${journeyDay.title}
-                  <i class="fa fa-times" style="float: right;margin-right: 10px;"></i>
+                  <i class="fa fa-times close-day" style="float: right;margin-right: 10px;"></i>
+                  <a href="#" style="float: right;margin-right: 10px;" id="updateDay">修改</a>
+                  <a href="#" style="float: right;margin-right: 10px;" id="addPlan">添加</a>
                 </p>
 
               </div>
               <div class="content">
-                <ul class="sortable-content">
-                <c:forEach items="${journeyDay.list}" var="plan">
+                <ul class="sortable-content" id="plan-${journeyDay.id}">
+                <c:forEach items="${ journeyDay.list}" var="plan">
                   <li>
                     <div id="${plan.id}" class="border">
-                      <p class="p-header">${plan.name}</p>
+                      <p class="p-header">${plan.name}
+                        <i class="fa fa-times close-plan" style="float: right;margin-right: 10px;"></i>
+                        <a href="#" id="updatePlan" style="float: right;margin-right: 10px;">修改</a>
+                      </p>
                       <c:if test="${plan.timeFlag==1}">
                         <p class='p-message'>${plan.time}</p>
                       </c:if>
@@ -157,28 +160,229 @@
       <form:hidden path="id"/>
       <form:hidden path="groupId"/>
       <sys:message content="${message}"/>
-      <label style="font-size: 15px;font-weight:bold;">名称:</label>
-      <form:input path="title" htmlEscape="false" maxlength="50" class="required"/><br>
-      <input id="btnSubmit" class="btn btn-default" type="submit" value="保 存"/>&nbsp;
+      <label style="font-size: 15px;font-weight:bold;">城市:</label>
+      <sys:treeselect id="city" name="city.id" value="" labelName="city.name" labelValue=""
+        cssStyle="width:300px" checked="true"   title="城市" url="/tim/city/treeData" notAllowSelectParent="true" cssClass="input-small" allowClear="true"/><br>
+      <input id="btnSubmit" class="btn btn-default" type="button" value="保 存"/>&nbsp;
       <input id="btnCancel" class="btn" type="button" value="返 回" />
 
     </form:form>
   </div>
 </div>
 
+<div id="journeyPlan" style="display: none" class="popup">
+  <%--<div style="position:fixed;left:20%;top:10%;background-color: white;padding-top: 20px;padding-bottom: 20px;width:600px">--%>
+    <form style="margin-top: 30px">
+        <input type="hidden" id="planId"/>
+        <input type="hidden" id="dayId"/>
+        <input type="hidden" id="cityIds"/>
+        <div class="form-group" >
+        <label for="plan-type">类型</label>
+        <select id="plan-type" class="form-control"  tabindex="20000"  style="width:220px">
+          <option value="" selected>清除类型模板</option>
+          <c:forEach items="${fns:getDictList('journey_plan')}" var="t">
+            <option value="${t.value}">${t.label}</option>
+          </c:forEach>
+        </select>
+        </div>
+        <div class="form-group">
+          <label for="plan-list">列表</label>
+          <select id="plan-list" class="form-control" tabindex="11000" style="width:220px">
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="plan-name">标题</label>
+          <input type="text" class="form-control" id="plan-name" placeholder="请输入标题"/>
+        </div>
+        <div class="form-group">
+          <label for="hasTime">是否有时间</label>
+          <label class="radio-inline" >
+            <input type="radio" name="hasTime" id="hasTime" value="1"> 是
+          </label>
+          <label class="radio-inline" >
+            <input type="radio" name="hasTime" value="0"> 否
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="plan-time">时间</label>
+          <input type="text" id="plan-time" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'H:mm:ss'})" class="Wdate"/>
+        </div>
+        <div class="form-group">
+          <label for="plan-description">描述</label>
+          <textarea class="form-control" rows="5" id="plan-description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="plan-message">备注</label>
+          <textarea class="form-control" rows="5" id="plan-message"></textarea>
+        </div>
+      <input id="plan-btnSubmit" class="btn btn-default" type="button" value="保 存"/>&nbsp;
+      <input id="plan-btnCancel" class="btn" type="button" value="返 回" />
+     </form>
+  <%--</div>--%>
+</div>
+
 <script type="text/javascript">
   $(function(){
+
+    $("#plan-type").on("select2:select", function (e) {
+      var dayId = $("#dayId").val();
+      var type = e.target.value;
+      $.ajax({
+        url:"${ctx}/tms/journeyPlan/findTypeList",
+        dataType:"json",
+        type:"post",
+        data:{}
+      })
+    });
+
+    $("#plan-btnSubmit").click(function(){
+      var id = $("#planID").val();
+      var type = $("#plan-type").val();
+      var infoId = $("#plan-list").val();
+      var dayId = $("#dayId").val();
+      var name = $("#plan-name").val();
+      var time = $("#plan-time").val();
+      var description = $("#plan-description").val();
+      var message = $("#plan-message").val();
+      var hasTime = $("input[name='hasTime']:checked").val();
+      var data = {
+        "dayId":dayId,
+        "id":id,
+        "type":type,
+        "name":name,
+        "infoId":infoId,
+        "time":time,
+        "description":description,
+        "message":message,
+        "timeFlag":hasTime
+      }
+      $.ajax({
+        url:"${ctx}/tms/journeyPlan/save",
+        dataType:"json",
+        type:"post",
+        data:data,
+        success:function(data){
+          var str = plan(data);
+          var ul = $("#plan-"+dayId);
+          if(id!=undefined&&id.length>0)$("#"+id).parent().remove();
+          ul.append(str);
+          $("#journeyPlan").hide(300);
+        }
+      })
+    });
+
+    $("#updateDay").live('click',function(){
+      var id = $(this).parent().parent().parent().attr("id");
+      $.ajax({
+        url:"${ctx}/tms/journeyDay/get?id="+id,
+        type:"get",
+        dataType:"json",
+        ansyc :true,
+        success:function(data) {
+          $("#id").val(data.id);
+          $("#groupId").val(data.groupId);
+          $("#cityId").val(data.cityIds);
+          $("#cityName").val(data.title.replace(new RegExp(/(-)/g),","));
+          $("#journeyList").show(300);
+          event.preventDefault();
+          return false;
+
+        }
+      });
+    });
+    $("#addPlan").live('click',function(){
+      var id = $(this).parent().parent().parent().attr("id");
+      $("#plan-list").val('');
+      $("#dayId").val(id);
+      $("#planId").val('');
+      $("#plan-name").val('');
+      $("#plan-time").val('');
+      $("#plan-description").val('');
+      $("#plan-message").val('');
+      $("input[name='hasTime'][value='0']").attr("checked",true);
+      $("#journeyPlan").show(300);
+    });
+
+    $("#updatePlan").live('click',function(){
+      var id = $(this).parent().parent().attr("id");
+      $.ajax({
+        url:"${ctx}/tms/journeyPlan/get?id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data) {
+          $("#plan-type").val(data.type).trigger("change");
+          var options = data.infos;
+
+          var str1 = ''
+          for(var i in options){
+            var option = options[i];
+            if(option.id===data.infoId)
+              str1 += "<option value='"+ option.id +"' selected />"+ option.name +"</option>";
+            else
+              str1 += "<option value='"+ option.id +"'/>"+ option.name +"</option>";
+          }
+          $("#plan-list").empty();
+          $("#plan-list").val(data.infos);
+          $("#planId").val(data.id);
+          $("#dayId").val(data.dayId);
+          $("#plan-name").val(data.name);
+          $("#plan-time").val(data.time);
+          $("#plan-description").val(data.description);
+          $("#plan-message").val(data.message);
+          $("input[name='hasTime'][value="+ data.timeFlag +"]").attr("checked",true);
+          $("#journeyPlan").show(300);
+        }
+      });
+    });
+
+    $("#btnSubmit").click(function(){
+      var cityId = $("#cityId").val();
+      if(cityId.length==0){
+        alertx("请选择城市！");
+        return false;
+      }
+      $.ajax({
+        url:"${ctx}/tms/journeyDay/save",
+        dataType:"json",
+        type:"post",
+        data:{"id":$("#id").val(),"cityIds":$("#cityId").val()
+          ,"title":$("#cityName").val(),"groupId":$("#groupId").val()},
+        success:function(data){
+          var str = "<li style=\"list-style-type:none;\">"
+                  +"<div style=\"width:400px;background-color: #ECECEC\" id=\""+ data.id +"\">"
+                  +"<div class=\"title\">"
+                  +"<p class=\"p-header-top\">"
+                  +data.title
+                  +"<i class=\"fa fa-times close-day\" style=\"float: right;margin-right: 10px;\"></i>"
+                  +"<a href=\"#\" style=\"float: right;margin-right: 10px;  onclick=\"updateDay('" +data.id+ "')\">修改</a>"
+                  +"</p>"
+                  +"</div>";
+          if($("#"+ data.id).length>0)
+            $("#"+ data.id).parent().remove();
+          $("#sortable1").append(str);
+          $("#journeyList").hide(300);
+        }
+      });
+    });
+
+
     $("#addJourneyDay").click(function(){
+      $("#cityId").val('');
+      $("#cityName").val('');
+      $("#id").val('');
       $("#journeyList").show(300);
     });
     $("#btnCancel").click(function(){
       $("#journeyList").hide(200);
     });
+    $("#plan-btnCancel").click(function(){
+      $("#journeyPlan").hide(200);
+    });
     $("#importJourney").click(function(){
 
       $("#modelList").show(300);
     });
-    $(".title").click(function(e){
+    $(".title").live('click',function(e){
       var $this = $(this);
       var content = $this.parent().children(".content");
       if(content.is(":hidden")){
@@ -194,13 +398,13 @@
     $(".sortable-content" ).sortable({
       connectWith: ".sortable-content"
     }).disableSelection();
-    $(".fa-times").mouseover(function(){
+    $(".fa-times").live('mouseover',function(){
       $(this).addClass("fa-spin");
     });
-    $(".fa-times").mouseout(function(){
+    $(".fa-times").live('mouseout',function(){
       $(this).removeClass("fa-spin");
     });
-    $(".fa-times").click(function(){
+    $(".close-day").live('click',function(){
       var _div = $(this).parent().parent().parent();
       var id = _div.attr("id");
       $.ajax({
@@ -214,9 +418,84 @@
         }
       })
     });
+    $(".close-plan").live('click',function(){
+      var _div = $(this).parent().parent();
+      var id = _div.attr("id");
+      $.ajax({
+        url:"${ctx}/tms/journeyPlan/delete?id="+id,
+        type:"get",
+        success:function(data){
+          data = eval("("+data+")");
+          if(data.status == 1){
+            _div.parent().remove();
+          }
+        }
+      })
+    });
     $(".journeyTemplate").select2();
+    $("#template").change(function(){
+      var $this = $(this);
+      var id = $this.val();
+      $.ajax({
+        url : "${ctx}/tms/journeyDay/getTemplate?groupId="+id,
+        type:"get",
+        dataType:"json",
+        success : function(data){
+          var str = "";
+          for(var n in data){
+            var obj = data[n];
+            str +=  "<li style=\"list-style-type:none;\">"+
+                    "<div style=\"width:400px;background-color: #ECECEC\" id=\""+ obj.id +"\">"+
+                    "<div class=\"title\">"+
+                    "<p class=\"p-header-top\">"+
+                    obj.title +
+                    "<i class=\"fa fa-times\" style=\"float: right;margin-right: 10px;\"></i>"
+                    +"<a href=\"#\" style=\"float: right;margin-right: 10px;\">修改</a>"
+                    +"</p>"
+
+                    +"</div>"
+                    +"<div class=\"content\">"
+                    +"<ul class=\"sortable-content\" id=>";
+            var str1 = "";
+            for(var i in obj.list){
+              var obj1 = obj.list[i];
+              str1 += plan(obj1);
+            }
+            str += str1
+                    +"</ul>"
+                    +"</div>"
+                    +"</div>"
+                    +"</li>";
+          }
+          $("#sortable2").html(str);
+          $( "#sortable1, #sortable2" ).sortable({
+            connectWith: ".connectedSortable"
+          }).disableSelection();
+          $(".sortable-content" ).sortable({
+            connectWith: ".sortable-content"
+          }).disableSelection();
+        }
+      })
+    });
 
   });
+  function plan(obj1){
+    var str1 = "<li>"
+    +"<div id=\""+obj1.id+"\" class=\"border\">"
+    +"<p class=\"p-header\">"+obj1.name
+    +"<i class=\"fa fa-times\" style=\"float: right;margin-right: 10px;\"></i>"
+    +"<a href=\"#\" id='updatePlan' style=\"float: right;margin-right: 10px;\">修改</a>"+
+    "</p>";
+    if(obj1.timeFlag==1){
+      str1 += "<p class='p-message'>"+obj1.time+"</p>";
+    }
+    str1 += "<p class=\"p-description\">"+obj1.description+"</p>";
+    str1 += "<p class=\"p-message\">"+obj1.message+"</p>";
+    str1 +=  "</div>"
+            + "</li>";
+    return str1;
+  }
+
 
 </script>
 </body>

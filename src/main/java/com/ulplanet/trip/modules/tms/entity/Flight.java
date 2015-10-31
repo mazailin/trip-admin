@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by Administrator on 2015/10/28.
  */
 public class Flight  extends DataEntity<Flight> {
+    private String city;
     private String flightNo;
     private String company;
     private String departureTerminal;
@@ -17,6 +18,14 @@ public class Flight  extends DataEntity<Flight> {
     private String departureCity;
     private String arrivalCity;
     private String common;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getFlightNo() {
         return flightNo;
@@ -88,5 +97,15 @@ public class Flight  extends DataEntity<Flight> {
 
     public void setCommon(String common) {
         this.common = common;
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("航班起飞时间："+this.departureTime);
+        sb.append(",航班起飞地点："+this.departureTerminal);
+        sb.append(",航班到达时间："+this.arrivalTime);
+        sb.append(",航班到达地点："+this.arrivalTerminal);
+        return sb.toString();
     }
 }

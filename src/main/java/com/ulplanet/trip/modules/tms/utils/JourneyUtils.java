@@ -17,7 +17,7 @@ public class JourneyUtils {
     private static JourneyPlanDao journeyPlanDao = SpringContextHolder.getBean(JourneyPlanDao.class);
     private static JourneyDayDao journeyDayDao = SpringContextHolder.getBean(JourneyDayDao.class);
 
-    public List<JourneyDayBo> getJourneyTemplate(String groupId){
+    public static List<JourneyDayBo> getJourneyTemplate(String groupId){
         JourneyDay j = new JourneyDay();
         j.setGroupId(groupId);
         List<JourneyDay> list = journeyDayDao.findList(j);
