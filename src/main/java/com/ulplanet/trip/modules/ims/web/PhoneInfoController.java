@@ -54,8 +54,10 @@ public class PhoneInfoController extends BaseController {
             phoneInfoBos.add(phoneInfoBo);
         }
         Page<PhoneInfoBo> page1 =  new Page<>(request, response);
+        page1.setCount(page.getCount());
+        page1.setPageNo(page.getPageNo());
+        page1.setPageSize(page.getPageSize());
         page1.setList(phoneInfoBos);
-
         model.addAttribute("page",page1);
         return "modules/ims/phoneList";
     }
@@ -81,6 +83,8 @@ public class PhoneInfoController extends BaseController {
 
         if(phoneInfo!=null){
             addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"成功");
+        }else{
+            addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"失败");
         }
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
@@ -135,9 +139,15 @@ public class PhoneInfoController extends BaseController {
      */
     @RequestMapping(value = "/count",method = RequestMethod.GET)
     @ResponseBody
-    public String count(@RequestParam("stockOrderId")String stockOrderId) {
+    public String count(@RequestParam(value = "stockOrderId",required = false)String stockOrderId,
+                        @RequestParam(value = "code",required = false)String code) {
         PhoneInfo phoneInfo = new PhoneInfo();
-        phoneInfo.setStockOrderId(stockOrderId);
+        if(StringUtils.isNotBlank(code)){
+            phoneInfo.setCode(code);
+        }
+        if(StringUtils.isNotBlank(stockOrderId)){
+            phoneInfo.setStockOrderId(stockOrderId);
+        }
         int num = phoneInfoService.queryDeliverPhone(phoneInfo);
         return "{\"count\":\"" + num + "\"}";
     }

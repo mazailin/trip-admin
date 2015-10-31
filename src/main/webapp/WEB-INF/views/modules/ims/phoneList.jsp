@@ -43,7 +43,7 @@
       <td>
         <a href="${ctx}/ims/phone/form?id=${phone.id}">修改</a>
         <a href="${ctx}/ims/phone/delete?id=${phone.id}" onclick="return confirmx('确认要置为报废状态吗？', this.href)">报废</a>
-        <a href="${ctx}/ims/phone/refund?id=${phone.id}" onclick="return confirmx('确认要置为退货状态吗？', this.href)">更换</a>
+        <%--<a href="${ctx}/ims/phone/refund?id=${phone.id}" onclick="return confirmx('确认要置为退货状态吗？', this.href)">更换</a>--%>
         <a href="${ctx}/ims/phone/refund?id=${phone.id}&refundFlag=1" onclick="return confirmx('确认要置为退货状态吗？', this.href)">退货</a>
       </td>
     </tr>

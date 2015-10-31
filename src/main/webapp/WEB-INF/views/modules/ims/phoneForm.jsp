@@ -15,9 +15,29 @@
     $(document).ready(function() {
       $("#value").focus();
       $("#inputForm").validate({
+
         submitHandler: function(form){
-          loading('正在提交，请稍等...');
-          form.submit();
+          if($("#id").val()!=null&&$("#id").val()!=''){
+            form.submit();
+            return;
+          }
+          $.ajax({
+            url : "${ctx}/ims/phone/count?code="+$("#code").val(),
+            type:"get",
+            dataType:"json",
+            success:function(data){
+              if(data.count > 0){
+                swal("插入失败", "手机编号已存在 :)", "error");
+                e.preventDefault();
+                return false;
+
+              }
+              loading('正在提交，请稍等...');
+              form.submit();
+            }
+          });
+
+
         },
         errorContainer: "#messageBox",
         errorPlacement: function(error, element) {
@@ -51,7 +71,7 @@
     <label class="control-label">订单号:</label>
     <div class="controls">
       <form:select path="stockOrderId">
-        <form:options items="${fns:phoneOrderIds()}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
+        <form:options items="${fns:phoneOrderIds(phoneInfo.stockOrderId==null?'':phoneInfo.stockOrderId)}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
       </form:select>
     </div>
   </div>
@@ -66,7 +86,7 @@
   <div class="control-group">
     <label class="control-label">备注:</label>
     <div class="controls">
-      <form:textarea path="comment" htmlEscape="false" rows="3" maxlength="200" class="input-xlarge"/>
+      <form:textarea path="comment" htmlEscape="false" rows="3" maxlength="2000" class="input-xlarge"/>
     </div>
   </div>
   <div class="form-actions">

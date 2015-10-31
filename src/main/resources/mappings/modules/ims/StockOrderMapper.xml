@@ -266,11 +266,11 @@
         FROM stock_order
         <where>
             status != 0
-            <if test="id!=null">
-                AND id = ${id}
+            <if test="id!=null and id!=''">
+                AND id = #{id}
             </if>
-            <if test="orderId!=null">
-                AND order_id = ${orderId}
+            <if test="orderId!=null and orderId!=''">
+                AND order_id = #{orderId}
             </if>
 
         </where>
