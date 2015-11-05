@@ -9,27 +9,28 @@
         $(function () {
             'use strict';
 
-            // Initialize the jQuery File Upload widget:
             $('#fileupload').fileupload();
 
             $('#fileupload').fileupload('option', {
                 url: ctx + '/tim/food/uploadData',
-                // Enable image resizing, except for Android and Opera,
-                // which actually support image resizing, but fail to
-                // send Blob objects via XHR requests:
                 disableImageResize: /Android(?!.*Chrome)|Opera/
                         .test(window.navigator.userAgent),
 //                maxFileSize: 999000,
-                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                formData: {
-                    "id": "${food.id}"
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+            });
+            $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+                var inputs = data.context.find(':input');
+                if (inputs.filter(function () {
+                            return !this.value && $(this).prop('required');
+                        }).first().focus().length) {
+                    data.context.find('button').prop('disabled', false);
+                    return false;
                 }
+                data.formData = inputs.serializeArray();
             });
             // Load existing files:
             $('#fileupload').addClass('fileupload-processing');
             $.ajax({
-                // Uncomment the following to send cross-domain cookies:
-                //xhrFields: {withCredentials: true},
                 url: ctx + '/tim/food/findFoodFiles',
                 data: {
                     "id": "${food.id}"
@@ -92,7 +93,9 @@
             </div>
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped">
-                <tbody class="files"></tbody>
+                <tbody class="files">
+                <th>图片</th><th>名称</th><th>类型</th><th style="width: 80px;">描述</th><th></th><th>操作</th>
+                </tbody>
             </table>
         </div>
     </form>
@@ -116,6 +119,17 @@
             <td>
                 <p class="name">{%=file.name%}</p>
                 <strong class="error text-danger"></strong>
+            </td>
+            <td>
+                <input type="hidden" name="food" value="${food.id}" />
+                <select name="type" class="input-mini" required>
+                    <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
+                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <textarea name="description" rows="3" class="input-xlarge">{%=file.description%}</textarea>
             </td>
             <td>
                 <p class="size">上传中...</p>
@@ -162,9 +176,23 @@
                 {% } %}
             </td>
             <td>
+                <input type="hidden" name="food" value="${food.id}" />
+                <select name="type" class="input-mini">
+                    <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
+                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
+                    </c:forEach>
+                </select>
+            </td>
+            <td>
+                <textarea name="description" rows="3" class="input-xlarge">{%=file.description%}</textarea>
+            </td>
+            <td>
             </td>
             <td>
                 {% if (file.id) { %}
+                    <button class="btn btn-primary">
+                        <span>更新</span>
+                    </button>
                     <button class="btn btn-danger delete" data-type="POST" data-url="${ctx}/tim/food/deleteFile?fileId={%=file.id %}" >
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>删除</span>

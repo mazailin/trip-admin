@@ -22,4 +22,5 @@ public interface FoodDao extends CrudDao<Food> {
 
     int deleteFoodFileByFood(String food);
 
+    FoodFile getFileById(String fileId);
 }

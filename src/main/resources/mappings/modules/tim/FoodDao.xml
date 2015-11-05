@@ -163,14 +163,26 @@
         #{remarks}
         )
     </insert>
+
+    <sql id="foodFileColumns">
+        a.id,
+        a.name,
+        a.type,
+        a.description,
+        a.path
+    </sql>
+
+    <select id="getFileById" resultType="FoodFile">
+        SELECT
+        <include refid="foodFileColumns"/>
+        FROM food_file a
+        WHERE a.id = #{fileId}
+    </select>
+
     <select id="findFoodFiles" resultType="FoodFile">
         SELECT
-        id,
-        name,
-        type,
-        description,
-        path
-        FROM food_file
+        <include refid="foodFileColumns"/>
+        FROM food_file a
         WHERE food = #{food}
         ORDER BY name
     </select>
