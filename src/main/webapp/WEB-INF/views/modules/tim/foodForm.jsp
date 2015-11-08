@@ -43,7 +43,8 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/tim/food/list">美食列表</a></li>
-		<li class="active"><a href="${ctx}/tim/food/form?id=${customer.id}">美食<shiro:hasPermission name="tim:food:edit">${not empty food.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/food/form?id=${food.id}">美食<shiro:hasPermission name="tim:food:edit">${not empty food.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
+        <c:if test="${not empty food.id}"><li><a href="${ctx}/tim/food/image?id=${food.id}">美食图片<shiro:hasPermission name="tim:food:edit">维护</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li></c:if>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="food" action="${ctx}/tim/food/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

@@ -27,7 +27,7 @@ public class FoodService extends CrudService<FoodDao, Food> {
     @Autowired
     private FoodDao foodDao;
 
-    public void saveFood(Food food) {
+    public Food saveFood(Food food) {
         if (StringUtils.isBlank(food.getId())){
             food.preInsert();
             foodDao.insert(food);
@@ -35,6 +35,7 @@ public class FoodService extends CrudService<FoodDao, Food> {
             food.preUpdate();
             foodDao.update(food);
         }
+        return food;
     }
 
     public void delete(Food food) {
@@ -94,11 +95,18 @@ public class FoodService extends CrudService<FoodDao, Food> {
     }
 
     public void deleteFoodFile(FoodFile foodFile) {
-        FileManager.delete(foodFile.getPath());
-        foodDao.deleteFoodFileById(foodFile.getId());
+        if (StringUtils.isNotEmpty(foodFile.getId())) {
+            FileManager.delete(foodFile.getPath());
+            foodDao.deleteFoodFileById(foodFile.getId());
+        }
     }
 
     public FoodFile getFileById(String fileId) {
         return foodDao.getFileById(fileId);
+    }
+
+
+    public void updateFoodFile(FoodFile foodFile) {
+        foodDao.updateFoodFile(foodFile);
     }
 }

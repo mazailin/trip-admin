@@ -49,12 +49,15 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/tim/food/image?id=${food.id}">美食图片</a></li>
+        <li><a href="${ctx}/tim/food/list">美食列表</a></li>
+        <li><a href="${ctx}/tim/food/form?id=${food.id}">美食<shiro:hasPermission name="tim:food:edit">${not empty food.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/food/image?id=${food.id}">美食图片<shiro:hasPermission name="tim:food:edit">维护</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-
     <form id="fileupload" class="form-horizontal" action="${ctx}/tim/food/uploadData" method="POST"
           enctype="multipart/form-data">
+        <sys:message content="${message}"/>
         <div class="control-group">
+            <shiro:hasPermission name="tim:food:edit">
             <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
             <div class="row fileupload-buttonbar">
                 <div class="span7">
@@ -71,6 +74,10 @@
                     <button type="reset" class="btn btn-warning cancel">
                         <i class="glyphicon glyphicon-ban-circle"></i>
                         <span>全部取消</span>
+                    </button>
+                    <button type="button" class="btn btn-info update">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>更新选中</span>
                     </button>
                     <button type="button" class="btn btn-danger delete">
                         <i class="glyphicon glyphicon-trash"></i>
@@ -91,10 +98,12 @@
                     <div class="progress-extended">&nbsp;</div>
                 </div>
             </div>
+            </shiro:hasPermission>
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped">
                 <tbody class="files">
-                <th>图片</th><th>名称</th><th>类型</th><th style="width: 80px;">描述</th><th></th><th>操作</th>
+                <th>图片</th><th>名称</th><th>类型</th><th style="width: 80px;">描述</th><th></th>
+                <shiro:hasPermission name="tim:food:edit"><th>操作</th></shiro:hasPermission>
                 </tbody>
             </table>
         </div>
@@ -177,6 +186,7 @@
             </td>
             <td>
                 <input type="hidden" name="food" value="${food.id}" />
+                <input type="hidden" name="id" value="{%=file.id%}" />
                 <select name="type" class="input-mini">
                     <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
                         <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
@@ -186,14 +196,18 @@
             <td>
                 <textarea name="description" rows="3" class="input-xlarge">{%=file.description%}</textarea>
             </td>
-            <td>
-            </td>
+            <td></td>
+            <shiro:hasPermission name="tim:food:edit">
             <td>
                 {% if (file.id) { %}
-                    <button class="btn btn-primary">
+                    <button class="btn btn-info update" data-type="POST"
+                        data-url="${ctx}/tim/food/updateFile">
+                        <i class="glyphicon glyphicon-upload"></i>
                         <span>更新</span>
                     </button>
-                    <button class="btn btn-danger delete" data-type="POST" data-url="${ctx}/tim/food/deleteFile?fileId={%=file.id %}" >
+                    <button class="btn btn-danger delete" data-type="POST"
+                        data-url="${ctx}/tim/food/deleteFile"
+                        data-data='{"fileId": "{%=file.id %}"}' >
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>删除</span>
                     </button>
@@ -205,6 +219,7 @@
                     </button>
                 {% } %}
             </td>
+            </shiro:hasPermission>
         </tr>
     {% } %}
     </script>

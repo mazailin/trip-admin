@@ -36,7 +36,7 @@
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="table-layout:fixed">
 		<thead><tr><th class="sort-column name" style="width:200px;">名称</th><th>类型</th><th>城市</th><th>创建人</th><th>修改人</th><th style="width: 400px;">描述</th>
-            <shiro:hasPermission name="tim:food:edit"><th style="width: 120px;">操作</th></shiro:hasPermission></tr></thead>
+            <shiro:hasPermission name="tim:food:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="food">
 			<tr>
@@ -48,7 +48,6 @@
 				<td title="${food.description}">${fns:abbr(food.description, 60)}</td>
 				<shiro:hasPermission name="tim:food:edit"><td>
     				<a href="${ctx}/tim/food/form?id=${food.id}">修改</a>
-    				<a href="${ctx}/tim/food/image?id=${food.id}">图片维护</a>
 					<a href="${ctx}/tim/food/delete?id=${food.id}" onclick="return confirmx('确认要删除该美食吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
