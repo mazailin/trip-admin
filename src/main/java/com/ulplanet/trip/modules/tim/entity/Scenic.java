@@ -7,10 +7,10 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 
 /**
- * 美食Entity
- * Created by zhangxd on 15/10/26.
+ * 景点Entity
+ * Created by zhangxd on 15/11/08.
  */
-public class Food extends DataEntity<Food> {
+public class Scenic extends DataEntity<Scenic> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,17 +23,17 @@ public class Food extends DataEntity<Food> {
     private double latitude;
     private int score;
     private int level;
-    private String worktime;
     private String price;
-    private String phone;
+    private String hours;
+    private String tips;
     private String cooper;
     private String published;
 
-    public Food() {
+    public Scenic() {
         super();
     }
 
-    public Food(String id, String name) {
+    public Scenic(String id, String name) {
         super(id);
         this.name = name;
     }
@@ -74,7 +74,7 @@ public class Food extends DataEntity<Food> {
         this.type = type;
     }
 
-    @Length(min=0, max=255, message="地址长度必须介于 1 和 255 之间")
+    @Length(min=0, max=255, message="描述长度必须介于 1 和 255 之间")
     public String getAddress() {
         return address;
     }
@@ -117,31 +117,31 @@ public class Food extends DataEntity<Food> {
         this.level = level;
     }
 
-    @Length(min=0, max=255, message="描述长度必须介于 1 和 255 之间")
-    public String getWorktime() {
-        return worktime;
+    @Length(min = 0, max = 64, message = "建议时间必须介于 1 和 64 之间")
+    public String getHours() {
+        return hours;
     }
 
-    public void setWorktime(String worktime) {
-        this.worktime = worktime;
+    public void setHours(String hours) {
+        this.hours = hours;
     }
 
-    @Length(min=0, max=64, message="价格长度必须介于 1 和 64 之间")
+    @Length(min = 0, max = 255, message = "实用贴士必须介于 1 和 255 之间")
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
+
+    @Length(min=0, max=255, message="价格长度必须介于 1 和 255 之间")
     public String getPrice() {
         return price;
     }
 
     public void setPrice(String price) {
         this.price = price;
-    }
-
-    @Length(min=0, max=64, message="电话长度必须介于 1 和 64 之间")
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getCooper() {
