@@ -7,10 +7,10 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 
 /**
- * 美食Entity
- * Created by zhangxd on 15/10/26.
+ * 购物Entity
+ * Created by zhangxd on 15/11/08.
  */
-public class Food extends DataEntity<Food> {
+public class Shop extends DataEntity<Shop> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,16 +24,14 @@ public class Food extends DataEntity<Food> {
     private int score;
     private int level;
     private String worktime;
-    private String price;
-    private String phone;
     private String cooper;
     private String published;
 
-    public Food() {
+    public Shop() {
         super();
     }
 
-    public Food(String id, String name) {
+    public Shop(String id, String name) {
         super(id);
         this.name = name;
     }
@@ -124,24 +122,6 @@ public class Food extends DataEntity<Food> {
 
     public void setWorktime(String worktime) {
         this.worktime = worktime;
-    }
-
-    @Length(min=0, max=64, message="价格长度必须介于 1 和 64 之间")
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    @Length(min=0, max=64, message="电话长度必须介于 1 和 64 之间")
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getCooper() {
