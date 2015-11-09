@@ -17,12 +17,12 @@ public class ApiHttpClient {
 	
 	private static final String UTF8 = "UTF-8";
 
-//    private static final String APPKEY = "0vnjpoadnwjfz";
-//    private static final String APPSECRET = "RbLfNztF73";
+    private static final String APPKEY = "0vnjpoadnwjfz";
+    private static final String APPSECRET = "RbLfNztF73";
 
     //正式
-    private static final String APPKEY = "e5t4ouvptf40a";
-    private static final String APPSECRET = "Q3obJczVbDY";
+//    private static final String APPKEY = "e5t4ouvptf40a";
+//    private static final String APPSECRET = "Q3obJczVbDY";
 
     // 获取token
 	public static SdkHttpResult getToken(String userId, String userName, String portraitUri) throws Exception {
