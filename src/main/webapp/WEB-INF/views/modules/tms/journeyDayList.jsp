@@ -246,6 +246,11 @@
         $(".fa-times").live('mouseout',function(){
             $(this).removeClass("fa-spin");
         });
+        $("#plan-time").live('blur',function(){
+            if($("#plan-time").val().length>0) {
+                $("#hasTime").attr("checked", "checked");
+            }
+        });
         $(".title").live('click',function(e){
             var $this = $(this);
             if(e.toElement.localName=='a'){
@@ -470,15 +475,43 @@
 
         $("#plan-btnSubmit").click(function(){
             var id = $("#planId").val();
-            var type = $("#plan-type").val();
+            var l = $("#plan-type");
+            var type = l.val();
+            if(type==='-1'){
+                l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请选择</span>");
+                return false;
+            }else{
+                l.parent().find('.msg').remove();
+            }
             var infoId = $("#plan-list").val();
             var dayId = $("#dayId").val();
-            var name = $("#plan-name").val();
+            l = $("#plan-name");
+            var name = l.val();
+            if(name===''){
+                l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute   ' class='msg'>*请输入标题</span>");
+                return false;
+            }else{
+                l.parent().find('.msg').remove();
+            }
             var time = $("#plan-time").val();
             var description = $("#plan-description").val();
             var message = $("#plan-message").val();
-            var longitude = $("#plan-longitude").val();
-            var latitude = $("#plan-latitude").val();
+            l = $("#plan-longitude");
+            var longitude = l.val();
+            if(longitude!=''&&!isNaN(longitude)){
+                l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
+                return false;
+            }else{
+                l.parent().find('.msg').remove();
+            }
+            l = $("#plan-latitude");
+            var latitude = l.val();
+            if(latitude!=''&&!isNaN(latitude)){
+                l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
+                return false;
+            }else{
+                l.parent().find('.msg').remove();
+            }
             var hasTime = $("input[name='hasTime']:checked").val();
             var data = {
                 "dayId":dayId,
@@ -725,7 +758,7 @@
         var str1 = "<li>"
                 +"<div id=\""+obj1.id+"\" class=\"border\" groupId=\""+ groupId +"\">"
                 +"<p class=\"p-header\">"+obj1.name
-                +"<i class=\"fa fa-times\" style=\"float: right;margin-right: 10px;\"></i>"
+                +"<i class=\"fa fa-times close-plan\" style=\"float: right;margin-right: 10px;\"></i>"
                 +"<a href=\"#\" id='updatePlan' style=\"float: right;margin-right: 10px;\">修改</a>"+
                 "</p>";
         if(obj1.timeFlag==1){
