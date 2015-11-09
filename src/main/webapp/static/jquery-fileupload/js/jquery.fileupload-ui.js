@@ -537,6 +537,26 @@
             }
         },
 
+        _updateHandler: function (e) {
+            e.preventDefault();
+            var button = $(e.currentTarget),
+                data = button.data(),
+                template = button.closest('.template-download'),
+                inputs = template.find(':input');
+            if (inputs.filter(function () {
+                    return !this.value && $(this).prop('required');
+                }).first().focus().length) {
+                return false;
+            }
+            if (data.url) {
+                data.dataType = "json";
+                data.data = inputs.serializeArray();
+                $.ajax(data).done(function() {
+                    showTip("图片内容更新成功。");
+                });
+            }
+        },
+
         _deleteHandler: function (e) {
             e.preventDefault();
             var button = $(e.currentTarget);
@@ -597,6 +617,16 @@
                         .prop('checked', false);
                 }
             });
+            this._on(fileUploadButtonBar.find('.update'), {
+                click: function (e) {
+                    e.preventDefault();
+                    filesList.find('.toggle:checked')
+                        .closest('.template-download')
+                        .find('.update').click();
+                    fileUploadButtonBar.find('.toggle')
+                        .prop('checked', false);
+                }
+            });
             this._on(fileUploadButtonBar.find('.toggle'), {
                 change: function (e) {
                     filesList.find('.toggle').prop(
@@ -624,6 +654,7 @@
             this._on(this.options.filesContainer, {
                 'click .start': this._startHandler,
                 'click .cancel': this._cancelHandler,
+                'click .update': this._updateHandler,
                 'click .delete': this._deleteHandler
             });
             this._initButtonBarEventHandlers();

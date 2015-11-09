@@ -27,7 +27,7 @@ public class FoodService extends CrudService<FoodDao, Food> {
     @Autowired
     private FoodDao foodDao;
 
-    public void saveFood(Food food) {
+    public Food saveFood(Food food) {
         if (StringUtils.isBlank(food.getId())){
             food.preInsert();
             foodDao.insert(food);
@@ -35,6 +35,7 @@ public class FoodService extends CrudService<FoodDao, Food> {
             food.preUpdate();
             foodDao.update(food);
         }
+        return food;
     }
 
     public void delete(Food food) {
@@ -42,27 +43,25 @@ public class FoodService extends CrudService<FoodDao, Food> {
         foodDao.deleteFoodFileByFood(food.getId());
     }
 
-    public Map<String, Object> uploadData(String foodId, MultipartFile file) {
+    public Map<String, Object> uploadData(FoodFile foodFile, MultipartFile file) {
 
         FileMeta fileMeta = new FileMeta();
-        if (!StringUtils.isEmpty(foodId) && file.getSize() > 0) {
+        if (!StringUtils.isEmpty(foodFile.getFood()) && file.getSize() > 0) {
             FileIndex ufi = new FileIndex();
             ufi.setmUpfile(file);
             ufi.setTruename(file.getOriginalFilename());
             ufi.setMcode("food");
             ufi = FileManager.save(ufi);
-            FoodFile foodFile = new FoodFile(null, foodId);
             foodFile.setName(ufi.getTruename());
-            foodFile.setType("2");
             foodFile.setPath(ufi.getPath());
             foodFile.preInsert();
             foodDao.insertFile(foodFile);
 
             fileMeta.setName(ufi.getTruename());
-            fileMeta.setId(ufi.getFileid());
+            fileMeta.setId(foodFile.getId());
             fileMeta.setPath(ufi.getPath());
-            fileMeta.setType("2");
-            fileMeta.setDescription("");
+            fileMeta.setType(foodFile.getType());
+            fileMeta.setDescription(foodFile.getDescription());
         } else {
             fileMeta.setError("上传失败");
         }
@@ -86,7 +85,6 @@ public class FoodService extends CrudService<FoodDao, Food> {
             fileMeta.setId(bean.getId());
             fileMeta.setType(bean.getType());
             fileMeta.setPath(bean.getPath());
-            fileMeta.setSize("10000");
             fileMeta.setDescription(bean.getDescription());
             files.add(fileMeta);
         }
@@ -96,7 +94,19 @@ public class FoodService extends CrudService<FoodDao, Food> {
         return result;
     }
 
-    public void deleteFoodFile(String id) {
-        foodDao.deleteFoodFileById(id);
+    public void deleteFoodFile(FoodFile foodFile) {
+        if (StringUtils.isNotEmpty(foodFile.getId())) {
+            FileManager.delete(foodFile.getPath());
+            foodDao.deleteFoodFileById(foodFile.getId());
+        }
+    }
+
+    public FoodFile getFileById(String fileId) {
+        return foodDao.getFileById(fileId);
+    }
+
+
+    public void updateFoodFile(FoodFile foodFile) {
+        foodDao.updateFoodFile(foodFile);
     }
 }

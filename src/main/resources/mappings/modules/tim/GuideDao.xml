@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ulplanet.trip.modules.tim.dao.FoodDao">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.GuideDao">
 
-    <sql id="foodColumns">
+    <sql id="guideColumns">
         a.id,
         a.`name`,
         a.city AS 'city.id',
         c.`name` AS 'city.name',
-        a.type,
         a.description,
-        a.address,
-        a.longitude,
-        a.latitude,
-        a.score,
-        a.level,
-        a.worktime,
-        a.price,
-        a.phone,
-        a.cooper,
         a.published,
         a.create_by AS 'createBy.id',
         a.update_by AS 'updateBy.id'
     </sql>
-	<select id="findList" resultType="Food">
+	<select id="findList" resultType="Guide">
 		SELECT
-            <include refid="foodColumns"/>,
+            <include refid="guideColumns"/>,
             sc.name AS 'createBy.name',
             su.name AS 'updateBy.name'
-        FROM food a
+        FROM guide a
         JOIN city c
         ON a.city = c.id
         LEFT JOIN sys_user sc
@@ -57,30 +47,20 @@
             </otherwise>
         </choose>
 	</select>
-    <select id="get" resultType="Food">
+    <select id="get" resultType="Guide">
         SELECT
-        <include refid="foodColumns"/>
-        FROM food a
+        <include refid="guideColumns"/>
+        FROM guide a
         JOIN city c
         ON a.city = c.id
         WHERE a.id = #{id}
     </select>
 	<insert id="insert">
-        INSERT INTO food(
+        INSERT INTO guide(
             id,
             name,
             city,
-            type,
             description,
-            address,
-            longitude,
-            latitude,
-            score,
-            level,
-            worktime,
-            price,
-            phone,
-            cooper,
             published,
             create_by,
             create_date,
@@ -91,17 +71,7 @@
             #{id},
             #{name},
             #{city.id},
-            #{type},
             #{description},
-            #{address},
-            #{longitude},
-            #{latitude},
-            #{score},
-            #{level},
-            #{worktime},
-            #{price},
-            #{phone},
-            #{cooper},
             #{published},
             #{createBy.id},
             #{createDate},
@@ -112,20 +82,10 @@
 	</insert>
 	
 	<update id="update">
-        UPDATE food SET
+        UPDATE guide SET
             name = #{name},
             city = #{city.id},
-            type = #{type},
             description = #{description},
-            address = #{address},
-            longitude = #{longitude},
-            latitude = #{latitude},
-            score = #{score},
-            level = #{level},
-            worktime = #{worktime},
-            price = #{price},
-            phone = #{phone},
-            cooper = #{cooper},
             published = #{published},
             update_by = #{updateBy.id},
             update_date = #{updateDate},
@@ -133,13 +93,13 @@
         WHERE id = #{id}
 	</update>
 	<delete id="delete">
-        DELETE FROM food WHERE id = #{id}
+        DELETE FROM guide WHERE id = #{id}
 	</delete>
 
     <insert id="insertFile">
-        INSERT INTO food_file(
+        INSERT INTO guide_file(
         id,
-        food,
+        guide,
         name,
         type,
         description,
@@ -151,7 +111,7 @@
         remarks
         ) VALUES (
         #{id},
-        #{food},
+        #{guide},
         #{name},
         #{type},
         #{description},
@@ -164,7 +124,7 @@
         )
     </insert>
 
-    <sql id="foodFileColumns">
+    <sql id="guideFileColumns">
         a.id,
         a.name,
         a.type,
@@ -172,32 +132,32 @@
         a.path
     </sql>
 
-    <select id="getFileById" resultType="FoodFile">
+    <select id="getFileById" resultType="GuideFile">
         SELECT
-        <include refid="foodFileColumns"/>
-        FROM food_file a
+        <include refid="guideFileColumns"/>
+        FROM guide_file a
         WHERE a.id = #{fileId}
     </select>
 
-    <select id="findFoodFiles" resultType="FoodFile">
+    <select id="findGuideFiles" resultType="GuideFile">
         SELECT
-        <include refid="foodFileColumns"/>
-        FROM food_file a
-        WHERE food = #{food}
+        <include refid="guideFileColumns"/>
+        FROM guide_file a
+        WHERE guide = #{guide}
         ORDER BY type
     </select>
-    <update id="updateFoodFile">
-        UPDATE food_file
+    <update id="updateGuideFile">
+        UPDATE guide_file
         <set>
             type=#{type},
             description=#{description}
         </set>
         WHERE id = #{id}
     </update>
-    <delete id="deleteFoodFileById">
-        DELETE FROM food_file WHERE id = #{id}
+    <delete id="deleteGuideFileById">
+        DELETE FROM guide_file WHERE id = #{id}
     </delete>
-    <delete id="deleteFoodFileByFood">
-        DELETE FROM food_file WHERE food = #{food}
+    <delete id="deleteGuideFileByGuide">
+        DELETE FROM guide_file WHERE guide = #{guide}
     </delete>
 </mapper>
