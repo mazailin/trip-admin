@@ -1,5 +1,7 @@
 package com.ulplanet.trip.modules.tms.service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ulplanet.trip.common.persistence.Parameter;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.DateUtils;
@@ -9,22 +11,23 @@ import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
+import io.rong.ApiHttpClient;
+import io.rong.models.SdkHttpResult;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2015/10/27.
  */
 @Service("groupUserService")
 public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
+    Logger logger = org.slf4j.LoggerFactory.getLogger(GroupUserService.class);
     @Resource
     private GroupUserDao groupUserDao;
     @Resource
@@ -37,8 +40,11 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     }
 
     public ResponseBo saveGroupUser(GroupUser groupUser){
-        ResponseBo responseBo;
-        if(StringUtils.isBlank(groupUser.getCode())){//添加用户
+        ResponseBo  responseBo = new ResponseBo();
+
+        if(StringUtils.isBlank(groupUser.getId())){//添加用户
+            Group group = groupService.get(groupUser.getGroup());
+            groupUser.preInsert();
             String code =  this.getUserCode(groupUser.getGroup());
             groupUser.setCode(code);
             if(StringUtils.isNotBlank(groupUser.getUser())){
@@ -46,8 +52,24 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             }else {
                 responseBo = addUser(groupUser);
             }
-            if(responseBo.getStatus()==1){//添加用户到团队中
-                responseBo = addGroupUser(groupUser);
+            try {
+                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
+                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
+                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
+                            new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+                    responseBo = addGroupUser(groupUser);
+                } else {
+                    logger.error(sdkHttpResult1.getResult()  + sdkHttpResult2.getResult());
+                    throw new RuntimeException("接口调用失败!");
+                }
+            } catch (Exception e) {
+                logger.error("用户创建失败", e);
+                responseBo.setMsg("用户创建失败");
+                responseBo.setStatus(0);
+                return responseBo;
             }
         }else{
             updateUser(groupUser);
@@ -68,7 +90,16 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     }
 
     public ResponseBo deleteUser(GroupUser groupUser){
-        return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
+        try {
+            SdkHttpResult sdkHttpResult = ApiHttpClient.quitGroup(groupUser.getId(), groupUser.getGroup());
+            if (sdkHttpResult.getHttpCode() == 200) {
+                return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBo(0,"聊天组删除用户失败");
+        }
+        return new ResponseBo(0,"删除用户失败");
     }
 
     public GroupUser getPassport(String passport,String group) {

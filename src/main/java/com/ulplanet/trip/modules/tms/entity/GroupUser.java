@@ -20,6 +20,15 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String email;
     private String toDate;
     private String fromDate;
+    private String imToken;
+
+    public String getImToken() {
+        return imToken;
+    }
+
+    public void setImToken(String imToken) {
+        this.imToken = imToken;
+    }
 
     public String getFromDate() {
         return fromDate;

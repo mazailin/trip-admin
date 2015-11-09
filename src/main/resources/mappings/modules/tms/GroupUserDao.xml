@@ -53,6 +53,7 @@
         INSERT INTO group_user(
             id,
             `group`,
+            im_token,
             user,
             code,
             type,
@@ -63,6 +64,7 @@
         ) VALUES (
             #{id},
             #{group},
+            #{imToken},
             #{user},
             #{code},
             #{type},

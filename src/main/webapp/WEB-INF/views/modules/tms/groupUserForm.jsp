@@ -124,6 +124,7 @@
               $("#btnSubmit").attr("readonly","true");
               return false;
             }
+            $("#id").val('');
             $("#passport").val(e.target.value);
             $("#user").val(data.user);
             $("#name").val(data.name);

@@ -11,6 +11,7 @@
 <head>
   <title>旅游团用户管理</title>
   <meta name="decorator" content="default"/>
+  <script type="text/javascript" src="/static/common/qrcode.js"></script>
   <script type="text/javascript">
     function page(n,s){
       $("#pageNo").val(n);
@@ -44,6 +45,7 @@
       <td>${fns:getDictLabel(groupUser.type, 'tourist_type', '')}</td>
       <td>${groupUser.phone}</td>
       <td>
+        <a href="#" onclick="getBarcode('${groupUser.name}','${groupUser.code}','${groupUser.passport}');">生成二维码</a>
         <a href="${ctx}/tms/groupUser/form?id=${groupUser.id}&&group=${groupUser.group}">修改</a>
         <a href="${ctx}/tms/groupUser/delete?id=${groupUser.id}&&group=${groupUser.group}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
       </td>
@@ -53,5 +55,15 @@
 </table>
 <div class="pagination">${page}</div>
 
+<script type="text/javascript">
+  function getBarcode(name,code,passport){
+      swal.setDefaults({'margin-top':'0px'});
+    swal({  title: name,
+            text: '<div id="qrcode" style="margin-left:80px;width: 300px;height: 300px"></div>',
+            html: true });
+    var qrcode = new QRCode(document.getElementById("qrcode"), {width:300,height:300});
+    qrcode.makeCode(code+","+passport);
+  }
+</script>
 </body>
 </html>
