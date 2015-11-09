@@ -2,7 +2,7 @@ package com.ulplanet.trip.modules.tms.bo;
 
 
 import com.ulplanet.trip.common.utils.StringUtils;
-import com.ulplanet.trip.modules.tms.entity.Flight;
+import com.ulplanet.trip.modules.tim.entity.Flight;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ public class JourneyPlanBo {
     private String longitude;
     private String latitude;
     private List<InfoBo> infos = new ArrayList<>();
-    private List<Flight> flights = new ArrayList<>();
 
     public JourneyPlanBo(){}
+
 
     public JourneyPlanBo(JourneyPlan journeyPlan){
         this.id = journeyPlan.getId();
@@ -50,15 +50,9 @@ public class JourneyPlanBo {
         this.sort = journeyPlan.getSort();
         this.longitude = journeyPlan.getLongitude();
         this.latitude = journeyPlan.getLatitude();
+        this.cityIds = journeyPlan.getCityIds();
     }
 
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
-    }
 
     public String getInfoId() {
         return infoId;

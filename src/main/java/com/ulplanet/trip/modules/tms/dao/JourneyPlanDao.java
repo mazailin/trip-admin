@@ -17,5 +17,9 @@ public interface  JourneyPlanDao extends CrudDao<JourneyPlan> {
     List<JourneyPlan> findPage(JourneyPlan journeyPlan);
     List<JourneyPlan> findAllType();
     List<InfoBo> findInfoByTableName(@Param(value = "table")String table,
-                                     @Param(value = "ids")String[] ids,@Param(value = "infoId")String infoId);
+                                     @Param(value = "ids")String[] ids,@Param(value = "infoId")String infoId,
+                                     @Param(value = "tableCol")String tableCol);
+    int updates(@Param("list") List<JourneyPlan> journeyPlans);
+
+    int inserts(@Param("list") List<JourneyPlan> journeyPlans);
 }

@@ -7,6 +7,7 @@ import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.service.GroupUserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,16 +46,8 @@ public class GroupUserController  extends BaseController {
         if (!beanValidator(model, groupUser)){
             return form(groupUser, model);
         }
-        ResponseBo responseBo;
-        if(StringUtils.isBlank(groupUser.getCode())){//添加用户
-            responseBo = groupUserService.addUser(groupUser);
-            if(responseBo.getStatus()==1){//添加用户到团队中
-                responseBo = groupUserService.addGroupUser(groupUser);
-            }
-        }else{
-            groupUser.preUpdate();
-            responseBo = groupUserService.updateUser(groupUser);
-        }
+        ResponseBo responseBo = groupUserService.saveGroupUser(groupUser);
+
 
         addMessage(redirectAttributes,responseBo.getMsg());
         if(responseBo.getStatus()==1) {

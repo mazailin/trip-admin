@@ -1,11 +1,11 @@
 package com.ulplanet.trip.modules.tms.service;
 
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.modules.tim.service.FlightService;
 import com.ulplanet.trip.modules.tms.bo.InfoBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
 import com.ulplanet.trip.modules.tms.dao.JourneyPlanDao;
-import com.ulplanet.trip.modules.tms.entity.Flight;
+import com.ulplanet.trip.modules.tim.entity.Flight;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 import org.springframework.stereotype.Service;
 
@@ -28,57 +28,52 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
         return journeyPlan;
     }
 
-    public JourneyPlanBo getInfo(String id){
+    public JourneyPlanBo getJourneyPlan(String id,String cityIds){
         JourneyPlan journeyPlan = journeyPlanDao.get(id);
         JourneyPlanBo journeyPlanBo = new JourneyPlanBo(journeyPlan);
-        List<InfoBo> list = getInfoList(journeyPlanBo.getType(), journeyPlanBo.getCityIds(), null);
-        if(list != null){
-            List<InfoBo> l = journeyPlanDao.findInfoByTableName(tableName(journeyPlanBo.getType()),null,journeyPlan.getInfoId()) ;
-            InfoBo infoBo = null;
-            if(l.size()>0){
-                infoBo = l.get(0);
-                journeyPlanBo.setName(infoBo.getName());
-                journeyPlanBo.setDescription(infoBo.getDescription());
-                journeyPlanBo.setLatitude(infoBo.getLatitude());
-                journeyPlanBo.setLongitude(infoBo.getLongitude());
+        if(cityIds!=null){
+            List<InfoBo> list = getInfoList(journeyPlan.getType(),cityIds);
+            if(list.size()>0){
+                journeyPlanBo.setInfos(list);
             }
-            journeyPlanBo.setInfos(list);
-            return journeyPlanBo;
-        }
-        if(journeyPlanBo.getType() == 3){//航班
-            List<InfoBo> flightList = flightService.findListByIds(journeyPlanBo.getCityIds());
-            journeyPlanBo.setInfos(flightList);
-            Flight flight = flightService.get(journeyPlanBo.getInfoId());
-            if(StringUtils.isNotBlank(flight.getId())) {
-                journeyPlanBo.setName(flight.getFlightNo());
-                journeyPlanBo.setDescription(flight.toString());
-            }
-            return journeyPlanBo;
         }
         return journeyPlanBo;
     }
 
+    /**
+     * 根据ID获取通用表列表信息
+     * @param type
+     * @param ids
+     * @param infoId
+     * @return
+     */
     public List<InfoBo> getInfoList(int type,String ids,String infoId){
         String table = tableName(type);
         if(table != null){
             String [] arr = null;
-            if(ids.indexOf(",")>0){
+            if(ids!=null){
                 arr = ids.split(",");
             }
-            List<InfoBo> infoBo = journeyPlanDao.findInfoByTableName(table, arr, infoId);
+            List<InfoBo> infoBo = journeyPlanDao.findInfoByTableName(table, arr, infoId, col(type));
             return infoBo;
         }
-        return null;
+        return new ArrayList<>();
     }
 
+    /**
+     * 获取所有信息
+     * @param type
+     * @param ids
+     * @return
+     */
     public List<InfoBo> getInfoList(int type,String ids){
         String table = tableName(type);
         if(table != null){
             String [] arr = null;
-            if(ids.indexOf(",")>0){
+            if(ids!=null){
                 arr = ids.split(",");
             }
-            List<InfoBo> infoBo = journeyPlanDao.findInfoByTableName(table,arr,null);
+            List<InfoBo> infoBo = journeyPlanDao.findInfoByTableName(table,arr,null,col(type));
             return infoBo;
         }
         if(type == 3){//航班
@@ -86,6 +81,45 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
             return flightList;
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * 获取关联信息
+     * @param type
+     * @param infoId
+     * @return
+     */
+    public InfoBo getInfo(int type,String infoId){
+        List<InfoBo> infoBos = getInfoList(type, null, infoId);
+        if(infoBos.size()>0){
+            return infoBos.get(0);
+        }
+        if(type == 3){//航班
+            Flight flight = flightService.get(infoId);
+            InfoBo infoBo = new InfoBo();
+            infoBo.setId(flight.getId());
+            infoBo.setDescription(flight.toString());
+            infoBo.setName(flight.getFlightNo());
+            return infoBo;
+        }
+        return new InfoBo();
+    }
+
+
+    public int updates(List<JourneyPlan> list){
+        return journeyPlanDao.updates(list);
+    }
+
+    public int inserts(List<JourneyPlan> list){
+        return journeyPlanDao.inserts(list);
+    }
+
+
+    public JourneyPlan copy(JourneyPlan journeyPlan){
+        journeyPlan = journeyPlanDao.get(journeyPlan);
+        journeyPlan.preInsert();
+        journeyPlanDao.insert(journeyPlan);
+        return journeyPlan;
     }
 
     private String tableName(int id){
@@ -98,6 +132,21 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
         }
 
     }
+
+    private String col(int id){
+        switch (id){
+            case 5 : return "phone";//旅馆
+            case 6 : return "phone";//餐饮
+            default:return "-1";
+        }
+
+    }
+
+//    public void save(JourneyPlan journeyPlan){
+//        if(StringUtils.isNotBlank(journeyPlan.getInfoId())){
+//
+//        }
+//    }
 
 
 

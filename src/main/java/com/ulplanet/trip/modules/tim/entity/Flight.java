@@ -1,8 +1,6 @@
-package com.ulplanet.trip.modules.tms.entity;
+package com.ulplanet.trip.modules.tim.entity;
 
 import com.ulplanet.trip.common.persistence.DataEntity;
-
-import java.util.Date;
 
 /**
  * Created by Administrator on 2015/10/28.
@@ -15,9 +13,28 @@ public class Flight  extends DataEntity<Flight> {
     private String arrivalTerminal;
     private String departureTime;
     private String arrivalTime;
-    private String departureCity;
-    private String arrivalCity;
+    private City departureCity;
+    private City arrivalCity;
     private String common;
+    private String departure;
+    private String arrival;
+
+
+    public String getArrival() {
+        return departureCity.getName() + ":" + departureTerminal + ":" + company + " " + departureTime;
+    }
+
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
+    }
+
+    public String getDeparture() {
+        return arrivalCity.getName() + ":" + arrivalTerminal + ":" + company + " " + arrivalTime;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
 
     public String getCity() {
         return city;
@@ -75,20 +92,20 @@ public class Flight  extends DataEntity<Flight> {
         this.arrivalTime = arrivalTime;
     }
 
-    public String getDepartureCity() {
-        return departureCity;
-    }
-
-    public void setDepartureCity(String departureCity) {
-        this.departureCity = departureCity;
-    }
-
-    public String getArrivalCity() {
+    public City getArrivalCity() {
         return arrivalCity;
     }
 
-    public void setArrivalCity(String arrivalCity) {
+    public void setArrivalCity(City arrivalCity) {
         this.arrivalCity = arrivalCity;
+    }
+
+    public City getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(City departureCity) {
+        this.departureCity = departureCity;
     }
 
     public String getCommon() {

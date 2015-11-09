@@ -1,29 +1,32 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ulplanet.trip.modules.tms.dao.HotelDao">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.HotelDao">
 
-	<resultMap id="Hotel" type="com.ulplanet.trip.modules.tms.entity.Hotel">
+	<resultMap id="Hotel" type="com.ulplanet.trip.modules.tim.entity.Hotel">
             <result property="id" column="id"/>
+            <result property="city.id" column="city"/>
             <result property="name" column="name"/>
             <result property="address" column="address"/>
             <result property="phone" column="phone"/>
             <result property="longitude" column="longitude"/>
             <result property="latitude" column="latitude"/>
-            <result property="common" column="common"/>
+            <result property="description" column="description"/>
             <result property="remarks" column="remarks"/>
 	</resultMap>
 	
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
-	    <![CDATA[
-            id,name,address,phone,longitude,latitude,common,remarks
-	    ]]>
+            hotel.id,hotel.name,hotel.address,hotel.phone,hotel.longitude
+            ,hotel.latitude,hotel.description,hotel.remarks
 	</sql>
 
 <sql id="BaseWhere">
     <where>
                 <if test="id != null and id != ''">
                     AND id = #{id}
+                </if>
+                <if test="city != null and city.id != null">
+                    AND city = #{city.id}
                 </if>
                 <if test="name != null and name != ''">
                     AND name = #{name}
@@ -40,8 +43,8 @@
                 <if test="latitude != null and latitude != ''">
                     AND latitude = #{latitude}
                 </if>
-                <if test="common != null and common != ''">
-                    AND common = #{common}
+                <if test="description != null and description != ''">
+                    AND description = #{description}
                 </if>
                 <if test="remarks != null and remarks != ''">
                     AND remarks = #{remarks}
@@ -55,12 +58,13 @@
             <![CDATA[
                 INSERT INTO hotel (
                     id ,
+                    city,
                     name ,
                     address ,
                     phone ,
                     longitude ,
                     latitude ,
-                    common ,
+                    description ,
                     create_by ,
                     create_date ,
                     update_by ,
@@ -68,12 +72,13 @@
                     remarks 
                 ) VALUES (
                     #{id} ,
+                    #{city.id} ,
                     #{name} ,
                     #{address} ,
                     #{phone} ,
                     #{longitude} ,
                     #{latitude} ,
-                    #{common} ,
+                    #{description} ,
                     #{createBy.id} ,
                     #{createDate} ,
                     #{updateBy.id} ,
@@ -93,6 +98,9 @@
                  <if test="address != null">
                       address = #{address},
                   </if>
+                 <if test="city != null">
+                     city = #{city.id},
+                 </if>
                  <if test="phone != null">
                       phone = #{phone},
                   </if>
@@ -102,8 +110,8 @@
                  <if test="latitude != null">
                       latitude = #{latitude},
                   </if>
-                 <if test="common != null">
-                      common = #{common},
+                 <if test="description != null">
+                      description = #{description},
                   </if>
                  <if test="updateBy.id != null">
                       update_by = #{updateBy.id},
@@ -126,21 +134,46 @@
     </delete>
     
     <select id="get" resultMap="Hotel">
-		SELECT <include refid="BaseColumns" />
-	    <![CDATA[
-		    FROM hotel 
-	        WHERE 
-		        id = #{id} 
-	    ]]>
+		SELECT <include refid="BaseColumns" />,
+        hotel.city AS 'city.id',
+        c.`name` AS 'city.name'
+		    FROM hotel
+            JOIN city c
+              ON hotel.city = c.id
+            WHERE hotel.id = #{id}
 	</select>
 	
 
 		
 
-    <select id="findList" resultMap="Hotel">
-    	SELECT <include refid="BaseColumns" />
-	    FROM hotel 
-		<include refid="BaseWhere"/>
+    <select id="findList" resultType="Hotel">
+    	SELECT <include refid="BaseColumns" />,
+        hotel.city AS 'city.id',
+        c.`name` AS 'city.name',
+        sc.name AS 'createBy.name',
+        su.name AS 'updateBy.name'
+        FROM hotel
+        JOIN city c
+        ON hotel.city = c.id
+        JOIN sys_user sc
+        ON hotel.create_by = sc.id
+        JOIN sys_user su
+        ON hotel.update_by = su.id
+		<where>
+            <if test="name != null and name != ''">
+                AND a.name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="city != null and city.id != null and city.id != ''">
+                AND a.city = #{city.id}
+            </if>
+            <if test="createBy != null and createBy.name != null and createBy.name != ''">
+                AND sc.name like CONCAT('%', #{createBy.name}, '%')
+            </if>
+            <if test="updateBy != null and updateBy.name != null and updateBy.name != ''">
+                AND su.name like CONCAT('%', #{updateBy.name}, '%')
+            </if>
+
+        </where>
     </select>
 
 	

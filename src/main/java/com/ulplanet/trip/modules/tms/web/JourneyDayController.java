@@ -1,12 +1,21 @@
 package com.ulplanet.trip.modules.tms.web;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.tms.bo.InfoBo;
+import com.ulplanet.trip.modules.tms.bo.JourneyBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
+import com.ulplanet.trip.modules.tms.bo.SortBo;
+import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
+import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
+import com.ulplanet.trip.modules.tms.service.GroupService;
 import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,6 +32,8 @@ public class JourneyDayController  extends BaseController {
 
     @Resource
     private JourneyDayService journeyDayService;
+    @Resource
+    private GroupService groupService;
 
     @ModelAttribute
     public JourneyDay get(@RequestParam(required=false) String id,@RequestParam(value = "groupId",required=false) String group) {
@@ -56,7 +67,11 @@ public class JourneyDayController  extends BaseController {
             return "redirect:" + adminPath + "/tms/group/list/?repage";
         }
         List<JourneyDayBo> journeyDayBos = journeyDayService.queryList(journeyDay.getGroupId());
+        Group group = new Group();
+        group.setId(journeyDay.getGroupId());
+        List<Group> groups = groupService.getGroupList(group);
         model.addAttribute("list", journeyDayBos);
+        model.addAttribute("groupList",groups);
         model.addAttribute("groupId", journeyDay.getGroupId());
         return "modules/tms/journeyDayList";
     }
@@ -64,7 +79,7 @@ public class JourneyDayController  extends BaseController {
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public Object save(JourneyDay journeyDay) {
-        String cityName = journeyDay.getTitle().replaceAll(",","-");
+        String cityName = journeyDay.getTitle().replaceAll(",", "-");
         journeyDay.setTitle(cityName);
         if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
         this.journeyDayService.save(journeyDay);
@@ -86,5 +101,30 @@ public class JourneyDayController  extends BaseController {
         return journeyDayBos;
     }
 
+
+//    @RequestMapping(value = "/sort",method = RequestMethod.POST)
+//    @ResponseBody
+//    public Object sort(JourneyBo journeyBo){
+//        journeyDayService.sort(journeyBo);
+//        return new ResponseBo(1,"success");
+//    }
+
+    @RequestMapping(value = "/sort",method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(readOnly = false)
+    public Object sort(@RequestParam("json")String json){
+        json = json.replaceAll("&quot;","\"");
+        JourneyBo journeyBo = JSONObject.parseObject(json,JourneyBo.class);
+        journeyDayService.sort(journeyBo);
+        return new ResponseBo(1,"success");
+    }
+
+    @RequestMapping(value = "/copy",method = RequestMethod.GET)
+    @ResponseBody
+    @Transactional(readOnly = false)
+    public Object copy(JourneyDay journeyDay){
+
+        return journeyDayService.copy(journeyDay);
+    }
 
 }

@@ -31,7 +31,13 @@
         LEFT JOIN `customer` on `group`.customer = `customer`.id
         <where>
             <if test="name!=null and name!=''">
-                AND name like concat('%',#{name},'%')
+                AND `group`.name like concat('%',#{name},'%')
+            </if>
+            <if test="id!=null and id!=''">
+                AND `group`.id != #{id}
+            </if>
+            <if test="customer!=null and customer!=''">
+                AND `group`.customer = #{customer}
             </if>
         </where>
         ORDER BY `group`.from_date DESC

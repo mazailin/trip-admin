@@ -8,7 +8,6 @@
             <result property="id" column="id"/>
             <result property="dayId" column="day_id"/>
             <result property="infoId" column="info_id"/>
-            <result property="cityIds" column="city_ids"/>
             <result property="type" column="type"/>
             <result property="name" column="name"/>
             <result property="time" column="time"/>
@@ -37,7 +36,7 @@
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,day_id,city_ids,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
+            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
 	    ]]>
 	</sql>
 
@@ -94,9 +93,6 @@
                       <if test="type != null and type != ''">
                           type,
                       </if>
-                      <if test="cityIds != null and cityIds != ''">
-                          city_ids,
-                      </if>
                       <if test="infoId != null and infoId != ''">
                           info_id,
                       </if>
@@ -151,9 +147,6 @@
                     <if test="type != null and type != ''">
                         #{type},
                     </if>
-                    <if test="cityIds != null and cityIds != ''">
-                        #{cityIds},
-                    </if>
                     <if test="infoId != null and infoId != ''">
                         #{infoId},
                     </if>
@@ -199,6 +192,49 @@
                   </trim>
                 )
 	</insert>
+
+
+    <insert id="inserts">
+        INSERT INTO journey_plan (
+                id,
+                day_id,
+                type,
+                info_id,
+                name,
+                time,
+                time_flag,
+                description,
+                message,
+                sort,
+                latitude,
+                longitude,
+                create_by,
+                create_date,
+                remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+                    #{item.id},
+                    #{item.dayId},
+                    #{item.type},
+                    #{item.infoId},
+                    #{item.name},
+                    #{item.time},
+                    #{item.timeFlag},
+                    #{item.description},
+                    #{item.message},
+                    #{item.sort},
+                    #{item.latitude},
+                    #{item.longitude},
+                    #{item.createBy.id},
+                    #{item.createDate},
+                    #{item.remarks}
+        )
+        </foreach>
+    </insert>
+
+
+
     
 	<update id="update" >
         UPDATE journey_plan
@@ -209,9 +245,6 @@
                  <if test="type != null and type!=''">
                       type = #{type},
                   </if>
-                 <if test="cityIds != null and cityIds!=''">
-                     city_ids = #{cityIds},
-                 </if>
                  <if test="infoId != null and infoId!=''">
                      info_id = #{infoId},
                  </if>
@@ -289,11 +322,20 @@
 		    ORDER BY jp.sort ASC
 	    ]]>
     </select>
-	
+
+    <update id="updates"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update journey_plan
+            <set>
+                sort=#{item.sort}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
 
 		
     <select id="findInfoByTableName" resultMap="InfoBo">
-        SELECT id,name,address,city,phone,longitude,latitude,description FROM ${table}
+        SELECT id,name,address,city,${tableCol},longitude,latitude,description FROM ${table}
         <where>
             <if test="ids!=null">
                 AND city IN

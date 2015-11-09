@@ -10,6 +10,7 @@ import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import com.ulplanet.trip.modules.tms.service.JourneyPlanService;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,9 +33,9 @@ public class JourneyPlanController  extends BaseController {
 
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JourneyPlanBo get(@RequestParam(required=false) String id) {
+    public JourneyPlanBo get(@RequestParam(required=false) String id,@RequestParam(required=false) String cityIds) {
         if (StringUtils.isNotBlank(id)){
-            return journeyPlanService.getInfo(id);
+            return journeyPlanService.getJourneyPlan(id,cityIds);
         }
         return null;
     }
@@ -56,12 +57,28 @@ public class JourneyPlanController  extends BaseController {
         return "{\"status\":\"1\"}";
     }
 
+    @RequestMapping(value = "/copy")
+    @ResponseBody
+    @Transactional(readOnly = false)
+    public Object copy(JourneyPlan journeyPlan) {
+        return journeyPlanService.copy(journeyPlan);
+    }
+
+
     @RequestMapping(value = "/findTypeList",method = RequestMethod.POST)
     @ResponseBody
     public List<InfoBo> findTypeList(JourneyPlan journeyPlan){
-        JourneyDay journeyDay = journeyDayService.get(journeyPlan.getDayId());
-        journeyPlan.setCityIds(journeyDay.getCityIds());
-        return journeyPlanService.getInfoList(journeyPlan.getType(),journeyPlan.getCityIds());
+        if(StringUtils.isNotBlank(journeyPlan.getDayId())) {
+            JourneyDay journeyDay = journeyDayService.get(journeyPlan.getDayId());
+            journeyPlan.setCityIds(journeyDay.getCityIds());
+        }
+        return journeyPlanService.getInfoList(journeyPlan.getType(), journeyPlan.getCityIds());
+    }
+
+    @RequestMapping(value = "/findType",method = RequestMethod.POST)
+    @ResponseBody
+    public InfoBo findType(JourneyPlan journeyPlan){
+        return journeyPlanService.getInfo(journeyPlan.getType(),journeyPlan.getInfoId());
     }
 
 }

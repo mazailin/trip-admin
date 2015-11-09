@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ulplanet.trip.modules.tms.dao.FlightDao">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.FlightDao">
 
-	<resultMap id="Flight" type="com.ulplanet.trip.modules.tms.entity.Flight">
+	<resultMap id="Flight" type="com.ulplanet.trip.modules.tim.entity.Flight">
             <result property="id" column="id"/>
-            <result property="city" column="city"/>
             <result property="flightNo" column="flight_no"/>
             <result property="company" column="company"/>
             <result property="departureTerminal" column="departure_terminal"/>
             <result property="arrivalTerminal" column="arrival_terminal"/>
             <result property="departureTime" column="departure_time"/>
             <result property="arrivalTime" column="arrival_time"/>
-            <result property="departureCity" column="departure_city"/>
-            <result property="arrivalCity" column="arrival_city"/>
+            <result property="departureCity.id" column="departure_city"/>
+            <result property="arrivalCity.id" column="arrival_city"/>
+            <result property="departureCity.name" column="departure_city_name"/>
+            <result property="arrivalCity.name" column="arrival_city_name"/>
+            <result property="createBy.name" column="createName"/>
+            <result property="UpdateBy.name" column="updateName"/>
             <result property="common" column="common"/>
             <result property="remarks" column="remarks"/>
 	</resultMap>
@@ -24,18 +27,15 @@
 	
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
-	    <![CDATA[
-            id,city,flight_no,company,departure_terminal,arrival_terminal,departure_time,arrival_time,departure_city,arrival_city,common,remarks
-	    ]]>
+            flight.id,flight.flight_no,flight.company
+            ,flight.departure_terminal,flight.arrival_terminal,flight.departure_time,
+            flight.arrival_time,flight.departure_city,flight.arrival_city,flight.common,flight.remarks
 	</sql>
 
 <sql id="BaseWhere">
     <where>
                 <if test="id != null and id != ''">
                     AND id = #{id}
-                </if>
-                <if test="city != null and city != ''">
-                    AND city = #{city}
                 </if>
                 <if test="flightNo != null and flightNo != ''">
                     AND flight_no = #{flightNo}
@@ -70,7 +70,6 @@
             <![CDATA[
                 INSERT INTO flight (
                     id ,
-                    city,
                     flight_no ,
                     company ,
                     departure_terminal ,
@@ -85,15 +84,14 @@
                     remarks
                 ) VALUES (
                     #{id} ,
-                    #{city},
                     #{flightNo} ,
                     #{company} ,
                     #{departureTerminal} ,
                     #{arrivalTerminal} ,
                     #{departureTime} ,
                     #{arrivalTime} ,
-                    #{departureCity} ,
-                    #{arrivalCity} ,
+                    #{departureCity.id} ,
+                    #{arrivalCity.id} ,
                     #{common} ,
                     #{createBy.id} ,
                     #{createDate} ,
@@ -108,9 +106,6 @@
          <set>
                  <if test="flightNo != null">
                       flight_no = #{flightNo},
-                  </if>
-                  <if test="city != null">
-                      city = #{city},
                   </if>
                  <if test="company != null">
                       company = #{company},
@@ -128,10 +123,10 @@
                       arrival_time = #{arrivalTime},
                   </if>
                  <if test="departureCity != null">
-                      departure_city = #{departureCity},
+                      departure_city = #{departureCity.id},
                   </if>
                  <if test="arrivalCity != null">
-                      arrival_city = #{arrivalCity},
+                      arrival_city = #{arrivalCity.id},
                   </if>
                  <if test="updateBy.id != null">
                      update_by = #{updateBy.id},
@@ -157,23 +152,65 @@
     </delete>
     
     <select id="get" resultMap="Flight">
-		SELECT <include refid="BaseColumns" />
-	    <![CDATA[
-		    FROM flight 
-	        WHERE 
-		        id = #{id} 
-	    ]]>
+		SELECT <include refid="BaseColumns" />,
+          dc.name as departure_city_name,
+          ac.name as arrival_city_name
+		    FROM flight
+          LEFT JOIN city dc
+            ON flight.departure_city = dc.id
+          LEFT JOIN city ac
+            ON flight.arrival_city = ac.id
+	        WHERE
+        flight.id = #{id}
 	</select>
 	
 
 		
 
-    <select id="findList" resultMap="InfoBo">
-    	SELECT id,flight_no as name
-	    FROM flight 
+    <select id="findList" resultMap="Flight">
+    	SELECT <include refid="BaseColumns" />,
+        sc.name AS 'createName',
+        su.name AS 'updateName',
+        dc.name as departure_city_name,
+        ac.name as arrival_city_name
+	    FROM flight
+        LEFT JOIN city dc
+        ON flight.departure_city = dc.id
+        LEFT JOIN city ac
+        ON flight.arrival_city = ac.id
+        LEFT JOIN sys_user sc
+        ON flight.create_by = sc.id
+        LEFT JOIN sys_user su
+        ON flight.update_by = su.id
+
 		<where>
+          <if test="id!=null and id!=''">
+              AND flight.id = #{id}
+          </if>
+          <if test="createBy!=null and createBy.name!=null and createBy.name!=''">
+              AND createName like concat('%',#{CreateBy.name},'%')
+          </if>
+          <if test="updateBy!=null and updateBy.name!=null and updateBy.name!=''">
+              AND updateName like concat('%',#{updateBy.name},'%')
+          </if>
+          <if test="flightNo!=null and flightNo!=''">
+              AND flight_no = #{flightNo}
+          </if>
+          <if test="departureCity!=null and departureCity!=''">
+              AND departure_city = #{departureCity.id}
+          </if>
+          <if test="arrivalCity!=null and arrivalCity!=''">
+              AND arrival_city = #{arrivalCity.id}
+          </if>
+        </where>
+    </select>
+
+    <select id="findListByCityIds" resultMap="InfoBo">
+        SELECT id,flight_no as name
+        FROM flight
+        <where>
             <if test="ids!=null">
-                AND city IN
+                AND departure_city IN
                 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
                     #{item}
                 </foreach>

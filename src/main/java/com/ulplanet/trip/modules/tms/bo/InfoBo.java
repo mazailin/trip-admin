@@ -11,6 +11,15 @@ public class InfoBo {
     private String longitude;
     private String latitude;
     private String description;
+    private String phoneCol = "-1";
+
+    public String getPhoneCol() {
+        return phoneCol;
+    }
+
+    public void setPhoneCol(String phoneCol) {
+        this.phoneCol = phoneCol;
+    }
 
     public String getPhone() {
         return phone;

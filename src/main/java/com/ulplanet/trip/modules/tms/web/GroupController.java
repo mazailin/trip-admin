@@ -3,10 +3,12 @@ package com.ulplanet.trip.modules.tms.web;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
+import com.ulplanet.trip.modules.crm.entity.Customer;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.service.GroupService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,11 +34,14 @@ public class GroupController  extends BaseController {
 
     @ModelAttribute
     public Group get(@RequestParam(required=false) String id) {
-        if (StringUtils.isNotBlank(id)){
-            return groupService.get(id);
-        }else{
-            return new Group();
+        List<Customer> customers = groupService.getCustomer();
+        Group group = new Group();
+
+        if (StringUtils.isNotBlank(id)) {
+            group = groupService.get(id);
         }
+            group.setCustomers(customers);
+        return group;
     }
 
     /**
@@ -47,10 +52,10 @@ public class GroupController  extends BaseController {
      * @param model
      * @return
      */
+    @RequiresPermissions("tms:group:view")
     @RequestMapping(value = {"/list",""})
     public String list(Group group, HttpServletRequest request, HttpServletResponse response, Model model){
         Page<Group> page = this.groupService.findPage(new Page<>(request, response), group);
-
         model.addAttribute("page",page);
         return "modules/tms/groupList";
     }
@@ -62,6 +67,7 @@ public class GroupController  extends BaseController {
      * @return
      */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequiresPermissions("tms:group:edit")
     public String save(Group group,Model model, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo;
         if (!beanValidator(model, group)){
@@ -81,6 +87,7 @@ public class GroupController  extends BaseController {
     }
 
     @RequestMapping(value = "/delete")
+    @RequiresPermissions("tms:group:edit")
     public String delete(Group group,Model model, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupService.deleteGroup(group);
         addMessage(redirectAttributes,responseBo.getMsg());
@@ -91,6 +98,7 @@ public class GroupController  extends BaseController {
     }
 
     @RequestMapping(value = "form",method = RequestMethod.GET)
+    @RequiresPermissions("tms:group:view")
     public String form(Group group,Model model) {
         model.addAttribute("group", group);
         return "modules/tms/groupForm";

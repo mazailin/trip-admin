@@ -3,6 +3,7 @@ package com.ulplanet.trip.modules.ims.service;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.DateUtils;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.ims.dao.StockOrderDao;
 import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.sys.utils.UserUtils;
@@ -70,5 +71,21 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
         stockOrder.setComment(stockOrder.getComment() + "/n 手机退货 on "
                 + DateUtils.formatDate(new Date()) + " ==id==" + stockOrder.getId());
         return stockOrderDao.update(stockOrder);
+    }
+
+    public List<StockOrder> getOrderIds(String id){
+        StockOrder stockOrder = new StockOrder();
+        stockOrder.setStatus(1);
+        stockOrder.setInsurance(null);
+        List<StockOrder> list = stockOrderDao.findListByParams(stockOrder);
+        if(StringUtils.isNotBlank(id)) {
+            stockOrder = new StockOrder();
+            stockOrder.setId(id);
+            stockOrder = stockOrderDao.get(id);
+            if (stockOrder.getStatus() == 3) {
+                list.add(stockOrder);
+            }
+        }
+        return list;
     }
 }

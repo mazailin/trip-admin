@@ -51,6 +51,17 @@
  </sql>
 
 
+    <update id="updates"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update journey_day
+            <set>
+                day_number=#{item.dayNumber}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+
 	<insert id="insert">
             <![CDATA[
                 INSERT INTO journey_day (
@@ -77,6 +88,32 @@
             ]]>
 
 	</insert>
+
+    <insert id="inserts">
+                INSERT INTO journey_day (
+                    id ,
+                    group_id ,
+                    city_ids,
+                    day_number ,
+                    title ,
+                    create_by ,
+                    create_date ,
+                    remarks
+                ) VALUES
+                <foreach collection="list" item="item" index="index" separator="," >
+                        (
+                            #{item.id} ,
+                            #{item.groupId} ,
+                            #{item.cityIds} ,
+                            #{item.dayNumber} ,
+                            #{item.title} ,
+                            #{item.createBy.id} ,
+                            #{item.createDate} ,
+                            #{item.remarks}
+                       )
+                </foreach>
+
+    </insert>
     
 	<update id="update" >
         UPDATE journey_day

@@ -7,6 +7,7 @@ import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.ims.service.StockOrderService;
 import com.ulplanet.trip.modules.sys.entity.Dict;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class StockOrderController  extends BaseController {
     }
 
 
+    @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = {"/list",""})
     public String findStockOrders(StockOrder stockOrder, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<StockOrder> page = this.stockOrderService.findPage(new Page<>(request, response), stockOrder);
@@ -47,6 +49,7 @@ public class StockOrderController  extends BaseController {
 
     }
 
+    @RequiresPermissions("ims:phone:edit")
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public String save(StockOrder stockOrder,Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, stockOrder)){
@@ -63,6 +66,7 @@ public class StockOrderController  extends BaseController {
         return "redirect:" + adminPath + "/ims/phoneOrder/list/?repage";
     }
 
+    @RequiresPermissions("ims:phone:edit")
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public String delete(StockOrder stockOrder, RedirectAttributes redirectAttributes) {
         stockOrder.setStatus(0);
@@ -70,6 +74,7 @@ public class StockOrderController  extends BaseController {
         addMessage(redirectAttributes, "保存手机订单" + stockOrder.getOrderId() + "成功");
         return "redirect:" + adminPath + "/ims/phoneOrder/list/?repage";
     }
+    @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = "form",method = RequestMethod.GET)
     public String form(StockOrder stockOrder,Model model) {
         model.addAttribute("order", stockOrder);

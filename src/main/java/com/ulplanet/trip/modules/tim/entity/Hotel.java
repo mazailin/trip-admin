@@ -1,4 +1,4 @@
-package com.ulplanet.trip.modules.tms.entity;
+package com.ulplanet.trip.modules.tim.entity;
 
 import com.ulplanet.trip.common.persistence.DataEntity;
 
@@ -11,7 +11,16 @@ public class Hotel   extends DataEntity<Hotel> {
     private String phone;
     private Double longitude;
     private Double latitude;
-    private String common;
+    private String description;
+    private City city;
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
 
     public String getName() {
         return name;
@@ -53,11 +62,11 @@ public class Hotel   extends DataEntity<Hotel> {
         this.latitude = latitude;
     }
 
-    public String getCommon() {
-        return common;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCommon(String common) {
-        this.common = common;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

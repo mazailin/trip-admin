@@ -1,9 +1,9 @@
-package com.ulplanet.trip.modules.tms.dao;
+package com.ulplanet.trip.modules.tim.dao;
 
 import com.ulplanet.trip.common.persistence.CrudDao;
 import com.ulplanet.trip.common.persistence.annotation.MyBatisDao;
 import com.ulplanet.trip.modules.tms.bo.InfoBo;
-import com.ulplanet.trip.modules.tms.entity.Flight;
+import com.ulplanet.trip.modules.tim.entity.Flight;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,5 +13,5 @@ import java.util.List;
  */
 @MyBatisDao
 public interface FlightDao extends CrudDao<Flight> {
-    List<InfoBo> findList(@Param(value = "ids")String []ids);
+    List<InfoBo> findListByCityIds(@Param(value = "ids")String []ids);
 }

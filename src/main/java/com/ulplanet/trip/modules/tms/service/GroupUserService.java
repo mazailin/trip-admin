@@ -31,14 +31,33 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private GroupService groupService;
 
     public ResponseBo addUser(GroupUser groupUser){
-        String userCode = this.getUserCode(groupUser.getGroup());
         groupUser.preInsert();
-        groupUser.setCode(userCode);
         groupUser.setUser(IdGen.uuid());
         return ResponseBo.getResult(groupUserDao.insertUser(groupUser));
     }
 
+    public ResponseBo saveGroupUser(GroupUser groupUser){
+        ResponseBo responseBo;
+        if(StringUtils.isBlank(groupUser.getCode())){//添加用户
+            String code =  this.getUserCode(groupUser.getGroup());
+            groupUser.setCode(code);
+            if(StringUtils.isNotBlank(groupUser.getUser())){
+                responseBo = updateUser(groupUser);
+            }else {
+                responseBo = addUser(groupUser);
+            }
+            if(responseBo.getStatus()==1){//添加用户到团队中
+                responseBo = addGroupUser(groupUser);
+            }
+        }else{
+            updateUser(groupUser);
+            responseBo = updateUser(groupUser);
+        }
+        return responseBo;
+    }
+
     public ResponseBo addGroupUser(GroupUser groupUser){
+        groupUser.preInsert();
         return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
     }
 

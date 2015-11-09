@@ -213,45 +213,6 @@
     <example>${fns:toJson(object)}</example>  
   </function>
 
-  <!-- PhoneUtils -->
-  <function>
-    <description>手机状态对象获取</description>
-    <name>phoneStatus</name>
-    <function-class>com.ulplanet.trip.modules.ims.utils.PhoneUtils</function-class>
-    <function-signature>java.util.List getStatus()</function-signature>
-    <example>${fns:phoneStatus()}</example>
-  </function>
-  <function>
-    <description>手机订单对象获取</description>
-    <name>phoneOrderIds</name>
-    <function-class>com.ulplanet.trip.modules.ims.utils.PhoneUtils</function-class>
-    <function-signature>java.util.List getOrderIds(java.lang.String))</function-signature>
-    <example>${fns:phoneOrderIds()}</example>
-  </function>
 
-  <!-- GroupUtils>-->
-  <function>
-    <description>获取团队列表</description>
-    <name>getGroupList</name>
-    <function-class>com.ulplanet.trip.modules.tms.utils.GroupUtils</function-class>
-    <function-signature>java.util.List getGroupList())</function-signature>
-    <example>${fns:getGroupList()}</example>
-  </function>
-  <function>
-    <description>获取旅行社列表</description>
-    <name>getCustomer</name>
-    <function-class>com.ulplanet.trip.modules.tms.utils.GroupUtils</function-class>
-    <function-signature>java.util.List getCustomer())</function-signature>
-    <example>${fns:getCustomer(groupId)}</example>
-  </function>
-
-  <!-- journeyUtils -->
-  <function>
-    <description>获取旅程信息</description>
-    <name>getJourneyTemplate</name>
-    <function-class>com.ulplanet.trip.modules.tms.utils.JourneyUtils</function-class>
-    <function-signature>java.util.List getJourneyTemplate(java.lang.String))</function-signature>
-    <example>${fns:getJourneyTemplate(groupId)}</example>
-  </function>
 
 </taglib>

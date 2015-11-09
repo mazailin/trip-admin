@@ -1,10 +1,12 @@
 package com.ulplanet.trip.modules.tms.entity;
 
 import com.ulplanet.trip.common.persistence.DataEntity;
+import com.ulplanet.trip.modules.crm.entity.Customer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by zhangxd on 15/8/11.
@@ -20,6 +22,16 @@ public class Group extends DataEntity<Group> {
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private Date toDate;
     private String chatId;
+
+    private List<Customer> customers;
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
 
     public String getCustomerName() {
         return customerName;

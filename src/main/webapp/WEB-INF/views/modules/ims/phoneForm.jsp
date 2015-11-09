@@ -71,7 +71,7 @@
     <label class="control-label">订单号:</label>
     <div class="controls">
       <form:select path="stockOrderId">
-        <form:options items="${fns:phoneOrderIds(phoneInfo.stockOrderId==null?'':phoneInfo.stockOrderId)}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
+        <form:options items="${orderList}" itemLabel="orderId" itemValue="id" htmlEscape="false"/>
       </form:select>
     </div>
   </div>
@@ -79,7 +79,7 @@
     <label class="control-label">状态:</label>
     <div class="controls">
       <form:select path="status" cssStyle="width:150px">
-        <form:options items="${fns:phoneStatus()}" itemLabel="value" itemValue="id" htmlEscape="false"/>
+        <form:options items="${fns:getDictList('phone_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
       </form:select>
     </div>
   </div>
