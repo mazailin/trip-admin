@@ -9,8 +9,7 @@
         description,
         customer,
         from_date,
-        to_date,
-        chat_id
+        to_date
         FROM
         `group`
         WHERE `group`.id = #{id}
@@ -24,7 +23,6 @@
         `group`.customer,
         `group`.from_date,
         `group`.to_date,
-        `group`.chat_id,
         `customer`.name as customerName
         FROM
             `group`
