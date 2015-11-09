@@ -11,7 +11,7 @@
 <head>
   <title>旅游团用户管理</title>
   <meta name="decorator" content="default"/>
-  <script type="text/javascript" src="${ctxStatic}/static/common/qrcode.js"></script>
+  <script type="text/javascript" src="${ctxStatic}/common/qrcode.js"></script>
   <script type="text/javascript">
     function page(n,s){
       $("#pageNo").val(n);
