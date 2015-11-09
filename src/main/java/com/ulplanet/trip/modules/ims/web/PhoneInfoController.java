@@ -7,6 +7,8 @@ import com.ulplanet.trip.modules.ims.bo.PhoneInfoBo;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.ims.service.PhoneInfoService;
+import com.ulplanet.trip.modules.ims.service.StockOrderService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,8 @@ import java.util.Map;
 public class PhoneInfoController extends BaseController {
     @Resource
     private PhoneInfoService phoneInfoService;
+    @Resource
+    private StockOrderService stockOrderService;
 
     @ModelAttribute
     public PhoneInfo get(@RequestParam(required=false) String id) {
@@ -45,6 +49,7 @@ public class PhoneInfoController extends BaseController {
      * @param model
      * @return
      */
+    @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = {"/list",""})
     public String list(PhoneInfo phoneInfo, HttpServletRequest request, HttpServletResponse response, Model model){
         Page<PhoneInfo> page = this.phoneInfoService.findPage(new Page<>(request, response), phoneInfo);
@@ -69,6 +74,7 @@ public class PhoneInfoController extends BaseController {
      * @param redirectAttributes
      * @return
      */
+    @RequiresPermissions("ims:phone:edit")
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public String save(PhoneInfo phoneInfo,Model model, RedirectAttributes redirectAttributes) {
 
@@ -95,6 +101,7 @@ public class PhoneInfoController extends BaseController {
      * @param redirectAttributes
      * @return
      */
+    @RequiresPermissions("ims:phone:refund")
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public String delete(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
         phoneInfo.setStatus(9000);
@@ -111,6 +118,7 @@ public class PhoneInfoController extends BaseController {
      * @param redirectAttributes
      * @return
      */
+    @RequiresPermissions("ims:phone:refund")
     @RequestMapping(value = "/refund",method = RequestMethod.GET)
     public String refund(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
         phoneInfo = this.phoneInfoService.startRefund(phoneInfo);
@@ -126,9 +134,11 @@ public class PhoneInfoController extends BaseController {
      * @param model
      * @return
      */
+    @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String form(PhoneInfo phoneInfo,Model model) {
         model.addAttribute("order", phoneInfo);
+        model.addAttribute("orderList",stockOrderService.getOrderIds(phoneInfo.getStockOrderId()));
         return "modules/ims/phoneForm";
     }
 
@@ -137,6 +147,7 @@ public class PhoneInfoController extends BaseController {
      * @param stockOrderId
      * @return
      */
+    @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = "/count",method = RequestMethod.GET)
     @ResponseBody
     public String count(@RequestParam(value = "stockOrderId",required = false)String stockOrderId,

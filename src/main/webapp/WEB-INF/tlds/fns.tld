@@ -213,19 +213,6 @@
     <example>${fns:toJson(object)}</example>  
   </function>
 
-  <!-- PhoneUtils -->
-  <function>
-    <description>手机状态对象获取</description>
-    <name>phoneStatus</name>
-    <function-class>com.ulplanet.trip.modules.ims.utils.PhoneUtils</function-class>
-    <function-signature>java.util.List getStatus()</function-signature>
-    <example>${fns:phoneStatus()}</example>
-  </function>
-  <function>
-    <description>手机订单对象获取</description>
-    <name>phoneOrderIds</name>
-    <function-class>com.ulplanet.trip.modules.ims.utils.PhoneUtils</function-class>
-    <function-signature>java.util.List getOrderIds(java.lang.String))</function-signature>
-    <example>${fns:phoneOrderIds()}</example>
-  </function>
+
+
 </taglib>

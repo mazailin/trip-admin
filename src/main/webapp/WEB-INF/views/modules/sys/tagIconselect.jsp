@@ -125,6 +125,7 @@
 	      <li><i class="fa fa-volume-up"></i> volume-up</li>
 
 	      <li><i class="fa fa-wrench"></i> wrench</li>
+		  <li><i class="fa fa-bed"></i>hotel</li>
 	    </ul>
 	
 	  

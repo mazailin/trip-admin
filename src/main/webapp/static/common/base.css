@@ -6,6 +6,8 @@ label {display:inline-block;margin-bottom:0;} input[type="radio"],input[type="ch
 input[disabled],select[disabled],textarea[disabled],input[readonly],select[readonly],textarea[readonly] {cursor:auto;background-color:#f3f3f3;}
 .input-prepend input,.input-append input,.input-prepend select,.input-append select,.input-prepend .uneditable-input,.input-append .uneditable-input {position:static;}
 legend {margin:10px 0;*left:-7px;*position:relative;color:#0088CC;*width:99.5%}
+table tr:hover {background-color: #b1cad5
+}
 
 .collapse {*display:none;_position:static;} .collapse.in {*display:block;}
 .close {opacity:0.3;filter:alpha(opacity=30);} .close:hover {opacity:0.8;filter:alpha(opacity=80);}

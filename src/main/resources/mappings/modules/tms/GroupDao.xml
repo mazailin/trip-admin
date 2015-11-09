@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupDao">
+
+    <select id="get" resultType="Group">
+        SELECT
+        id,
+        name,
+        description,
+        customer,
+        from_date,
+        to_date,
+        chat_id
+        FROM
+        `group`
+        WHERE `group`.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Group">
+        SELECT
+        `group`.id,
+        `group`.name,
+        `group`.description,
+        `group`.customer,
+        `group`.from_date,
+        `group`.to_date,
+        `group`.chat_id,
+        `customer`.name as customerName
+        FROM
+            `group`
+        LEFT JOIN `customer` on `group`.customer = `customer`.id
+        <where>
+            <if test="name!=null and name!=''">
+                AND `group`.name like concat('%',#{name},'%')
+            </if>
+            <if test="id!=null and id!=''">
+                AND `group`.id != #{id}
+            </if>
+            <if test="customer!=null and customer!=''">
+                AND `group`.customer = #{customer}
+            </if>
+        </where>
+        ORDER BY `group`.from_date DESC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `group`(
+            id,
+            name,
+            customer,
+            from_date,
+            to_date,
+            description,
+            create_by,
+            create_date,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{name},
+            #{customer},
+            #{fromDate},
+            #{toDate},
+            #{description},
+            #{createBy.id},
+            #{createDate},
+            #{updateDate},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE `group` SET
+            name = #{name},
+            from_date = #{fromDate},
+            to_date = #{toDate},
+            description = #{description},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+
+
+    <delete id="delete">
+        DELETE FROM `group` WHERE id = #{id}
+    </delete>
+
+</mapper>

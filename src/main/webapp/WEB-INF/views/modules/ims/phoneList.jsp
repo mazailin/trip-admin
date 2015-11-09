@@ -23,7 +23,7 @@
 <body>
 <ul class="nav nav-tabs">
   <li class="active"><a href="${ctx}/ims/phone/">手机信息列表</a></li>
-  <li><a href="${ctx}/ims/phone/form?sort=10">手机信息添加</a></li>
+  <shiro:hasPermission name="ims:phone:edit"><li><a href="${ctx}/ims/phone/form?sort=10">手机信息添加</a></li></shiro:hasPermission>
 </ul>
 <form:form id="searchForm" modelAttribute="phoneInfo" action="${ctx}/ims/phone/" method="post" class="breadcrumb form-search">
   <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -32,7 +32,7 @@
   &nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form:form>
 <sys:message content="${message}"/>
-<table id="contentTable" class="table table-striped table-bordered table-condensed">
+<table id="contentTable" class="table table-hover table-bordered table-condensed">
   <thead><tr><th>手机编号</th><th>订单ID</th><th>手机状态</th><th>操作</th></tr></thead>
   <tbody>
   <c:forEach items="${page.list}" var="phone">
@@ -41,10 +41,14 @@
       <td><a href="${ctx}/ims/phoneOrder/form?id=${phone.stockOrderId}">${phone.stockOrderId}</td>
       <td>${phone.statusValue}</td>
       <td>
-        <a href="${ctx}/ims/phone/form?id=${phone.id}">修改</a>
-        <a href="${ctx}/ims/phone/delete?id=${phone.id}" onclick="return confirmx('确认要置为报废状态吗？', this.href)">报废</a>
+        <shiro:hasPermission name="ims:phone:edit"><a href="${ctx}/ims/phone/form?id=${phone.id}">修改</a></shiro:hasPermission>
+        <shiro:hasPermission name="ims:phone:refund">
+          <a href="${ctx}/ims/phone/delete?id=${phone.id}" onclick="return confirmx('确认要置为报废状态吗？', this.href)">报废</a>
+        </shiro:hasPermission>
         <%--<a href="${ctx}/ims/phone/refund?id=${phone.id}" onclick="return confirmx('确认要置为退货状态吗？', this.href)">更换</a>--%>
-        <a href="${ctx}/ims/phone/refund?id=${phone.id}&refundFlag=1" onclick="return confirmx('确认要置为退货状态吗？', this.href)">退货</a>
+        <shiro:hasPermission name="ims:phone:refund">
+          <a href="${ctx}/ims/phone/refund?id=${phone.id}&refundFlag=1" onclick="return confirmx('确认要置为退货状态吗？', this.href)">退货</a>
+        </shiro:hasPermission>
       </td>
     </tr>
   </c:forEach>

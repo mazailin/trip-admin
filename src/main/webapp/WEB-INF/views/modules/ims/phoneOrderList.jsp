@@ -23,7 +23,7 @@
 <body>
   <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/ims/phoneOrder/">订单列表</a></li>
-    <li><a href="${ctx}/ims/phoneOrder/form?sort=10">订单添加</a></li>
+    <shiro:hasPermission name="ims:phone:edit"><li><a href="${ctx}/ims/phoneOrder/form?sort=10">订单添加</a></li></shiro:hasPermission>
   </ul>
   <form:form id="searchForm" modelAttribute="stockOrder" action="${ctx}/ims/phoneOrder/" method="post" class="breadcrumb form-search">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -32,7 +32,7 @@
     &nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
   </form:form>
   <sys:message content="${message}"/>
-  <table id="contentTable" class="table table-striped table-bordered table-condensed">
+  <table id="contentTable" class="table table-hover table-bordered table-condensed">
     <thead><tr><th>订单号</th><th>手机型号</th><th>单价</th><th>总价</th><th>数量</th><th>订单状态</th><th>保险</th><th>备注</th><th>操作</th></tr></thead>
     <tbody>
     <c:forEach items="${page.list}" var="order">
@@ -46,8 +46,10 @@
         <td>${order.insurance}</td>
         <td>${order.comment}</td>
         <td nowrap="nowrap">
-          <a href="${ctx}/ims/phoneOrder/form?id=${order.id}">修改</a>
-          <a href="${ctx}/ims/phoneOrder/delete?id=${order.id}" onclick="return confirmx('确认要删除该订单吗？', this.href)">删除</a>
+          <shiro:hasPermission name="ims:phone:edit"><a href="${ctx}/ims/phoneOrder/form?id=${order.id}">修改</a></shiro:hasPermission>
+          <shiro:hasPermission name="ims:phone:edit">
+            <a href="${ctx}/ims/phoneOrder/delete?id=${order.id}" onclick="return confirmx('确认要删除该订单吗？', this.href)">删除</a>
+          </shiro:hasPermission>
           <a href="javascript:void(0)" onclick="aog('${order.id}');">已到货数量</a>
           <a href="${ctx}/ims/phone/list?stockOrderId=${order.id}">查看订单下所有手机</a>
         </td>

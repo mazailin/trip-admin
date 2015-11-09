@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.JourneyPlanDao">
+
+	<resultMap id="JourneyPlan" type="com.ulplanet.trip.modules.tms.entity.JourneyPlan">
+            <result property="id" column="id"/>
+            <result property="dayId" column="day_id"/>
+            <result property="infoId" column="info_id"/>
+            <result property="type" column="type"/>
+            <result property="name" column="name"/>
+            <result property="time" column="time"/>
+            <result property="timeFlag" column="time_flag"/>
+            <result property="description" column="description"/>
+            <result property="message" column="message"/>
+            <result property="messageFlag" column="message_flag"/>
+            <result property="sort" column="sort"/>
+            <result property="remarks" column="remarks"/>
+            <result property="typeValue" column="typeValue"/>
+            <result property="longitude" column="longitude"/>
+            <result property="latitude" column="latitude"/>
+	</resultMap>
+
+    <resultMap id="InfoBo" type="com.ulplanet.trip.modules.tms.bo.InfoBo">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="phone" column="phone"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="BaseColumns">
+	    <![CDATA[
+            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
+	    ]]>
+	</sql>
+
+<sql id="BaseWhere">
+    <where>
+                <if test="id != null and id != ''">
+                    AND id = #{id}
+                </if>
+                <if test="dayId != null and dayId != ''">
+                    AND day_id = #{dayId}
+                </if>
+                <if test="type != null and type != ''">
+                    AND type = #{type}
+                </if>
+                <if test="name != null and name != ''">
+                    AND name = #{name}
+                </if>
+                <if test="time != null and time != ''">
+                    AND time = #{time}
+                </if>
+                <if test="timeFlag != null and timeFlag != ''">
+                    AND time_flag = #{timeFlag}
+                </if>
+                <if test="description != null and description != ''">
+                    AND description = #{description}
+                </if>
+                <if test="message != null and message != ''">
+                    AND message = #{message}
+                </if>
+                <if test="messageFlag != null and messageFlag != ''">
+                    AND message_flag = #{messageFlag}
+                </if>
+                <if test="sort != null and sort != ''">
+                    AND sort = #{sort}
+                </if>
+                <if test="remarks != null and remarks != ''">
+                    AND remarks = #{remarks}
+                </if>
+    </where>
+
+ </sql>
+
+
+
+	<insert id="insert">
+                INSERT INTO journey_plan (
+                  <trim suffix="" suffixOverrides=",">
+                      <if test="id != null and id != ''">
+                          id,
+                      </if>
+                      <if test="dayId != null and dayId != ''">
+                          day_id,
+                      </if>
+                      <if test="type != null and type != ''">
+                          type,
+                      </if>
+                      <if test="infoId != null and infoId != ''">
+                          info_id,
+                      </if>
+                      <if test="name != null and name != ''">
+                          name,
+                      </if>
+                      <if test="time != null and time != ''">
+                          time,
+                      </if>
+                      <if test="timeFlag != null and timeFlag != ''">
+                         time_flag,
+                      </if>
+                      <if test="description != null">
+                          description,
+                      </if>
+                      <if test="message != null">
+                         message,
+                      </if>
+                      <if test="messageFlag != null and messageFlag != ''">
+                         message_flag,
+                      </if>
+                      <if test="sort != null and sort != ''">
+                        sort,
+                      </if>
+                      <if test="latitude != null and latitude != ''">
+                          latitude,
+                      </if>
+                      <if test="longitude != null and longitude != ''">
+                          longitude,
+                      </if>
+                      <if test="createBy.id != null and createBy.id != ''">
+                        create_by,
+                      </if>
+                      <if test="createDate != null and createDate != ''">
+                        create_date,
+                      </if>
+                      <if test="updateDate != null and updateDate != ''">
+                        update_date,
+                      </if>
+                      <if test="remarks != null and remarks != ''">
+                        remarks,
+                      </if>
+                  </trim>
+                ) VALUES (
+                  <trim suffix="" suffixOverrides=",">
+                    <if test="id != null and id != ''">
+                        #{id},
+                    </if>
+                    <if test="dayId != null and dayId != ''">
+                        #{dayId},
+                    </if>
+                    <if test="type != null and type != ''">
+                        #{type},
+                    </if>
+                    <if test="infoId != null and infoId != ''">
+                        #{infoId},
+                    </if>
+                    <if test="name != null and name != ''">
+                        #{name},
+                    </if>
+                    <if test="time != null and time != ''">
+                        #{time},
+                    </if>
+                    <if test="timeFlag != null and timeFlag != ''">
+                       #{timeFlag},
+                    </if>
+                    <if test="description != null">
+                        #{description},
+                    </if>
+                    <if test="message != null">
+                        #{message},
+                    </if>
+                    <if test="messageFlag != null and messageFlag != ''">
+                        #{messageFlag},
+                    </if>
+                    <if test="sort != null and sort != ''">
+                        #{sort},
+                    </if>
+                      <if test="latitude != null and latitude != ''">
+                          #{latitude},
+                      </if>
+                      <if test="longitude != null and longitude != ''">
+                          #{longitude},
+                      </if>
+                    <if test="createBy.id != null and createBy.id != ''">
+                        #{createBy.id},
+                    </if>
+                    <if test="createDate != null and createDate != ''">
+                        #{createDate},
+                    </if>
+                    <if test="updateDate != null and updateDate != ''">
+                        #{updateDate},
+                    </if>
+                    <if test="remarks != null and remarks != ''">
+                        #{remarks},
+                    </if>
+                  </trim>
+                )
+	</insert>
+
+
+    <insert id="inserts">
+        INSERT INTO journey_plan (
+                id,
+                day_id,
+                type,
+                info_id,
+                name,
+                time,
+                time_flag,
+                description,
+                message,
+                sort,
+                latitude,
+                longitude,
+                create_by,
+                create_date,
+                remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+                    #{item.id},
+                    #{item.dayId},
+                    #{item.type},
+                    #{item.infoId},
+                    #{item.name},
+                    #{item.time},
+                    #{item.timeFlag},
+                    #{item.description},
+                    #{item.message},
+                    #{item.sort},
+                    #{item.latitude},
+                    #{item.longitude},
+                    #{item.createBy.id},
+                    #{item.createDate},
+                    #{item.remarks}
+        )
+        </foreach>
+    </insert>
+
+
+
+    
+	<update id="update" >
+        UPDATE journey_plan
+         <set>
+                 <if test="dayId != null and dayId!=''">
+                      day_id = #{dayId},
+                  </if>
+                 <if test="type != null and type!=''">
+                      type = #{type},
+                  </if>
+                 <if test="infoId != null and infoId!=''">
+                     info_id = #{infoId},
+                 </if>
+                 <if test="name != null and name!=''">
+                      name = #{name},
+                  </if>
+                 <if test="time != null and time!=''">
+                      time = #{time},
+                  </if>
+                 <if test="timeFlag != null and timeFlag!=''">
+                      time_flag = #{timeFlag},
+                  </if>
+                 <if test="description != null">
+                      description = #{description},
+                  </if>
+                 <if test="message != null">
+                      message = #{message},
+                  </if>
+                 <if test="messageFlag != null and messageFlag!=''">
+                      message_flag = #{messageFlag},
+                  </if>
+                 <if test="sort != null and sort!=''">
+                      sort = #{sort},
+                  </if>
+                 <if test="latitude != null and latitude != ''">
+                     latitude = #{latitude},
+                 </if>
+                 <if test="longitude != null and longitude != ''">
+                     longitude = #{longitude},
+                 </if>
+                 <if test="updateBy.id != null">
+                      update_by = #{updateBy.id},
+                  </if>
+                 <if test="updateDate != null">
+                      update_date = #{updateDate},
+                  </if>
+                 <if test="remarks != null">
+                      remarks = #{remarks}
+                  </if>
+        </set>
+        where id = #{id}
+	</update>
+
+    <delete id="delete">
+            DELETE FROM journey_plan
+            <where>
+                <if test="id!=null and id!=''">
+                    id = #{id}
+                </if>
+                <if test="dayId!=null and dayId!=''">
+                    day_id = #{dayId}
+                </if>
+            </where>
+    </delete>
+    
+    <select id="get" resultMap="JourneyPlan">
+		SELECT <include refid="BaseColumns" />
+	    <![CDATA[
+		    FROM journey_plan 
+	        WHERE 
+		        id = #{id} 
+	    ]]>
+	</select>
+
+
+    <select id="findList" resultMap="JourneyPlan">
+        SELECT <![CDATA[
+            jp.id,jp.day_id,jp.type,jp.name as name,jp.time,jp.time_flag,jp.description,
+            jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude
+	    ]]>
+        <![CDATA[
+		    FROM journey_plan jp
+	        WHERE
+		        jp.day_id = #{dayId}
+		    ORDER BY jp.sort ASC
+	    ]]>
+    </select>
+
+    <update id="updates"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update journey_plan
+            <set>
+                sort=#{item.sort}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+		
+    <select id="findInfoByTableName" resultMap="InfoBo">
+        SELECT id,name,address,city,${tableCol},longitude,latitude,description FROM ${table}
+        <where>
+            <if test="ids!=null">
+                AND city IN
+                <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="infoId!=null">
+                AND id = #{infoId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findPage" resultMap="JourneyPlan">
+    	SELECT <include refid="BaseColumns" />
+	    FROM journey_plan 
+		<include refid="BaseWhere"/>
+    </select>
+
+
+
+	
+</mapper>
+

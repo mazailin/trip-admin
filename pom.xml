@@ -413,12 +413,12 @@
             <version>2.3.1</version>
         </dependency>
 
-        <!-- fastjson json
+        <!--fastjson json-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency> -->
+            <version>1.2.7</version>
+        </dependency>
 
         <!-- xstream xml -->
         <dependency>
