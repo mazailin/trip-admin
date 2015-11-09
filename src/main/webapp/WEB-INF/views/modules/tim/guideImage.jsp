@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>美食图片</title>
+	<title>导购图片</title>
 	<meta name="decorator" content="default"/>
     <%@include file="/WEB-INF/views/include/fileupload.jsp" %>
     <script type="text/javascript">
@@ -12,7 +12,7 @@
             $('#fileupload').fileupload();
 
             $('#fileupload').fileupload('option', {
-                url: ctx + '/tim/food/uploadData',
+                url: ctx + '/tim/guide/uploadData',
                 disableImageResize: /Android(?!.*Chrome)|Opera/
                         .test(window.navigator.userAgent),
                 acceptFileTypes: /(\.|\/)(jpe?g|png)$/i
@@ -30,9 +30,9 @@
             // Load existing files:
             $('#fileupload').addClass('fileupload-processing');
             $.ajax({
-                url: ctx + '/tim/food/findFoodFiles',
+                url: ctx + '/tim/guide/findGuideFiles',
                 data: {
-                    "id": "${food.id}"
+                    "id": "${guide.id}"
                 },
                 dataType: 'json',
                 context: $('#fileupload')[0]
@@ -48,15 +48,15 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-        <li><a href="${ctx}/tim/food/list">美食列表</a></li>
-        <li><a href="${ctx}/tim/food/form?id=${food.id}">美食<shiro:hasPermission name="tim:food:edit">${not empty food.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
-		<li class="active"><a href="${ctx}/tim/food/image?id=${food.id}">美食图片<shiro:hasPermission name="tim:food:edit">维护</shiro:hasPermission><shiro:lacksPermission name="tim:food:edit">查看</shiro:lacksPermission></a></li>
+        <li><a href="${ctx}/tim/guide/list">导购列表</a></li>
+        <li><a href="${ctx}/tim/guide/form?id=${guide.id}">导购<shiro:hasPermission name="tim:guide:edit">${not empty guide.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:guide:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/guide/image?id=${guide.id}">导购图片<shiro:hasPermission name="tim:guide:edit">维护</shiro:hasPermission><shiro:lacksPermission name="tim:guide:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-    <form id="fileupload" class="form-horizontal" action="${ctx}/tim/food/uploadData" method="POST"
+    <form id="fileupload" class="form-horizontal" action="${ctx}/tim/guide/uploadData" method="POST"
           enctype="multipart/form-data">
         <sys:message content="${message}"/>
         <div class="control-group">
-            <shiro:hasPermission name="tim:food:edit">
+            <shiro:hasPermission name="tim:guide:edit">
             <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
             <div class="row fileupload-buttonbar">
                 <div class="span7">
@@ -102,7 +102,7 @@
             <table role="presentation" class="table table-striped">
                 <tbody class="files">
                 <th>图片</th><th>名称</th><th>类型</th><th style="width: 80px;">描述</th><th></th>
-                <shiro:hasPermission name="tim:food:edit"><th>操作</th></shiro:hasPermission>
+                <shiro:hasPermission name="tim:guide:edit"><th>操作</th></shiro:hasPermission>
                 </tbody>
             </table>
         </div>
@@ -129,9 +129,9 @@
                 <strong class="error text-danger"></strong>
             </td>
             <td>
-                <input type="hidden" name="food" value="${food.id}" />
+                <input type="hidden" name="guide" value="${guide.id}" />
                 <select name="type" class="input-mini" required>
-                    <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
+                    <c:forEach var="fileType" items="${fns:getDictList('guide_file_type')}">
                         <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
                     </c:forEach>
                 </select>
@@ -184,10 +184,10 @@
                 {% } %}
             </td>
             <td>
-                <input type="hidden" name="food" value="${food.id}" />
+                <input type="hidden" name="guide" value="${guide.id}" />
                 <input type="hidden" name="id" value="{%=file.id%}" />
                 <select name="type" class="input-mini">
-                    <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
+                    <c:forEach var="fileType" items="${fns:getDictList('guide_file_type')}">
                         <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
                     </c:forEach>
                 </select>
@@ -196,16 +196,16 @@
                 <textarea name="description" rows="3" class="input-xlarge">{%=file.description%}</textarea>
             </td>
             <td></td>
-            <shiro:hasPermission name="tim:food:edit">
+            <shiro:hasPermission name="tim:guide:edit">
             <td>
                 {% if (file.id) { %}
                     <button class="btn btn-info update" data-type="POST"
-                        data-url="${ctx}/tim/food/updateFile">
+                        data-url="${ctx}/tim/guide/updateFile">
                         <i class="glyphicon glyphicon-upload"></i>
                         <span>更新</span>
                     </button>
                     <button class="btn btn-danger delete" data-type="POST"
-                        data-url="${ctx}/tim/food/deleteFile"
+                        data-url="${ctx}/tim/guide/deleteFile"
                         data-data='{"fileId": "{%=file.id %}"}' >
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>删除</span>

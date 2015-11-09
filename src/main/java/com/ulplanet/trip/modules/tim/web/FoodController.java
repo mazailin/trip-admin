@@ -71,8 +71,13 @@ public class FoodController extends BaseController {
         if (!beanValidator(model, food)){
             return form(food, model);
         }
-        foodService.saveFood(food);
+
+        boolean isNew = StringUtils.isEmpty(food.getId());
+        food = foodService.saveFood(food);
         addMessage(redirectAttributes, "保存美食'" + food.getName() + "'成功");
+        if (isNew) {
+            return "redirect:" + adminPath + "/tim/food/image?repage&id=" + food.getId();
+        }
         return "redirect:" + adminPath + "/tim/food/list?repage";
     }
 
@@ -98,7 +103,7 @@ public class FoodController extends BaseController {
         return foodService.uploadData(foodFile, file);
     }
 
-    @RequiresPermissions("tim:food:edit")
+    @RequiresPermissions("tim:food:view")
     @RequestMapping(value="findFoodFiles")
     @ResponseBody
     public Map<String, Object> getUpload(Food food) {
@@ -110,6 +115,13 @@ public class FoodController extends BaseController {
     @ResponseBody
     public void deleteFile(FoodFile foodFile) {
         foodService.deleteFoodFile(foodFile);
+    }
+
+    @RequiresPermissions("tim:food:edit")
+    @RequestMapping(value="updateFile")
+    @ResponseBody
+    public void updateFile(FoodFile foodFile) {
+        foodService.updateFoodFile(foodFile);
     }
 
 }
