@@ -29,7 +29,7 @@
 		workfolderName:(!必须!),文件存放的目录,可以是相对当前AppPath的目录.
 	-->
 	<bean id="diskGetter" class="com.ulplanet.trip.common.utils.fservice.FileGetterDiskImpl">
-		<property name="workfolderName" value="/Users/zhangxd/files" />
+		<property name="workfolderName" value="/storage/files" />
 	</bean>
 
 	<!-- 
@@ -54,7 +54,7 @@
 		workfolderName:文件保存的路径(可以是相对当前AppPath的路径).
 	-->
 	<bean id="diskSaver" class="com.ulplanet.trip.common.utils.fservice.FileSaverDiskImpl">
-		<property name="workfolderName" value="/Users/zhangxd/files" />
+		<property name="workfolderName" value="/storage/files" />
 	</bean>
  	
 	<!-- init the FileManger -->
