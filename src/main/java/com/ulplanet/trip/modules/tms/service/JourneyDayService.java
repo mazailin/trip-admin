@@ -66,12 +66,12 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
             if(!groupId.equals(sortBo.getGroupId())){
                 journeyDay = journeyDayDao.get(sortBo.getId());
                 journeyDay.preInsert();
-                journeyDay.setDayNumber(i);
+                journeyDay.setDayNumber(i+1);
                 journeyDay.setGroupId(groupId);
                 addDayList.add(journeyDay);
             }else {
                 journeyDay.setId(sortBo.getId());
-                journeyDay.setDayNumber(i);
+                journeyDay.setDayNumber(i+1);
                 journeyDays.add(journeyDay);
             }
             SortBo[] sortBos1 = sortBo.getChildren();
