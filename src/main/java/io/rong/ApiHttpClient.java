@@ -1,5 +1,6 @@
 package io.rong;
 
+import com.ulplanet.trip.common.config.Global;
 import io.rong.models.ChatroomInfo;
 import io.rong.models.FormatType;
 import io.rong.models.GroupInfo;
@@ -17,12 +18,8 @@ public class ApiHttpClient {
 	
 	private static final String UTF8 = "UTF-8";
 
-    private static final String APPKEY = "0vnjpoadnwjfz";
-    private static final String APPSECRET = "RbLfNztF73";
-
-    //正式
-//    private static final String APPKEY = "e5t4ouvptf40a";
-//    private static final String APPSECRET = "Q3obJczVbDY";
+    private static final String APPKEY = Global.getConfig("rong.key");
+    private static final String APPSECRET = Global.getConfig("rong.secret");
 
     // 获取token
 	public static SdkHttpResult getToken(String userId, String userName, String portraitUri) throws Exception {
