@@ -498,7 +498,7 @@
             var message = $("#plan-message").val();
             l = $("#plan-longitude");
             var longitude = l.val();
-            if(longitude!=''&&!isNaN(longitude)){
+            if(longitude!=''&&isNaN(longitude)){
                 l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
                 return false;
             }else{
@@ -506,7 +506,7 @@
             }
             l = $("#plan-latitude");
             var latitude = l.val();
-            if(latitude!=''&&!isNaN(latitude)){
+            if(latitude!=''&&isNaN(latitude)){
                 l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
                 return false;
             }else{
