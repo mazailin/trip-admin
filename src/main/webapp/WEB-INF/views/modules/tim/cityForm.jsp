@@ -14,7 +14,7 @@
                             type: "get",
                             dataType: 'json',
                             data: {
-                                'oldName': encodeURIComponent('${city.name}'),
+                                'oldName': '${city.name}',
                                 'country.id': function () {
                                     return $('#country').val();
                                 }
