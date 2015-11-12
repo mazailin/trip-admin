@@ -21,7 +21,7 @@ public class Flight  extends DataEntity<Flight> {
 
 
     public String getArrival() {
-        return departureCity.getName() + ":" + departureTerminal + ":" + company + " " + departureTime;
+        return arrivalCity.getName() + ":" + arrivalTerminal + ":"  + arrivalTime;
     }
 
     public void setArrival(String arrival) {
@@ -29,7 +29,8 @@ public class Flight  extends DataEntity<Flight> {
     }
 
     public String getDeparture() {
-        return arrivalCity.getName() + ":" + arrivalTerminal + ":" + company + " " + arrivalTime;
+        return departureCity.getName() + ":" + departureTerminal + ":" +  departureTime;
+
     }
 
     public void setDeparture(String departure) {

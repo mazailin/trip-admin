@@ -15,7 +15,7 @@
             <result property="departureCity.name" column="departure_city_name"/>
             <result property="arrivalCity.name" column="arrival_city_name"/>
             <result property="createBy.name" column="createName"/>
-            <result property="UpdateBy.name" column="updateName"/>
+            <result property="updateBy.name" column="updateName"/>
             <result property="common" column="common"/>
             <result property="remarks" column="remarks"/>
 	</resultMap>

@@ -503,6 +503,19 @@
             <version>1.13</version>
         </dependency>
 
+        <!-- qiniu cloud-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>[7.0.0, 7.0.99]</version>
+        </dependency>
+        <!--parse apk-->
+        <dependency>
+            <groupId>net.erdfelt.android</groupId>
+            <artifactId>apk-parser</artifactId>
+            <version>1.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -537,6 +550,8 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.5.1</version>
             </plugin>
+
+
 
             <!-- jetty插件 -->
             <plugin>

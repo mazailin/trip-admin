@@ -1,11 +1,15 @@
 package com.ulplanet.trip.modules.tms.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ulplanet.trip.common.persistence.Parameter;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.IdGen;
+import com.ulplanet.trip.common.utils.JedisUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
@@ -47,11 +51,6 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             groupUser.preInsert();
             String code =  this.getUserCode(groupUser.getGroup());
             groupUser.setCode(code);
-            if(StringUtils.isNotBlank(groupUser.getUser())){
-                responseBo = updateUser(groupUser);
-            }else {
-                responseBo = addUser(groupUser);
-            }
             try {
                 SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
                 SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
@@ -130,6 +129,47 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             return groupUser;
         }
         return new GroupUser();
+
+    }
+
+    public List<JSONObject> getPassportList(String group) {
+        if(JedisUtils.exists("userPassportList")){
+            String str = JedisUtils.get("userPassportList");
+            List<JSONObject> list = new ArrayList<>();
+            list = JSON.parseObject(str,list.getClass());
+            return list;
+        }
+        List<GroupUser> list = groupUserDao.findUserByPassport(null,null);
+
+        List<JSONObject> userList = new ArrayList<>();
+        if(list.size()>0){
+            Group group1 = groupService.get(group);
+            Date toDate = group1.getToDate();
+            Date fromDate = group1.getFromDate();
+
+            for(GroupUser g : list){
+                if(StringUtils.isNotBlank(g.getToDate())){
+                    try {
+                        Date fDate = DateUtils.parseDate(g.getFromDate(),"yyyy-MM-dd");
+                        Date tDate = DateUtils.parseDate(g.getToDate(),"yyyy-MM-dd");
+                        if(isIn(fDate,tDate,fromDate,toDate)){
+                            g.setCode("0");
+                        }else{
+                            g.setCode("1");
+                            JSONObject groupUser = new JSONObject();
+                            groupUser.put("label",g.getPassport());
+                            groupUser.put("value",g.getPassport()+":"+g.getName());
+                            userList.add(groupUser);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }
+        JedisUtils.set("userPassportList", JSON.toJSONString(userList), 0);
+        return userList;
 
     }
 

@@ -36,6 +36,7 @@ public class GroupUserController  extends BaseController {
             GroupUser groupUser = new GroupUser();
             if(StringUtils.isNotBlank(group)){
                 groupUser.setGroup(group);
+                groupUser.setList(groupUserService.getPassportList(group));
             }
             return groupUser;
         }
