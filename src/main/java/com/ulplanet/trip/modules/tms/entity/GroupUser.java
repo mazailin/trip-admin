@@ -1,7 +1,10 @@
 package com.ulplanet.trip.modules.tms.entity;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.persistence.DataEntity;
+
+import java.util.List;
 
 /**
  * Created by zhangxd on 15/8/11.
@@ -13,7 +16,15 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String type;
     private String code;
     private String name;
+    private String weChat;
+    private String qq;
+    private String birth;
+    private String birthPlace;
+    private String issuePlace;
+    private String issueDate;
+    private String expiryDate;
     private String gender;
+    private String photo;
     private String identityCard;
     private String passport;
     private String phone;
@@ -21,6 +32,80 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String toDate;
     private String fromDate;
     private String imToken;
+    private List<JSONObject> list;
+
+
+    public List<JSONObject> getList() {
+        return list;
+    }
+
+    public void setList(List<JSONObject> list) {
+        this.list = list;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(String weChat) {
+        this.weChat = weChat;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getBirth() {
+        return birth;
+    }
+
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public String getBirthPlace() {
+        return birthPlace;
+    }
+
+    public void setBirthPlace(String birthPlace) {
+        this.birthPlace = birthPlace;
+    }
+
+    public String getIssuePlace() {
+        return issuePlace;
+    }
+
+    public void setIssuePlace(String issuePlace) {
+        this.issuePlace = issuePlace;
+    }
+
+    public String getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(String issueDate) {
+        this.issueDate = issueDate;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
 
     public String getImToken() {
         return imToken;

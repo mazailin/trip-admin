@@ -92,7 +92,7 @@
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/tms/groupUser/?group=${groupId}">旅游团用户列表</a></li>
     <li><a href="${ctx}/tms/groupUser/form?group=${groupId}&sort=10">旅游团用户添加</a></li>
-    <li class="active"><a href="${ctx}/tms/journeyDay/?groupId=${groupId}">旅游团行程</a></li>
+    <li class="active"><a>旅游团行程</a></li>
 </ul>
 <sys:message content="${message}"/>
 <div style="margin-left: auto;margin-right: auto">

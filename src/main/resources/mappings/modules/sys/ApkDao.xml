@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.sys.dao.ApkDao">
+
+    <select id="findList" resultType="Apk">
+        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        ORDER BY name
+    </select>
+
+    <select id="findByParam" resultType="Apk">
+        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        <where>
+            1 = 1
+            <if test="packageName!=null">
+                AND package_name = #{packageName}
+            </if>
+        </where>
+        ORDER BY create_date
+    </select>
+
+    <select id="get" resultType="Apk">
+        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        WHERE id = #{id}
+        ORDER BY create_date
+    </select>
+
+    <update id="update">
+        UPDATE apk SET
+        name = #{name},
+        version = #{version},
+        url = #{url},
+        so_urls = #{soUrls},
+        size = #{size},
+        md5 = #{md5},
+        description = #{description},
+        package_name = #{packageName},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insert" >
+        INSERT INTO apk (
+        id,
+        name,
+        description,
+        version,
+        size,
+        md5,
+        url,
+        so_urls,
+        package_name,
+        create_by,
+        create_date,
+        remarks
+        ) VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        #{version,jdbcType=VARCHAR},
+        #{size,jdbcType=VARCHAR},
+        #{md5},
+        #{url,jdbcType=VARCHAR},
+        #{soUrls},
+        #{packageName},
+        #{createBy.id},
+        #{createDate},
+        #{remarks}
+        )
+
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM apk WHERE id = #{id}
+    </delete>
+
+
+</mapper>

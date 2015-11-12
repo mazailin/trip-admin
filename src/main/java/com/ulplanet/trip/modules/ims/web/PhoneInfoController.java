@@ -92,7 +92,7 @@ public class PhoneInfoController extends BaseController {
         }else{
             addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"失败");
         }
-        return "redirect:" + adminPath + "/ims/phone/list/?repage";
+        return "redirect:" + adminPath + "/ims/phone/list/?stockOrderId=" + phoneInfo.getStockOrderId() + "&repage";
     }
 
     /**

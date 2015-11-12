@@ -10,6 +10,13 @@
             group_user.code,
             group_user.type,
             user.name,
+            user.weChat,
+            user.qq,
+            user.birth,
+            user.issue_date,
+            user.expiry_date,
+            user.birth_place,
+            user.issue_place,
             user.gender,
             user.identity_card,
             user.passport,
@@ -36,6 +43,13 @@
         group_user.code,
         group_user.type,
         user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
         user.gender,
         user.identity_card,
         user.passport,
@@ -79,6 +93,13 @@
         INSERT INTO user(
             id,
             name,
+            weChat,
+            qq,
+            birth,
+            issue_date,
+            expiry_date,
+            birth_place,
+            issue_place,
             gender,
             identity_card,
             passport,
@@ -91,6 +112,13 @@
         ) VALUES (
             #{user},
             #{name},
+            #{weChat},
+            #{qq},
+            #{birth},
+            #{issueDate},
+            #{expiryDate},
+            #{birthPlace},
+            #{issuePlace},
             #{gender},
             #{identityCard},
             #{passport},
@@ -171,6 +199,7 @@
         group by user.passport
 
     </select>
+
 
     <select id="getUserById"  resultType="GroupUser">
         select `user`.id as user

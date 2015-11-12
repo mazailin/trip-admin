@@ -161,10 +161,10 @@
         ON hotel.update_by = su.id
 		<where>
             <if test="name != null and name != ''">
-                AND a.name like CONCAT('%', #{name}, '%')
+                AND hotel.name like CONCAT('%', #{name}, '%')
             </if>
             <if test="city != null and city.id != null and city.id != ''">
-                AND a.city = #{city.id}
+                AND hotel.city = #{city.id}
             </if>
             <if test="createBy != null and createBy.name != null and createBy.name != ''">
                 AND sc.name like CONCAT('%', #{createBy.name}, '%')
