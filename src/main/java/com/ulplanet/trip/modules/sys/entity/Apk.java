@@ -17,17 +17,17 @@ public class Apk extends DataEntity<Apk> {
     private String version;
     private String packageName;
     private String url;
-    private String soUrls;
+    private String tar;
     private String key;
     private String md5;
     private String size;
 
-    public String getSoUrls() {
-        return soUrls;
+    public String getTar() {
+        return tar;
     }
 
-    public void setSoUrls(String soUrls) {
-        this.soUrls = soUrls;
+    public void setTar(String tar) {
+        this.tar = tar;
     }
 
     public String getKey() {

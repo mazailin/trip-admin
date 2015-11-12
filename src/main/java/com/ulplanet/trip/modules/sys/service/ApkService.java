@@ -3,6 +3,7 @@ package com.ulplanet.trip.modules.sys.service;
 import com.ulplanet.trip.common.security.Digests;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.Encodes;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.sys.dao.ApkDao;
 import com.ulplanet.trip.modules.sys.entity.Apk;
@@ -29,11 +30,10 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
     @Resource
     private ApkDao apkDao;
 
-    public Apk upload(String name, String description,MultipartFile file,MultipartFile[] osFiles) {
+    public Apk upload(String name, String description,MultipartFile file,MultipartFile tar) {
         QiniuUploadUtil uploadUtil = new QiniuUploadUtil();
         String token = uploadUtil.uploadToken("tripapk", null, 3600, null, true);
         Apk uploadAPK = new Apk();
-        StringBuffer sb = new StringBuffer();
         try {
             byte [] bytes = file.getBytes();
             CommonsMultipartFile cf= (CommonsMultipartFile)file;
@@ -45,35 +45,29 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
             byte[] md5Bytes = Digests.md5(bytes);
             String md5 = Encodes.encodeHex(md5Bytes);
             size = f.length()+"";
-
+            String key = "";
+            String tarName = "";
             if(f.exists()){
                 AndroidApk apk = new AndroidApk(f);
                 packageName = apk.getPackageName();
                 version = apk.getAppVersion();
-                for(int z = 0;z<osFiles.length;z++){
-                    byte [] bytes1 = osFiles[z].getBytes();
-                    CommonsMultipartFile cf1= (CommonsMultipartFile)osFiles[z];
-                    DiskFileItem fi1 = (DiskFileItem)cf1.getFileItem();
-                    File f2 = fi1.getStoreLocation();
-                    if(f2.exists()) {
-                        String key = uploadUtil.upload(bytes1, name+"so"+z+".so", token);
-                        sb.append(key);
-                        sb.append(",");
-                    }
+                if(name.indexOf(".apk")<0){
+                    name = name + ".apk";
                 }
+                key = uploadUtil.upload(bytes,name, token);
+                byte [] bytes1 = tar.getBytes();
+                tarName = uploadUtil.upload(bytes1,tar.getOriginalFilename(), token);
+
             }
-            if(name.indexOf(".apk")<0){
-                name = name + ".apk";
-            }
-            String key = uploadUtil.upload(bytes,name, token);
+
             uploadAPK.setName(key);
             uploadAPK.setDescription(description);
-            uploadAPK.setUrl(QiniuUploadUtil.QINIU_URL + key);
+            uploadAPK.setUrl(key);
             uploadAPK.setVersion(version);
             uploadAPK.setPackageName(packageName);
             uploadAPK.setMd5(md5);
             uploadAPK.setSize(size);
-            uploadAPK.setSoUrls(sb.toString());
+            uploadAPK.setTar(tarName);
             this.saveApk(uploadAPK);
             return uploadAPK;
         }catch (IOException e){
@@ -86,10 +80,11 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
 
     public ResponseBo saveApk(Apk apk) {
         int i = 0;
-        if(apk.getId()==null) {
+        if(StringUtils.isBlank(apk.getId())) {
             List<Apk> list = apkDao.findByParam(apk);
             if (list.size() > 0) {
                 Apk apk1 = list.get(0);
+                apk.setId(apk1.getId());
                 apk1.setVersion(apk.getVersion());
                 apk1.setName(apk.getName());
                 apk1.setUrl(apk.getUrl());
@@ -97,6 +92,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
                 apk1.setPackageName(apk.getPackageName());
                 apk1.setSize(apk.getSize());
                 apk1.setMd5(apk.getMd5());
+                apk1.setTar(apk.getTar());
                 apk1.preUpdate();
                 i = apkDao.update(apk1);
             } else {

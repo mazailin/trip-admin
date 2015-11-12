@@ -20,24 +20,20 @@
         }
         return false;
       },"请上传文件后缀为apk的安装包");
-      jQuery.validator.addMethod("so",function(){
-        var files = $("input[name='osFiles']");
-        if(files == undefined)return true;
-        for(var i = 0;i< files.length;i++){
-          var file = files[i];
-          if(file.value.indexOf(".so")<0){
-            return false;
-          }
+      jQuery.validator.addMethod("tar",function(){
+        var file = $("#tarFile");
+        if(file.value.indexOf(".tar")>0||file.value.indexOf(".zip")>0&&file.value.indexOf(".rar")>0){
+          return true;
         }
-        return true;
-      },"请上传文件后缀为so的安装包");
+        return false;
+      },"请上传文件后缀为tar,zip,rar的安装包");
       $("#inputForm").validate({
         rules:{
           file : {
             apk : true
           },
-          osFiles : {
-            so : true
+          tarFile : {
+            tar : true
           }
         },
 
@@ -58,11 +54,6 @@
 
     });
   </script>
-  <style type="text/css">
-    .fa-times:hover {
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
 <ul class="nav nav-tabs">
@@ -93,9 +84,9 @@
       </div>
     </div>
     <div class="control-group">
-      <label class="control-label">SO上传:</label>
+      <label class="control-label">压缩包上传:</label>
       <div class="controls">
-        <a href="#" onclick="addFile(this);">添加文件...</a>
+        <input type="file" id="tarFile" name="tarFile" class="required"/>
       </div>
     </div>
   </c:if>
@@ -124,9 +115,15 @@
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label">URL:</label>
+    <label class="control-label">apk名称:</label>
     <div class="controls">
       <form:input path="url" htmlEscape="false" maxlength="50" class="" readonly="true"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">压缩包名称:</label>
+    <div class="controls">
+      <form:input path="tar" htmlEscape="false" maxlength="50" class="" readonly="true"/>
     </div>
   </div>
   <div class="form-actions">
@@ -142,17 +139,5 @@
 
   </div>
 </form:form>
-<script type="text/javascript">
-  function addFile(e){
-    var div = $(e).parent().parent().find(".controls");
-    div.append('<div><input type="file" name="osFiles"  class="required"/><i class="fa fa-times"></i></div>');
-  }
-  $(function(){
-    $(".fa-times").live("click",function(){
-      $(this).parent().remove();
-    });
-  });
-
-</script>
 </body>
 </html>

@@ -40,9 +40,9 @@ public class ApkController  extends BaseController {
 
     @RequiresPermissions("sys:apk:upload")
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public String upload(Apk apk,@RequestParam MultipartFile file,@RequestParam MultipartFile[] osFiles,Model model
+    public String upload(Apk apk,@RequestParam MultipartFile file,@RequestParam MultipartFile tarFile,Model model
     ) {
-        apk = apkService.upload(apk.getName(),apk.getDescription(),file,osFiles);
+        apk = apkService.upload(apk.getName(),apk.getDescription(),file,tarFile);
         return form(apk, model);
     }
 

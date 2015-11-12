@@ -45,6 +45,9 @@ public class QiniuUploadUtil {
                 .putNotEmpty("persistentPipeline", ""), true);
     }
 
+    public static String getQiniuUrl(){
+        return QINIU_URL;
+    }
     /**
      * 生成上传token
      *

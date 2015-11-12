@@ -3,12 +3,12 @@
 <mapper namespace="com.ulplanet.trip.modules.sys.dao.ApkDao">
 
     <select id="findList" resultType="Apk">
-        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        SELECT id,name,version,url,tar,description,package_name as packageName,md5,size FROM apk
         ORDER BY name
     </select>
 
     <select id="findByParam" resultType="Apk">
-        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        SELECT id,name,version,url,tar,description,package_name as packageName,md5,size FROM apk
         <where>
             1 = 1
             <if test="packageName!=null">
@@ -19,7 +19,7 @@
     </select>
 
     <select id="get" resultType="Apk">
-        SELECT id,name,version,url,so_urls,description,package_name as packageName,md5,size FROM apk
+        SELECT id,name,version,url,tar,description,package_name as packageName,md5,size FROM apk
         WHERE id = #{id}
         ORDER BY create_date
     </select>
@@ -29,7 +29,7 @@
         name = #{name},
         version = #{version},
         url = #{url},
-        so_urls = #{soUrls},
+        tar = #{tar},
         size = #{size},
         md5 = #{md5},
         description = #{description},
@@ -49,7 +49,7 @@
         size,
         md5,
         url,
-        so_urls,
+        tar,
         package_name,
         create_by,
         create_date,
@@ -62,7 +62,7 @@
         #{size,jdbcType=VARCHAR},
         #{md5},
         #{url,jdbcType=VARCHAR},
-        #{soUrls},
+        #{tar},
         #{packageName},
         #{createBy.id},
         #{createDate},
