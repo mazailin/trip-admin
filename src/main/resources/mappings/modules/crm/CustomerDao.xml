@@ -62,7 +62,8 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE customer SET 	
+		UPDATE customer SET
+            name = #{name},
 			description = #{description},
 			active = #{active},
 			update_by = #{updateBy.id},
