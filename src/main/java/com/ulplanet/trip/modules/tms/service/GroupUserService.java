@@ -168,7 +168,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             }
 
         }
-        JedisUtils.set("userPassportList", JSON.toJSONString(userList), 0);
+        JedisUtils.set("userPassportList", JSON.toJSONString(userList), 36000);
         return userList;
 
     }

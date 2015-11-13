@@ -14,12 +14,6 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $("#value").focus();
-      jQuery.validator.addMethod("apk",function(){
-        if($("#file").val().indexOf(".apk") > 0){
-          return true;
-        }
-        return false;
-      },"请上传文件后缀为apk的安装包");
       jQuery.validator.addMethod("tar",function(){
         var file = $("#tarFile");
         if(file.value.indexOf(".tar")>0||file.value.indexOf(".zip")>0&&file.value.indexOf(".rar")>0){
@@ -29,9 +23,6 @@
       },"请上传文件后缀为tar,zip,rar的安装包");
       $("#inputForm").validate({
         rules:{
-          file : {
-            apk : true
-          },
           tarFile : {
             tar : true
           }
@@ -63,9 +54,10 @@
 <form:form id="inputForm" modelAttribute="apk" action="${ctx}${empty apk.id?'/sys/apk/upload':'/sys/apk/save'}"
            method="post" class="form-horizontal"  enctype="multipart/form-data">
   <form:hidden path="id"/>
+  <input type="hidden" name="token" id="token" value="${token}"/>
   <sys:message content="${message}"/>
   <div class="control-group">
-    <label class="control-label">名字:</label>
+    <label class="control-label">压缩包名称:</label>
     <div class="controls">
       <form:input path="name" htmlEscape="false" maxlength="50" class="required"/>
     </div>
@@ -73,16 +65,22 @@
   <div class="control-group">
     <label class="control-label">描述:</label>
     <div class="controls">
-      <form:input path="description" htmlEscape="false" maxlength="50" class=""/>
+      <form:input path="description" htmlEscape="false" maxlength="50" class="required"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">包名:</label>
+    <div class="controls">
+      <form:input path="packageName" htmlEscape="false" maxlength="50" class="required"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">版本:</label>
+    <div class="controls">
+      <form:input path="version" htmlEscape="false" maxlength="50" class="required"/>
     </div>
   </div>
   <c:if test="${empty apk.id}">
-    <div class="control-group">
-      <label class="control-label">Apk上传:</label>
-      <div class="controls">
-        <input type="file" id="file" name="file" class="required"/>
-      </div>
-    </div>
     <div class="control-group">
       <label class="control-label">压缩包上传:</label>
       <div class="controls">
@@ -91,39 +89,21 @@
     </div>
   </c:if>
   <div class="control-group">
-    <label class="control-label">包名:</label>
-    <div class="controls">
-      <form:input path="packageName" htmlEscape="false" maxlength="50" class="" readonly="true"/>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">版本:</label>
-    <div class="controls">
-      <form:input path="version" htmlEscape="false" maxlength="50" class="" readonly="true"/>
-    </div>
-  </div>
-  <div class="control-group">
     <label class="control-label">MD5:</label>
     <div class="controls">
       <form:input path="md5" htmlEscape="false" maxlength="50" class="" readonly="true"/>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label">安装包大小:</label>
+    <label class="control-label">压缩包大小:</label>
     <div class="controls">
       <form:input path="size" htmlEscape="false" maxlength="50" class="" readonly="true"/>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label">apk名称:</label>
+    <label class="control-label">压缩包路径:</label>
     <div class="controls">
       <form:input path="url" htmlEscape="false" maxlength="50" class="" readonly="true"/>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">压缩包名称:</label>
-    <div class="controls">
-      <form:input path="tar" htmlEscape="false" maxlength="50" class="" readonly="true"/>
     </div>
   </div>
   <div class="form-actions">

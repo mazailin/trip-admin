@@ -1,6 +1,9 @@
 package com.ulplanet.trip.modules.crm.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.service.CrudService;
+import com.ulplanet.trip.common.utils.JedisUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.dao.AppUserDao;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
@@ -8,6 +11,7 @@ import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +45,17 @@ public class AppUserService extends CrudService<AppUserDao, AppUser> {
             return new ResponseBo(0,"护照号已存在");
         }
         return new ResponseBo(1,"SUCCESS");
+    }
+
+    public void refresh(){
+        List<AppUser> list = appUserDao.findList(new AppUser());
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        for(AppUser a : list){
+            JSONObject groupUser = new JSONObject();
+            groupUser.put("label",a.getPassport());
+            groupUser.put("value",a.getPassport()+":"+a.getName());
+            jsonObjects.add(groupUser);
+        }
+        JedisUtils.set("userPassportList", JSON.toJSONString(jsonObjects), 36000);
     }
 }

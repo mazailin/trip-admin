@@ -81,6 +81,8 @@
                     common ,
                     create_by ,
                     create_date ,
+                    update_by ,
+                    update_date ,
                     remarks
                 ) VALUES (
                     #{id} ,
@@ -95,6 +97,8 @@
                     #{common} ,
                     #{createBy.id} ,
                     #{createDate} ,
+                    #{updateBy.id} ,
+                    #{updateDate} ,
                     #{remarks}
                 )
             ]]>

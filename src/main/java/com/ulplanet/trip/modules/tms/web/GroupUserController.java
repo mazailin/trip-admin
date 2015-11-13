@@ -36,7 +36,6 @@ public class GroupUserController  extends BaseController {
             GroupUser groupUser = new GroupUser();
             if(StringUtils.isNotBlank(group)){
                 groupUser.setGroup(group);
-                groupUser.setList(groupUserService.getPassportList(group));
             }
             return groupUser;
         }
@@ -86,6 +85,7 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String form(GroupUser group,Model model) {
+        group.setList(groupUserService.getPassportList(group.getGroup()));
         model.addAttribute("groupUser", group);
         return "modules/tms/groupUserForm";
     }

@@ -72,6 +72,7 @@
                     title ,
                     create_by ,
                     create_date ,
+                    update_by ,
                     update_date ,
                     remarks 
                 ) VALUES (
@@ -82,6 +83,7 @@
                     #{title} ,
                     #{createBy.id} ,
                     #{createDate} ,
+                    #{updateBy.id} ,
                     #{updateDate} ,
                     #{remarks} 
                 )
@@ -98,6 +100,8 @@
                     title ,
                     create_by ,
                     create_date ,
+                    update_by ,
+                    update_date ,
                     remarks
                 ) VALUES
                 <foreach collection="list" item="item" index="index" separator="," >
@@ -109,6 +113,8 @@
                             #{item.title} ,
                             #{item.createBy.id} ,
                             #{item.createDate} ,
+                            #{updateBy.id} ,
+                            #{updateDate} ,
                             #{item.remarks}
                        )
                 </foreach>

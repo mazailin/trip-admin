@@ -79,6 +79,7 @@
                 create_by ,
             </if>
             update_date ,
+            update_by ,
             create_date ,
             remarks ,
         </trim>
@@ -105,6 +106,7 @@
                 #{createBy.id} ,
             </if>
             #{updateDate} ,
+            #{updateBy.id} ,
             #{createDate} ,
             #{remarks} ,
         </trim>

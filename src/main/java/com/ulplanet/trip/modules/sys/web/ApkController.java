@@ -1,11 +1,13 @@
 package com.ulplanet.trip.modules.sys.web;
 
+import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.sys.entity.Apk;
 import com.ulplanet.trip.modules.sys.service.ApkService;
+import com.ulplanet.trip.modules.sys.utils.QiniuUploadUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,9 +42,9 @@ public class ApkController  extends BaseController {
 
     @RequiresPermissions("sys:apk:upload")
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public String upload(Apk apk,@RequestParam MultipartFile file,@RequestParam MultipartFile tarFile,Model model
+    public String upload(Apk apk,@RequestParam MultipartFile tarFile,Model model
     ) {
-        apk = apkService.upload(apk.getName(),apk.getDescription(),file,tarFile);
+        apk = apkService.upload(apk.getName(),apk.getDescription(),tarFile);
         return form(apk, model);
     }
 
@@ -78,6 +80,9 @@ public class ApkController  extends BaseController {
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String form(Apk apk,Model model) {
+        QiniuUploadUtil uploadUtil = new QiniuUploadUtil();
+        String token = uploadUtil.uploadToken("tripapk", null, 3600, new StringMap().put("size",104857600).put("deadline",3600), true);
+        model.addAttribute("token",token);
         model.addAttribute("apk", apk);
         return "modules/sys/apkForm";
     }

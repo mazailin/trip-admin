@@ -73,6 +73,7 @@
             type,
             create_by,
             create_date,
+            update_by ,
             update_date,
             remarks
         ) VALUES (
@@ -84,52 +85,12 @@
             #{type},
             #{createBy.id},
             #{createDate},
+            #{updateBy.id} ,
             #{updateDate},
             #{remarks}
         )
     </insert>
 
-    <insert id="insertUser">
-        INSERT INTO user(
-            id,
-            name,
-            weChat,
-            qq,
-            birth,
-            issue_date,
-            expiry_date,
-            birth_place,
-            issue_place,
-            gender,
-            identity_card,
-            passport,
-            phone,
-            email,
-            create_by,
-            create_date,
-            update_date,
-            remarks
-        ) VALUES (
-            #{user},
-            #{name},
-            #{weChat},
-            #{qq},
-            #{birth},
-            #{issueDate},
-            #{expiryDate},
-            #{birthPlace},
-            #{issuePlace},
-            #{gender},
-            #{identityCard},
-            #{passport},
-            #{phone},
-            #{email},
-            #{createBy.id},
-            #{createDate},
-            #{updateDate},
-            #{remarks}
-        )
-    </insert>
 
     <update id="updateGroupUser">
         UPDATE group_user SET
@@ -140,19 +101,6 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateUser">
-        UPDATE user SET
-            name = #{name},
-            gender = #{gender},
-            identity_card = #{identityCard},
-            passport = #{passport},
-            phone = #{phone},
-            email = #{email},
-            update_by = #{updateBy.id},
-            update_date = #{updateDate},
-            remarks = #{remarks}
-        WHERE id = #{user}
-    </update>
 
     <delete id="deleteGroupUser">
         DELETE FROM group_user WHERE id = #{id}

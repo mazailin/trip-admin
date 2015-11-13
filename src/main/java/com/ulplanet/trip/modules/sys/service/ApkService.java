@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.sys.service;
 
+import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.security.Digests;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.Encodes;
@@ -30,7 +31,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
     @Resource
     private ApkDao apkDao;
 
-    public Apk upload(String name, String description,MultipartFile file,MultipartFile tar) {
+    public Apk upload(String name, String description,MultipartFile file) {
         QiniuUploadUtil uploadUtil = new QiniuUploadUtil();
         String token = uploadUtil.uploadToken("tripapk", null, 3600, null, true);
         Apk uploadAPK = new Apk();
@@ -39,35 +40,17 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
             CommonsMultipartFile cf= (CommonsMultipartFile)file;
             DiskFileItem fi = (DiskFileItem)cf.getFileItem();
             File f = fi.getStoreLocation();
-            String packageName = "";
-            String version = "";
             String size = "";
             byte[] md5Bytes = Digests.md5(bytes);
             String md5 = Encodes.encodeHex(md5Bytes);
             size = f.length()+"";
             String key = "";
-            String tarName = "";
             if(f.exists()){
-                AndroidApk apk = new AndroidApk(f);
-                packageName = apk.getPackageName();
-                version = apk.getAppVersion();
-                if(name.indexOf(".apk")<0){
-                    name = name + ".apk";
-                }
                 key = uploadUtil.upload(bytes,name, token);
-                byte [] bytes1 = tar.getBytes();
-                tarName = uploadUtil.upload(bytes1,tar.getOriginalFilename(), token);
-
             }
-
-            uploadAPK.setName(key);
-            uploadAPK.setDescription(description);
             uploadAPK.setUrl(key);
-            uploadAPK.setVersion(version);
-            uploadAPK.setPackageName(packageName);
             uploadAPK.setMd5(md5);
             uploadAPK.setSize(size);
-            uploadAPK.setTar(tarName);
             this.saveApk(uploadAPK);
             return uploadAPK;
         }catch (IOException e){

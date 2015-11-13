@@ -1,11 +1,17 @@
 package com.ulplanet.trip.modules.sys.utils;
 
+import com.qiniu.common.Config;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
+import com.qiniu.storage.Recorder;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.storage.persistent.FileRecorder;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 七牛云上传工具类
@@ -19,8 +25,10 @@ public class QiniuUploadUtil {
     public static final String QINIU_SK						= "2DV4NJhJzzusfzcdTmdgmrHmYe_PnlhPM7qQELjL";
 
     public static final String QINIU_URL 					= "http://7xluz8.dl1.z0.glb.clouddn.com/";
+
+    private static final String pathFile = "/file";
     private Auth auth = Auth.create(QINIU_AK,QINIU_SK) ;
-    private UploadManager uploadManager = new UploadManager();
+    private UploadManager uploadManager = null;
     // 简单上传，使用默认策略
     private String getUpToken0(){
         return auth.uploadToken("bucket");
@@ -60,7 +68,7 @@ public class QiniuUploadUtil {
      * @return 生成的上传token
      */
     public String uploadToken(String bucket, String key, long expires, StringMap policy, boolean strict){
-        return auth.uploadToken(bucket);
+        return auth.uploadToken(bucket,key,expires,policy,strict);
     }
 
     /**
@@ -72,7 +80,14 @@ public class QiniuUploadUtil {
      */
     public String upload(byte[] data,String key,String token) {
         try {
-
+            File file = new File("/file");
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            if(uploadManager==null){
+                Recorder recorder = new FileRecorder(pathFile);
+                uploadManager = new UploadManager(recorder);
+            }
             Response response = uploadManager.put(data, key, token);
             if(response.isOK()) {
                 DefaultPutRet ret = response.jsonToObject(DefaultPutRet.class);
@@ -80,9 +95,16 @@ public class QiniuUploadUtil {
             }
             return null;
         }catch (QiniuException e){
+
+            try {
+                System.out.print(e.response.bodyString());
+            } catch (QiniuException e1) {
+                e1.printStackTrace();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
 
     }
 

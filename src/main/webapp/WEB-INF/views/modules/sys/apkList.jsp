@@ -43,10 +43,10 @@
       <td>${apk.size}</td>
       <td>${apk.description}</td>
       <td>
-          <a href="${fns:getQiniuUrl()}">下载</a>
+          <a href="${fns:getQiniuUrl()}${apk.url}")>下载</a>
         <shiro:hasPermission name="sys:apk:upload">
-          <a href="${ctx}/sys/apk/form?id=${apk.id}">修改</a>
-          <a href="${ctx}/sys/apk/delete?id=${apk.id}">删除</a>
+          <a href="${ctx}/sys/apk/form?id='${apk.id}'">修改</a>
+          <a href="${ctx}/sys/apk/delete?id='${apk.id}'">删除</a>
         </shiro:hasPermission>
       </td>
     </tr>

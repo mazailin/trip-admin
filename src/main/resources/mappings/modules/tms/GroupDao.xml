@@ -51,6 +51,7 @@
             description,
             create_by,
             create_date,
+            update_by ,
             update_date,
             remarks
         ) VALUES (
@@ -62,6 +63,7 @@
             #{description},
             #{createBy.id},
             #{createDate},
+            #{updateBy.id} ,
             #{updateDate},
             #{remarks}
         )

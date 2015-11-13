@@ -113,6 +113,7 @@
               <if test="comment!=null and comment!=''">
                     comment ,
               </if>
+              update_by ,
                     update_date ,
                     create_date ,
               <if test="createBy.id!=null">
@@ -156,6 +157,7 @@
               <if test="comment!=null and comment!=''">
                   #{comment} ,
               </if>
+              #{updateBy.id} ,
               #{updateDate} ,
               #{createDate} ,
                 <if test="createBy.id!=null">
