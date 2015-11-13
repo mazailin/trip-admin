@@ -34,13 +34,13 @@ public class GroupController  extends BaseController {
 
     @ModelAttribute
     public Group get(@RequestParam(required=false) String id) {
-        List<Customer> customers = groupService.getCustomer();
+
         Group group = new Group();
 
         if (StringUtils.isNotBlank(id)) {
             group = groupService.get(id);
         }
-            group.setCustomers(customers);
+
         return group;
     }
 
@@ -91,15 +91,14 @@ public class GroupController  extends BaseController {
     public String delete(Group group,Model model, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupService.deleteGroup(group);
         addMessage(redirectAttributes,responseBo.getMsg());
-        if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/group/list/?repage";
-        }
-        return form(group, model);
+        return "redirect:" + adminPath + "/tms/group/list/?repage";
     }
 
     @RequestMapping(value = "form",method = RequestMethod.GET)
     @RequiresPermissions("tms:group:view")
     public String form(Group group,Model model) {
+        List<Customer> customers = groupService.getCustomer();
+        group.setCustomers(customers);
         model.addAttribute("group", group);
         return "modules/tms/groupForm";
     }

@@ -151,22 +151,24 @@
         type:"get",
         success:function(data){
           if(data.id!=null&&data.id.length>0){
-            if(data.code == 0){
-              swal("用户已存在", "用户已存在,", "error");
-              $("#btnSubmit").attr("readonly","true");
-              return false;
-            }
-            $("#id").val('');
-            $("#passport").val(e.target.value);
-            $("#user").val(data.user);
+            swal("用户已存在", "用户已存在,", "error");
+            $("#id").val(data.id);
+            $("#passport").val(data.passport);
             $("#name").val(data.name);
-            $("#type").val(data.type);
             $("#gender").val(data.gender).trigger("change");
             $("#phone").val(data.phone);
-            $("#email").val(data.email);
-            $("#passport").attr("readonly","true");
+            $("#weChat").val(data.weChat);
+            $("#qq").val(data.qq);
+            $("#birth").val(data.birth).trigger("change");
+            $("#birthPlace").val(data.birthPlace);
+            $("#issueDate").val(data.issueDate).trigger("change");
+            $("#issuePlace").val(data.issuePlace);
+            $("#expiryDate").val(data.expiryDate).trigger("change");
+            $("#btnSubmit").hide();
+            return true;
           }
-          $("#btnSubmit").removeAttr("disabled");
+          document.getElementById("inputForm").reset();
+          $("#btnSubmit").show();
         }
       })
     })

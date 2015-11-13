@@ -39,14 +39,14 @@ public class AppUserService extends CrudService<AppUserDao, AppUser> {
         return ResponseBo.getResult(appUserDao.delete(user));
     }
 
-    public ResponseBo hasPassport(String passport){
+    public AppUser hasPassport(String passport){
         AppUser appUser = new AppUser();
         appUser.setPassport(passport);
         List<AppUser> appUsers = appUserDao.findList(appUser);
         if(appUsers.size()>0){
-            return new ResponseBo(0,"护照号已存在");
+            return appUsers.get(0);
         }
-        return new ResponseBo(1,"SUCCESS");
+        return appUser;
     }
 
     public void refresh(){

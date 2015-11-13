@@ -51,7 +51,7 @@ public class GroupService extends CrudService<GroupDao,Group> {
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.dismissGroup("", group.getId());
             if (sdkHttpResult.getHttpCode() == 200) {
-                this.groupDao.delete(group);
+                return ResponseBo.getResult(this.groupDao.delete(group));
             } else {
                 logger.error(sdkHttpResult.getResult());
                 throw new RuntimeException("接口调用失败!");
@@ -60,12 +60,13 @@ public class GroupService extends CrudService<GroupDao,Group> {
             e.printStackTrace();
             return new ResponseBo(0,"调用接口失败");
         }
-        return new ResponseBo(0,"删除失败");
     }
 
 
     public List<Customer> getCustomer(){
-        List<Customer> list = customerDao.findList(new Customer());
+        Customer customer = new Customer();
+        customer.setActive("1");
+        List<Customer> list = customerDao.findList(customer);
         return list;
     }
 

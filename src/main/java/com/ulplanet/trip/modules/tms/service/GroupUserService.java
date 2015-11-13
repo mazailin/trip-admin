@@ -173,6 +173,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         if(oldSDate.before(newSDate) && oldEDate.after(newSDate))return true;
         if(oldSDate.before(newEDate) && oldEDate.after(newEDate))return true;
         if(oldSDate.after(newSDate) && oldEDate.before(newEDate))return true;
+        if(oldEDate.compareTo(newEDate)==0 || oldSDate.compareTo(newSDate)==0)return true;
         return false;
     }
 

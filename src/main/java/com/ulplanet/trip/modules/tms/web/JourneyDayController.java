@@ -2,13 +2,11 @@ package com.ulplanet.trip.modules.tms.web;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
-import com.ulplanet.trip.modules.tms.bo.InfoBo;
-import com.ulplanet.trip.modules.tms.bo.JourneyBo;
-import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
-import com.ulplanet.trip.modules.tms.bo.SortBo;
+import com.ulplanet.trip.modules.tms.bo.*;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
@@ -50,7 +48,10 @@ public class JourneyDayController  extends BaseController {
 
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JourneyDay get(@RequestParam(value = "id") String id) {
+    public JourneyDay getJourneyDay(@RequestParam(value = "id") String id,@RequestParam String groupId) {
+            if(EhCacheUtils.get(groupId,id)!=null){
+                return (JourneyDay)EhCacheUtils.get(groupId,id);
+            }
             return journeyDayService.get(id);
     }
 
@@ -83,6 +84,22 @@ public class JourneyDayController  extends BaseController {
         journeyDay.setTitle(cityName);
         if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
         this.journeyDayService.save(journeyDay);
+        return new JourneyDayBo(journeyDay);
+
+    }
+
+    /**
+     * 暂存信息
+     * @param journeyDay
+     * @return
+     */
+    @RequestMapping(value = "/saveTemp",method = RequestMethod.POST)
+    @ResponseBody
+    public Object saveTemp(JourneyDay journeyDay) {
+        String cityName = journeyDay.getTitle().replaceAll(",", "-");
+        journeyDay.setTitle(cityName);
+        if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
+        EhCacheUtils.put(journeyDay.getGroupId(),journeyDay.getId(),journeyDay);
         return new JourneyDayBo(journeyDay);
 
     }

@@ -216,6 +216,8 @@
                 longitude,
                 create_by,
                 create_date,
+                update_by ,
+                update_date ,
                 remarks
         ) VALUES
         <foreach collection="list" item="item" index="index" separator="," >
@@ -234,6 +236,8 @@
                     #{item.longitude},
                     #{item.createBy.id},
                     #{item.createDate},
+                    #{item.updateBy.id} ,
+                    #{item.updateDate} ,
                     #{item.remarks}
         )
         </foreach>
