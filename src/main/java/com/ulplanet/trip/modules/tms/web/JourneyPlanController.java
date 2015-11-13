@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.tms.web;
 
+import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
@@ -33,9 +34,12 @@ public class JourneyPlanController  extends BaseController {
 
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JourneyPlanBo get(@RequestParam(required=false) String id,@RequestParam(required=false) String cityIds) {
+    public JourneyPlanBo get(@RequestParam String id,@RequestParam(value = "dayId") String dayId) {
         if (StringUtils.isNotBlank(id)){
-            return journeyPlanService.getJourneyPlan(id,cityIds);
+            if(EhCacheUtils.get(dayId,id)!=null){
+               return new JourneyPlanBo((JourneyPlan)EhCacheUtils.get(dayId,id));
+            }
+            return new JourneyPlanBo(journeyPlanService.get(id));
         }
         return null;
     }
@@ -47,6 +51,16 @@ public class JourneyPlanController  extends BaseController {
             journeyPlan.setIsNewRecord(false);
         }
         journeyPlanService.save(journeyPlan);
+        return journeyPlan;
+    }
+
+    @RequestMapping(value = "/saveTemp")
+    @ResponseBody
+    public Object saveTemp(JourneyPlan journeyPlan) {
+        if(StringUtils.isBlank(journeyPlan.getId())){
+            journeyPlan.setIsNewRecord(false);
+        }
+        EhCacheUtils.put(journeyPlan.getDayId(),journeyPlan.getId(),journeyPlan);
         return journeyPlan;
     }
 

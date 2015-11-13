@@ -178,6 +178,7 @@
         <input type="hidden" id="planId"/>
         <input type="hidden" id="dayId"/>
         <input type="hidden" id="cityIds"/>
+        <input type="hidden" id="infoId"/>
         <div class="form-group" >
             <label for="plan-type">类型</label>
             <select id="plan-type" class="form-control"  tabindex="20000"  style="width:220px">
@@ -304,7 +305,7 @@
                         var str1 = "";
                         for(var i in obj.list){
                             var obj1 = obj.list[i];
-                            str1 += plan(obj1,obj.groupId);
+                            str1 += "<li>" + plan(obj1,obj.groupId) + "</li>";
                         }
                         str += str1
                                 +"</ul>"
@@ -332,16 +333,18 @@
                 return false;
             }
             var id = _div.attr("id");
-            $.ajax({
-                url:"${ctx}/tms/journeyDay/delete?id="+id,
-                type:"get",
-                success:function(data){
-                    data = eval("("+data+")");
-                    if(data.status == 1){
-                        _div.parent().remove();
-                    }
-                }
-            })
+
+            _div.parent().remove();
+            <%--$.ajax({--%>
+                <%--url:"${ctx}/tms/journeyDay/delete?id="+id,--%>
+                <%--type:"get",--%>
+                <%--success:function(data){--%>
+                    <%--data = eval("("+data+")");--%>
+                    <%--if(data.status == 1){--%>
+                        <%--_div.parent().remove();--%>
+                    <%--}--%>
+                <%--}--%>
+            <%--})--%>
         });
         $(".close-plan").live('click',function(){
             var _div = $(this).parent().parent();
@@ -351,16 +354,17 @@
                 return false;
             }
             var id = _div.attr("id");
-            $.ajax({
-                url:"${ctx}/tms/journeyPlan/delete?id="+id,
-                type:"get",
-                success:function(data){
-                    data = eval("("+data+")");
-                    if(data.status == 1){
-                        _div.parent().remove();
-                    }
-                }
-            })
+            _div.parent().remove();
+            <%--$.ajax({--%>
+                <%--url:"${ctx}/tms/journeyPlan/delete?id="+id,--%>
+                <%--type:"get",--%>
+                <%--success:function(data){--%>
+                    <%--data = eval("("+data+")");--%>
+                    <%--if(data.status == 1){--%>
+                        <%--_div.parent().remove();--%>
+                    <%--}--%>
+                <%--}--%>
+            <%--})--%>
         });
         /**========================删除end==============**/
         /**============更新具体行程========**/
@@ -369,10 +373,10 @@
             var dayId = $(this).parent().parent().parent().attr("id");
             var cityIds = '';
             $.ajax({
-                url:"${ctx}/tms/journeyDay/get?id="+dayId,
+                url:"${ctx}/tms/journeyDay/get?id="+dayId+"&groupId="+_groupId,
                 type:"get",
                 dataType:"json",
-                ansyc :true,
+                ansyc :false,
                 success:function(data) {
                     cityIds = data.cityIds;
                     $("#cityIds").val(data.cityIds);
@@ -403,17 +407,18 @@
         $("#updatePlan").live('click',function(){
             var id = $(this).parent().parent().attr("id");
             var groupId = $(this).parent().parent().attr("groupId");
+            var dayId = $(this).parent().parent().parent().parent().attr("id");
+            dayId = dayId.substring(5);
             if(groupId!=_groupId){
                 if(!check(id))return false;
                 var data = copyDay(dayId);
                 $(this).parent().parent().attr("id",data.id);
                 $(this).parent().parent().attr("groupId",_groupId);
             }
-            var dayId = $(this).parent().parent().parent().parent().attr("id");
-            dayId = dayId.substring(5);
+
             var cityIds = '';
             $.ajax({
-                url:"${ctx}/tms/journeyDay/get?id="+dayId,
+                url:"${ctx}/tms/journeyDay/get?id="+dayId+"&groupId="+_groupId,
                 type:"get",
                 dataType:"json",
                 async:false,
@@ -440,34 +445,37 @@
                 $(this).parent().parent().attr("id",id);
             }
             $.ajax({
-                url:"${ctx}/tms/journeyPlan/get?id="+id+"&cityIds="+cityIds,
+                url:"${ctx}/tms/journeyPlan/get?id="+id+"&dayId="+dayId,
                 type:"get",
                 dataType:"json",
                 success:function(data) {
-                    $("#plan-type").val(data.type).trigger("change");
-                    var options = data.infos;
-
-                    var str1 = '';
-                    for(var i in options){
-                        var option = options[i];
-                        if(option.id===data.infoId)
-                            str1 += "<option value='"+ option.id +"' selected >"+ option.name +"</option>";
-                        else
-                            str1 += "<option value='"+ option.id +"'>"+ option.name +"</option>";
-                    }
-                    $("#plan-list").empty();
-                    $("#plan-list").append(str1);
-                    $("#plan-list").val(data.infoId).trigger("change");
+//                    var options = data.infos;
+//
+//                    var str1 = '';
+//                    for(var i in options){
+//                        var option = options[i];
+//                        if(option.id===data.infoId)
+//                            str1 += "<option value='"+ option.id +"' selected >"+ option.name +"</option>";
+//                        else
+//                            str1 += "<option value='"+ option.id +"'>"+ option.name +"</option>";
+//                    }
                     if(groupId!=_groupId)id='';
+                    $("#plan-time").val(data.time);
                     $("#planId").val(id);
                     $("#dayId").val(dayId);
-                    $("#plan-name").val(data.name);
-                    $("#plan-time").val(data.time);
-                    $("#plan-description").val(data.description);
+                    $("#infoId").val(data.infoId);
                     $("#plan-message").val(data.message);
-                    $("#plan-longitude").val(data.longitude === undefined ? '':data.longitude);
-                    $("#plan-latitude").val(data.latitude === undefined ? '':data.latitude);
                     $("input[name='hasTime'][value="+ data.timeFlag +"]").attr("checked",true);
+                    $("#plan-type").val(data.type).trigger("change");
+//                    $("#plan-list").empty();
+//                    $("#plan-list").append(str1);
+
+//                    $("#plan-name").val(data.name);
+
+//                    $("#plan-description").val(data.description);
+
+//                    $("#plan-longitude").val(data.longitude === undefined ? '':data.longitude);
+//                    $("#plan-latitude").val(data.latitude === undefined ? '':data.latitude);
                     $("#journeyPlan").show(300);
                 }
             });
@@ -498,7 +506,7 @@
             var message = $("#plan-message").val();
             l = $("#plan-longitude");
             var longitude = l.val();
-            if(longitude!=''&&isNaN(longitude)){
+            if(longitude!=''&&isNaN(longitude)&&longitude>180&&longitude<-180){
                 l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
                 return false;
             }else{
@@ -506,7 +514,7 @@
             }
             l = $("#plan-latitude");
             var latitude = l.val();
-            if(latitude!=''&&isNaN(latitude)){
+            if(latitude!=''&&isNaN(latitude)&&latitude>180&&latitude<-180){
                 l.parent().append("<span style='color: #dd1f26;font-size: 12px;position: absolute' class='msg'>*请输入正确的坐标</span>");
                 return false;
             }else{
@@ -527,15 +535,19 @@
                 "latitude":latitude
             }
             $.ajax({
-                url:"${ctx}/tms/journeyPlan/save",
+                url:"${ctx}/tms/journeyPlan/saveTemp",
                 dataType:"json",
                 type:"post",
                 data:data,
                 success:function(data){
                     var str = plan(data,_groupId);
+                    if(id!=undefined&&id.length>0){
+                        $("#"+id).parent().html(str);
+                        $("#journeyPlan").hide(300);
+                        return true;
+                    }
                     var ul = $("#plan-"+dayId);
-                    if(id!=undefined&&id.length>0)$("#"+id).parent().remove();
-                    ul.append(str);
+                    ul.append("<li>"+str+"</li>");
                     $("#journeyPlan").hide(300);
                 }
             })
@@ -549,20 +561,25 @@
             $("#plan-name").val('');
             $("#plan-longitude").val('');
             $("#plan-latitude").val('');
-            $("#plan-description").removeAttr("readonly");
-            $("#plan-name").removeAttr("readonly");
-            $("#plan-longitude").removeAttr("readonly");
-            $("#plan-latitude").removeAttr("readonly");
             $("#plan-list").val('').trigger("change");
             $("#plan-list").empty();
             if(type==1||type==2||type==4){
+                $("#plan-description").removeAttr("readonly");
+                $("#plan-name").removeAttr("readonly");
+                $("#plan-longitude").removeAttr("readonly");
+                $("#plan-latitude").removeAttr("readonly");
                 return false;
             }
+            $("#plan-description").attr("readonly","true");
+            $("#plan-name").attr("readonly","true");
+            $("#plan-longitude").attr("readonly","true");
+            $("#plan-latitude").attr("readonly","true");
             $.ajax({
                 url:"${ctx}/tms/journeyPlan/findTypeList",
                 dataType:"json",
                 type:"post",
                 data:{"dayId":dayId,"type":type},
+                ansyc:false,
                 success:function(data){
                     $("#plan-list").empty();
                     var str = '<option value=\"\" selected>请选择</option>';
@@ -571,6 +588,10 @@
                         str += "<option value=\"" + obj.id + "\">" +obj.name+ "</option>"
                     }
                     $("#plan-list").append(str);
+                    var infoId = $("#infoId").val();
+                    if(infoId!=null&&infoId.length>0){
+                        $("#plan-list").val(infoId).trigger("change");
+                    }
                 }
             })
         });
@@ -625,10 +646,10 @@
 
             }
             $.ajax({
-                url:"${ctx}/tms/journeyDay/get?id="+id,
+                url:"${ctx}/tms/journeyDay/get?id="+id+"&groupId="+_groupId,
                 type:"get",
                 dataType:"json",
-                ansyc :true,
+                ansyc :false,
                 success:function(data) {
                     if(groupId!=_groupId)id='';
                     $("#id").val(id);
@@ -651,18 +672,29 @@
         });
 
         $("#btnSubmit").click(function(){
+            var id = $("#id").val();
             var cityId = $("#cityId").val();
             if(cityId.length==0){
                 alertx("请选择城市！");
                 return false;
             }
             $.ajax({
-                url:"${ctx}/tms/journeyDay/save",
+                url:"${ctx}/tms/journeyDay/saveTemp",
                 dataType:"json",
                 type:"post",
                 data:{"id":$("#id").val(),"cityIds":$("#cityId").val()
                     ,"title":$("#cityName").val(),"groupId":_groupId},
                 success:function(data){
+                    if(id!=null && id.length>0){
+                      $("#"+id).find("p[class='p-header-top']").html(
+                          data.title
+                          +"<i class=\"fa fa-times close-day\" style=\"float: right;margin-right: 10px;\"></i>"
+                          +"<a href=\"#\" style=\"float: right;margin-right: 10px;\"  id=\"updateDay\">修改</a>"
+                          +"<a href=\"#\" style=\"float: right;margin-right: 10px;\" id=\"addPlan\">添加</a>"
+                      );
+                      $("#journeyList").hide(300);
+                      return true;
+                    }
                     var str = "<li style=\"list-style-type:none;\">"
                             +"<div style='width:400px;background-color: #ECECEC' id='"+ data.id +"' groupId='" + data.groupId + "'>"
                                 +"<div class=\"title\">"
@@ -755,8 +787,8 @@
     });
 
     function plan(obj1,groupId){
-        var str1 = "<li>"
-                +"<div id=\""+obj1.id+"\" class=\"border\" groupId=\""+ groupId +"\">"
+        var str1 =
+                "<div id=\""+obj1.id+"\" class=\"border\" groupId=\""+ groupId +"\">"
                 +"<p class=\"p-header\">"+obj1.name
                 +"<i class=\"fa fa-times close-plan\" style=\"float: right;margin-right: 10px;\"></i>"
                 +"<a href=\"#\" id='updatePlan' style=\"float: right;margin-right: 10px;\">修改</a>"+
@@ -765,11 +797,12 @@
             str1 += "<p class='p-message'>"+obj1.time+"</p>";
         }
         str1 += "<p class=\"p-description\">"+obj1.description+"</p>";
+        if(obj1.longitude != undefined && obj1.longitude.length>0)
         str1 += "<p class=\"p-description\">维度："+obj1.longitude+"</p>";
+        if(obj1.latitude != undefined && obj1.latitude.length>0)
         str1 += "<p class=\"p-description\">经度："+obj1.latitude+"</p>";
         str1 += "<p class=\"p-message\">"+obj1.message+"</p>";
-        str1 +=  "</div>"
-                + "</li>";
+        str1 +=  "</div>";
         return str1;
     }
 

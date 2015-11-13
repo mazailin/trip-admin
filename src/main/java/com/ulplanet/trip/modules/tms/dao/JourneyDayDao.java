@@ -14,5 +14,6 @@ public interface  JourneyDayDao extends CrudDao<JourneyDay> {
     List<JourneyDay> findPage(JourneyDay journeyDay);
     int updates(@Param("list") List<JourneyDay> list);
     int inserts(@Param("list") List<JourneyDay> list);
+    int deleteByGroupId(@Param("groupId")String groupId);
 
 }

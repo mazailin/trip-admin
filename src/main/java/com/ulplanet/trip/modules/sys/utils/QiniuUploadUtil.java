@@ -88,7 +88,8 @@ public class QiniuUploadUtil {
                 Recorder recorder = new FileRecorder(pathFile);
                 uploadManager = new UploadManager(recorder);
             }
-            Response response = uploadManager.put(data, key, token);
+            StringMap params = new StringMap().put("x:foo", "foo_val");
+            Response response = uploadManager.put(data, key, token,params,null,true);
             if(response.isOK()) {
                 DefaultPutRet ret = response.jsonToObject(DefaultPutRet.class);
                 return ret.key;

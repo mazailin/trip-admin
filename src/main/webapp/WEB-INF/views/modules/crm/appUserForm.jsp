@@ -151,22 +151,11 @@
         type:"get",
         success:function(data){
           if(data.id!=null&&data.id.length>0){
-            if(data.code == 0){
-              swal("用户已存在", "用户已存在,", "error");
-              $("#btnSubmit").attr("readonly","true");
-              return false;
-            }
-            $("#id").val('');
-            $("#passport").val(e.target.value);
-            $("#user").val(data.user);
-            $("#name").val(data.name);
-            $("#type").val(data.type);
-            $("#gender").val(data.gender).trigger("change");
-            $("#phone").val(data.phone);
-            $("#email").val(data.email);
-            $("#passport").attr("readonly","true");
+            swal("用户已存在", "名字："+data.name+",电话："+data.phone, "error");
+            $("#btnSubmit").hide();
+            return true;
           }
-          $("#btnSubmit").removeAttr("disabled");
+          $("#btnSubmit").show();
         }
       })
     })

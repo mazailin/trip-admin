@@ -2,6 +2,7 @@ package com.ulplanet.trip.modules.sys.web;
 
 import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.persistence.Page;
+import com.ulplanet.trip.common.utils.FileManager;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Map;
 
 /**
@@ -39,12 +41,11 @@ public class ApkController  extends BaseController {
     }
 
 
-
     @RequiresPermissions("sys:apk:upload")
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public String upload(Apk apk,@RequestParam MultipartFile tarFile,Model model
     ) {
-        apk = apkService.upload(apk.getName(),apk.getDescription(),tarFile);
+        apk = apkService.upload(apk,tarFile);
         return form(apk, model);
     }
 

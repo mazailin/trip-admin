@@ -2,6 +2,7 @@ package com.ulplanet.trip.modules.tms.entity;
 
 
 import com.ulplanet.trip.common.persistence.DataEntity;
+import com.ulplanet.trip.common.utils.StringUtils;
 
 public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Serializable{
 	private static final long serialVersionUID = 5454155825314635342L;
@@ -50,6 +51,9 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 	}
 
 	public String getLongitude() {
+		if(StringUtils.isBlank(longitude)){
+			longitude = null;
+		}
 		return longitude;
 	}
 
@@ -58,6 +62,9 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 	}
 
 	public String getLatitude() {
+		if(StringUtils.isBlank(latitude)){
+			latitude = null;
+		}
 		return latitude;
 	}
 
@@ -100,6 +107,9 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 
 
 	public String getTime() {
+		if(StringUtils.isBlank(time)){
+			time = null;
+		}
 		return time;
 	}
 

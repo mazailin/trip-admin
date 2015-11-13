@@ -81,7 +81,7 @@ public class AppUserController extends BaseController {
 
 	@RequestMapping(value = "/hasPassport",method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBo hasPassport(@RequestParam(value = "passport")String passport){
+	public AppUser hasPassport(@RequestParam(value = "passport")String passport){
 		return appUserService.hasPassport(passport);
 	}
 }

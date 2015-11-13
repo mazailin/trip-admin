@@ -113,8 +113,8 @@
                             #{item.title} ,
                             #{item.createBy.id} ,
                             #{item.createDate} ,
-                            #{updateBy.id} ,
-                            #{updateDate} ,
+                            #{item.updateBy.id} ,
+                            #{item.updateDate} ,
                             #{item.remarks}
                        )
                 </foreach>
@@ -179,7 +179,11 @@
 		        id = #{id} 
 	    ]]>
 	</select>
-	
+
+    <delete id="deleteByGroupId">
+        delete jd.*,p.* from journey_day jd LEFT JOIN journey_plan p ON jd.id = p.day_id
+        WHERE jd.group_id = #{groupId}
+    </delete>
 
 		
     <select id="findPageCount" resultType="long">
