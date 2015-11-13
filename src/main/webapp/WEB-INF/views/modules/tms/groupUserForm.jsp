@@ -128,7 +128,7 @@
         dataType:"json",
         type:"get",
         success:function(data){
-          if(data.id!=null&&data.id.length>0){
+          if(data.user!=null&&data.user.length>0){
             if(data.code == 0){
               swal("用户已存在", "用户已存在于本团队或其他团队中", "error");
               $("#btnSubmit").hide();
@@ -139,7 +139,7 @@
             $("#user").val(data.user);
             $("#name").val(data.name);
             $("#type").val(data.type);
-            if(data.gender === '1'){
+            if(data.gender ===   '1'){
               $("#gender").val('男');
             }else if(data.gender === '2'){
               $("#gender").val('女');
