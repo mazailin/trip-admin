@@ -13,7 +13,7 @@
 		SELECT
             <include refid="cityColumns"/>
         FROM city a
-        JOIN country c
+        LEFT JOIN country c
         ON a.country = c.id
         <where>
             <if test="name != null and name != ''">
@@ -36,7 +36,7 @@
         SELECT
         <include refid="cityColumns"/>
         FROM city a
-        JOIN country c
+        LEFT JOIN country c
         ON a.country = c.id
         WHERE a.id = #{id}
     </select>
@@ -44,7 +44,7 @@
 		SELECT
 		    <include refid="cityColumns"/>
         FROM city a
-        JOIN country c
+        LEFT JOIN country c
         ON a.country = c.id
         WHERE a.name = #{name}
         AND a.country = #{country.id}
