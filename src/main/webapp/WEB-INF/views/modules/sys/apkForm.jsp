@@ -54,7 +54,6 @@
 <form:form id="inputForm" modelAttribute="apk" action="${ctx}${empty apk.id?'/sys/apk/upload':'/sys/apk/save'}"
            method="post" class="form-horizontal"  enctype="multipart/form-data">
   <form:hidden path="id"/>
-  <input type="hidden" name="token" id="token" value="${token}"/>
   <sys:message content="${message}"/>
   <div class="control-group">
     <label class="control-label">压缩包名称:</label>

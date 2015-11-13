@@ -50,7 +50,7 @@ public class ApkController  extends BaseController {
     }
 
     @RequiresPermissions("sys:apk:view")
-    @RequestMapping(value = {"/ist",""})
+    @RequestMapping(value = {"/list",""})
     public String findList(Apk apk, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<Apk> page = apkService.findPage(new Page<>(request, response), apk);
         model.addAttribute("page", page);
@@ -81,9 +81,6 @@ public class ApkController  extends BaseController {
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)
     public String form(Apk apk,Model model) {
-        QiniuUploadUtil uploadUtil = new QiniuUploadUtil();
-        String token = uploadUtil.uploadToken("tripapk", null, 3600, new StringMap().put("size",104857600).put("deadline",3600), true);
-        model.addAttribute("token",token);
         model.addAttribute("apk", apk);
         return "modules/sys/apkForm";
     }

@@ -45,8 +45,8 @@
       <td>
           <a href="${ctx}/userfiles/${apk.url}")>下载</a>
         <shiro:hasPermission name="sys:apk:upload">
-          <a href="${ctx}/sys/apk/form?id='${apk.id}'">修改</a>
-          <a href="${ctx}/sys/apk/delete?id='${apk.id}'">删除</a>
+          <a href="${ctx}/sys/apk/form?id=${apk.id}">修改</a>
+          <a href="${ctx}/sys/apk/delete?id=${apk.id}">删除</a>
         </shiro:hasPermission>
       </td>
     </tr>
