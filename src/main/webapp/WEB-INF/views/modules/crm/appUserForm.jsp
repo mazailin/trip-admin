@@ -151,23 +151,10 @@
         type:"get",
         success:function(data){
           if(data.id!=null&&data.id.length>0){
-            swal("用户已存在", "用户已存在,", "error");
-            $("#id").val(data.id);
-            $("#passport").val(data.passport);
-            $("#name").val(data.name);
-            $("#gender").val(data.gender).trigger("change");
-            $("#phone").val(data.phone);
-            $("#weChat").val(data.weChat);
-            $("#qq").val(data.qq);
-            $("#birth").val(data.birth).trigger("change");
-            $("#birthPlace").val(data.birthPlace);
-            $("#issueDate").val(data.issueDate).trigger("change");
-            $("#issuePlace").val(data.issuePlace);
-            $("#expiryDate").val(data.expiryDate).trigger("change");
+            swal("用户已存在", "名字："+data.name+",电话："+data.phone, "error");
             $("#btnSubmit").hide();
             return true;
           }
-          document.getElementById("inputForm").reset();
           $("#btnSubmit").show();
         }
       })
