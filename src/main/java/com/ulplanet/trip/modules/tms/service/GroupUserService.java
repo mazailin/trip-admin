@@ -7,10 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ulplanet.trip.common.persistence.Parameter;
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.DateUtils;
-import com.ulplanet.trip.common.utils.IdGen;
-import com.ulplanet.trip.common.utils.JedisUtils;
-import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.utils.*;
+import com.ulplanet.trip.modules.crm.entity.AppUser;
+import com.ulplanet.trip.modules.crm.service.AppUserService;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
@@ -36,6 +35,8 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private GroupUserDao groupUserDao;
     @Resource
     private GroupService groupService;
+    @Resource
+    private AppUserService appUserService;
 
     public ResponseBo addUser(GroupUser groupUser){
         groupUser.preInsert();
@@ -132,44 +133,14 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
-    public List<JSONObject> getPassportList(String group) {
-        if(JedisUtils.exists("userPassportList")){
-            String str = JedisUtils.get("userPassportList");
-            List<JSONObject> list = new ArrayList<>();
-            list = JSON.parseObject(str,list.getClass());
+    public List<AppUser> getPassportList(String group) {
+        if(EhCacheUtils.get("userPassportList", "userPassportList")!=null){
+            List<AppUser> list = (List<AppUser>)EhCacheUtils.get("userPassportList");
             return list;
         }
-        List<GroupUser> list = groupUserDao.findUserByPassport(null,null);
-
-        List<JSONObject> userList = new ArrayList<>();
-        if(list.size()>0){
-            Group group1 = groupService.get(group);
-            Date toDate = group1.getToDate();
-            Date fromDate = group1.getFromDate();
-
-            for(GroupUser g : list){
-                if(StringUtils.isNotBlank(g.getToDate())){
-                    try {
-                        Date fDate = DateUtils.parseDate(g.getFromDate(),"yyyy-MM-dd");
-                        Date tDate = DateUtils.parseDate(g.getToDate(),"yyyy-MM-dd");
-                        if(isIn(fDate,tDate,fromDate,toDate)){
-                            g.setCode("0");
-                        }else{
-                            g.setCode("1");
-                            JSONObject groupUser = new JSONObject();
-                            groupUser.put("label",g.getPassport());
-                            groupUser.put("value",g.getPassport()+":"+g.getName());
-                            userList.add(groupUser);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        }
-        JedisUtils.set("userPassportList", JSON.toJSONString(userList), 36000);
-        return userList;
+        List<AppUser> list = appUserService.findList(new AppUser());
+        EhCacheUtils.put("userPassportList", "userPassportList",list);
+        return list;
 
     }
 

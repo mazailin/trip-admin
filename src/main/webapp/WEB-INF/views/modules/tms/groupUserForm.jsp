@@ -60,7 +60,7 @@
           <select id="passport" name="passport" style="width:300px">
             <option value="-1">请选择</option>
             <c:forEach items="${groupUser.list}" var="p">
-              <option value="${p.get('passport')}">${p.get('name')}</option>
+              <option value="${p.passport}">${p.passport}:${p.name}</option>
             </c:forEach>
           </select>
         </c:when>

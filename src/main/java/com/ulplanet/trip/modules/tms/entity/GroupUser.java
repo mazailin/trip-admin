@@ -3,6 +3,7 @@ package com.ulplanet.trip.modules.tms.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.persistence.DataEntity;
+import com.ulplanet.trip.modules.crm.entity.AppUser;
 
 import java.util.List;
 
@@ -32,14 +33,14 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String toDate;
     private String fromDate;
     private String imToken;
-    private List<JSONObject> list;
+    private List<AppUser> list;
 
 
-    public List<JSONObject> getList() {
+    public List<AppUser> getList() {
         return list;
     }
 
-    public void setList(List<JSONObject> list) {
+    public void setList(List<AppUser> list) {
         this.list = list;
     }
 

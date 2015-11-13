@@ -3,11 +3,13 @@ package com.ulplanet.trip.modules.crm.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.service.CrudService;
+import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.JedisUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.dao.AppUserDao;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,13 +51,6 @@ public class AppUserService extends CrudService<AppUserDao, AppUser> {
 
     public void refresh(){
         List<AppUser> list = appUserDao.findList(new AppUser());
-        List<JSONObject> jsonObjects = new ArrayList<>();
-        for(AppUser a : list){
-            JSONObject groupUser = new JSONObject();
-            groupUser.put("label",a.getPassport());
-            groupUser.put("value",a.getPassport()+":"+a.getName());
-            jsonObjects.add(groupUser);
-        }
-        JedisUtils.set("userPassportList", JSON.toJSONString(jsonObjects), 36000);
+        EhCacheUtils.put("userPassportList", "userPassportList", list);
     }
 }
