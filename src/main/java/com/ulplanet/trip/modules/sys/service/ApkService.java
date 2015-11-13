@@ -4,7 +4,9 @@ import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.security.Digests;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.Encodes;
+import com.ulplanet.trip.common.utils.FileManager;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.utils.fservice.FileIndex;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.sys.dao.ApkDao;
 import com.ulplanet.trip.modules.sys.entity.Apk;
@@ -31,10 +33,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
     @Resource
     private ApkDao apkDao;
 
-    public Apk upload(String name, String description,MultipartFile file) {
-        QiniuUploadUtil uploadUtil = new QiniuUploadUtil();
-        String token = uploadUtil.uploadToken("tripapk", null, 3600, null, true);
-        Apk uploadAPK = new Apk();
+    public Apk upload(Apk uploadAPK,MultipartFile file) {
         try {
             byte [] bytes = file.getBytes();
             CommonsMultipartFile cf= (CommonsMultipartFile)file;
@@ -46,12 +45,17 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
             size = f.length()+"";
             String key = "";
             if(f.exists()){
-                key = uploadUtil.upload(bytes,name, token);
+                FileIndex ufi = new FileIndex();
+                ufi.setmUpfile(file);
+                ufi.setTruename(file.getOriginalFilename());
+                ufi.setMcode("apk");
+                ufi = FileManager.save(ufi);
+
+                uploadAPK.setUrl(ufi.getPath());
+                uploadAPK.setMd5(md5);
+                uploadAPK.setSize(size);
+                this.saveApk(uploadAPK);
             }
-            uploadAPK.setUrl(key);
-            uploadAPK.setMd5(md5);
-            uploadAPK.setSize(size);
-            this.saveApk(uploadAPK);
             return uploadAPK;
         }catch (IOException e){
             e.printStackTrace();
