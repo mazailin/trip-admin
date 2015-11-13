@@ -135,7 +135,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     public List<AppUser> getPassportList(String group) {
         if(EhCacheUtils.get("userPassportList", "userPassportList")!=null){
-            List<AppUser> list = (List<AppUser>)EhCacheUtils.get("userPassportList");
+            List<AppUser> list = (List<AppUser>)EhCacheUtils.get("userPassportList","userPassportList");
             return list;
         }
         List<AppUser> list = appUserService.findList(new AppUser());
