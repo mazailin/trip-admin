@@ -59,6 +59,7 @@ public class JourneyPlanController  extends BaseController {
     public Object saveTemp(JourneyPlan journeyPlan) {
         if(StringUtils.isBlank(journeyPlan.getId())){
             journeyPlan.setIsNewRecord(false);
+            journeyPlan.preInsert();
         }
         EhCacheUtils.put(journeyPlan.getDayId(),journeyPlan.getId(),journeyPlan);
         return journeyPlan;

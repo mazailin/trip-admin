@@ -98,7 +98,10 @@ public class JourneyDayController  extends BaseController {
     public Object saveTemp(JourneyDay journeyDay) {
         String cityName = journeyDay.getTitle().replaceAll(",", "-");
         journeyDay.setTitle(cityName);
-        if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
+        if(StringUtils.isBlank(journeyDay.getId())){
+            journeyDay.setIsNewRecord(false);
+            journeyDay.preInsert();
+        }
         EhCacheUtils.put(journeyDay.getGroupId(),journeyDay.getId(),journeyDay);
         return new JourneyDayBo(journeyDay);
 
