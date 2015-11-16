@@ -13,10 +13,12 @@
                         digits: true
                     },
                     latitude : {
-                        number : true
+                        range : [-90, 90],
+                        lnglat : true
                     },
                     longitude : {
-                        number : true
+                        range : [-180, 180],
+                        lnglat : true
                     },
                     level : {
                         range : [0, 5],
