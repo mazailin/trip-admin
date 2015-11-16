@@ -12,12 +12,6 @@
                         range : [0, 5],
                         digits: true
                     },
-                    latitude : {
-                        number : true
-                    },
-                    longitude : {
-                        number : true
-                    },
                     level : {
                         range : [0, 5],
                         digits: true

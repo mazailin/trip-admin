@@ -1289,10 +1289,16 @@ jQuery.validator.addMethod("qq", function(value, element) {
     return this.optional(element) || (tel.test(value));
 }, "请正确填写您的QQ号码");
  
-//校验身份证好
+//校验身份证号
 jQuery.validator.addMethod("card",function(value, element) {
 	return this.optional(element) || checkIdcard(value);
-},"请输入正确的身份证号码(15-18位)")
+},"请输入正确的身份证号码(15-18位)");
+
+//经纬度校验
+jQuery.validator.addMethod("lnglat",function(value, element) {
+    var decimal = /^-?\d+(\.\d{1,6})?$/;
+    return this.optional(element) || (decimal.test(value));
+},"请输入小数位数不超过6位的经纬度");
 
 //验证身份证函数
 function checkIdcard(idcard){
