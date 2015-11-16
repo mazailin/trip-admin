@@ -4,12 +4,14 @@ import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import com.ulplanet.trip.modules.tms.bo.InfoBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import com.ulplanet.trip.modules.tms.service.JourneyPlanService;
+import org.springframework.context.i18n.LocaleContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -82,9 +84,10 @@ public class JourneyPlanController  extends BaseController {
 
     @RequestMapping(value = "/findTypeList",method = RequestMethod.POST)
     @ResponseBody
-    public List<InfoBo> findTypeList(JourneyPlan journeyPlan){
+    public List<InfoBo> findTypeList(JourneyPlan journeyPlan,@RequestParam String groupId){
         if(StringUtils.isNotBlank(journeyPlan.getDayId())) {
-            JourneyDay journeyDay = journeyDayService.get(journeyPlan.getDayId());
+            JourneyDay journeyDay = (JourneyDay)EhCacheUtils.get(groupId,journeyPlan.getDayId());
+            if(journeyDay==null)journeyDay = journeyDayService.get(journeyPlan.getDayId());
             journeyPlan.setCityIds(journeyDay.getCityIds());
         }
         return journeyPlanService.getInfoList(journeyPlan.getType(), journeyPlan.getCityIds());

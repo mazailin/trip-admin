@@ -578,7 +578,7 @@
                 url:"${ctx}/tms/journeyPlan/findTypeList",
                 dataType:"json",
                 type:"post",
-                data:{"dayId":dayId,"type":type},
+                data:{"dayId":dayId,"type":type,"groupId":_groupId},
                 ansyc:false,
                 success:function(data){
                     $("#plan-list").empty();
