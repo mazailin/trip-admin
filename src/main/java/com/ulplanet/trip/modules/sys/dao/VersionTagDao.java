@@ -11,4 +11,5 @@ import com.ulplanet.trip.modules.sys.entity.VersionTag;
 public interface VersionTagDao{
     VersionTag get(VersionTag versionTag);
     int insert(VersionTag versionTag);
+    int update(VersionTag versionTag);
 }

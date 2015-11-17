@@ -19,10 +19,8 @@
             width: 100%;
             text-align: center;
             vertical-align:middle;
-            background-color: #939595;
-            opacity: 0.9;
+            background-color: #F1F1F1;
             z-index: 10001;
-            filter:Alpha(opacity=90);
             position:fixed;
         }
         .select2-drop{
@@ -74,6 +72,7 @@
         .border {
             border:1px solid #cc3331;
             border-style: solid none;
+            background-color: #f8f6f2;
         }
         #sortable1, #sortable2 {
             border: 1px solid #B4D434;
@@ -239,12 +238,14 @@
         /**=======================页面效果====**/
         $( "#sortable1, #sortable2" ).sortable({
             connectWith: ".connectedSortable",
+            distance:20,
             activate : function(){
                 $("#changeFlag").val(1);
             }
         }).disableSelection();
         $(".sortable-content" ).sortable({
             connectWith: ".sortable-content",
+            distance:20,
             activate : function(){
                 $("#changeFlag").val(1);
             }
@@ -777,7 +778,9 @@
                 data:{json:json+""},
                 success:function(data){
                     $("#changeFlag").val(0);
-                    swal("保存成功!", data.msg, "success");
+                    swal({title:"保存成功!", text:data.msg, type:"success"},function(isConfirm){
+                        window.location.href = "${ctx}/tms/journeyDay/?groupId=" + _groupId;
+                    });
                 },
                 error:function(data){
                     $("#changeFlag").val(1);
@@ -785,6 +788,9 @@
                 }
 
             });
+        });
+
+        $("#preview").click(function(){
         });
 
 

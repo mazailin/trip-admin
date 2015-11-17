@@ -12,6 +12,15 @@
     <title>行程预览</title>
 </head>
 <body>
+  <div>
+    <c:forEach items="${journeyDayList}" var="journeyDay">
+      <ul></ul>
+        <c:forEach items="${journeyDay.getList}" var="plan">
 
+        </c:forEach>
+
+    </c:forEach>
+
+  </div>
 </body>
 </html>

@@ -20,6 +20,15 @@
     		FROM version_tag a
     		WHERE
     		  id = #{id} and `type` = #{type}
-    	</select>
+    </select>
+
+    <update id="update">
+        UPDATE version_tag SET
+        id = #{id},
+        `type` = #{type},
+        `tag` = #{tag}
+        WHERE id = #{id} and `type` = #{type}
+    </update>
+
 
 </mapper>

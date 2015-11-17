@@ -4,6 +4,7 @@ import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.modules.sys.dao.VersionTagDao;
 import com.ulplanet.trip.modules.sys.entity.VersionTag;
+import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.bo.JourneyBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
 import com.ulplanet.trip.modules.tms.bo.SortBo;
@@ -27,7 +28,7 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
     @Resource
     private JourneyPlanService journeyPlanService;
     @Resource
-    private VersionTagDao versionTagDao;
+    private VersionTagService versionTagService;
 
     public List<JourneyDayBo> queryList(String groupId){
         JourneyDay j = new JourneyDay();
@@ -108,7 +109,7 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
         journeyDayDao.deleteByGroupId(groupId);//清空行程原有信息，重新插入
         if(addPlanList.size()>0)journeyPlanService.inserts(addPlanList);
         if(addDayList.size()>0)journeyDayDao.inserts(addDayList);
-        versionTagDao.insert(new VersionTag(groupId,2));
+        versionTagService.save(new VersionTag(groupId, 2));
         return 1;
     }
 
@@ -133,6 +134,54 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
             journeyDayBos.add(journeyDayBo);
         }
         return journeyDayBos;
+    }
+
+    public List<JourneyDayBo> preview(JourneyBo journeyBo){
+        SortBo[] sortBos = journeyBo.getList();
+        String groupId = journeyBo.getGroupId();
+        List<JourneyDayBo> addDayList = new ArrayList<>();
+        for(int i = 0;i < sortBos.length;i++){//每天行程保存
+            SortBo sortBo = sortBos[i];
+            JourneyDay journeyDay ;
+            if(!groupId.equals(sortBo.getGroupId())){
+                journeyDay = journeyDayDao.get(sortBo.getId());
+                journeyDay.setDayNumber(i + 1);
+            }else {
+                if(EhCacheUtils.get(groupId,sortBo.getId())==null){
+                    journeyDay = journeyDayDao.get(sortBo.getId());
+                }else {
+                    journeyDay = (JourneyDay) EhCacheUtils.get(groupId, sortBo.getId());
+                }
+                journeyDay.setDayNumber(i + 1);
+            }
+            SortBo[] sortBos1 = sortBo.getChildren();
+            List<JourneyPlan> addPlanList = new ArrayList<>();
+            for(int j = 0;j < sortBos1.length;j++){//每天详细行程保存
+                SortBo sortBo1 = sortBos1[j];
+                JourneyPlan journeyPlan;
+                if(!groupId.equals(sortBo1.getGroupId())){
+                    journeyPlan = journeyPlanService.get(sortBo1.getId());
+                    journeyPlan.preInsert();
+                    journeyPlan.setSort(j);
+                    journeyPlan.setDayId(journeyDay.getId());
+                    addPlanList.add(journeyPlan);
+                }else {
+                    if(EhCacheUtils.get(sortBo.getId(),sortBo1.getId()) == null){
+                        journeyPlan = journeyPlanService.get(sortBo1.getId());
+                    }else {
+                        journeyPlan = (JourneyPlan) EhCacheUtils.get(sortBo.getId(), sortBo1.getId());
+                    }
+                    journeyPlan.preInsert();
+                    journeyPlan.setSort(j);
+                    journeyPlan.setDayId(journeyDay.getId());
+                    addPlanList.add(journeyPlan);
+                }
+            }
+            JourneyDayBo journeyDayBo = new JourneyDayBo(journeyDay);
+            journeyDayBo.setList(addPlanList);
+            addDayList.add(journeyDayBo);
+        }
+        return addDayList;
     }
 
 

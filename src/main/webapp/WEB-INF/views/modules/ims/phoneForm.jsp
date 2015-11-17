@@ -85,7 +85,8 @@
           </form:select>
         </c:when>
         <c:otherwise>
-          <input type="text" id="status" name="status" value="退货" readonly="true"/>
+          <input type="hidden" id="status" name="status" value="9999"/>
+          <label>退货</label>
         </c:otherwise>
       </c:choose>
     </div>

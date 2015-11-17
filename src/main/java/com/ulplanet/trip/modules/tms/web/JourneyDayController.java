@@ -152,4 +152,13 @@ public class JourneyDayController  extends BaseController {
         return journeyDayService.copy(journeyDay);
     }
 
+    @RequestMapping(value = "/preview",method = RequestMethod.GET)
+    @ResponseBody
+    @Transactional(readOnly = false)
+    public Object preview(@RequestParam("json")String json){
+        json = json.replaceAll("&quot;","\"");
+        JourneyBo journeyBo = JSONObject.parseObject(json,JourneyBo.class);
+        return journeyDayService.preview(journeyBo );
+    }
+
 }
