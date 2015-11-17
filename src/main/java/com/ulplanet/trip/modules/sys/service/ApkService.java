@@ -43,14 +43,12 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
             byte[] md5Bytes = Digests.md5(bytes);
             String md5 = Encodes.encodeHex(md5Bytes);
             size = f.length()+"";
-            String key = "";
             if(f.exists()){
                 FileIndex ufi = new FileIndex();
                 ufi.setmUpfile(file);
                 ufi.setTruename(file.getOriginalFilename());
                 ufi.setMcode("apk");
                 ufi = FileManager.save(ufi);
-
                 uploadAPK.setUrl(ufi.getPath());
                 uploadAPK.setMd5(md5);
                 uploadAPK.setSize(size);
@@ -79,7 +77,6 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
                 apk1.setPackageName(apk.getPackageName());
                 apk1.setSize(apk.getSize());
                 apk1.setMd5(apk.getMd5());
-                apk1.setTar(apk.getTar());
                 apk1.preUpdate();
                 i = apkDao.update(apk1);
             } else {

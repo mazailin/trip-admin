@@ -98,7 +98,10 @@ public class JourneyDayController  extends BaseController {
     public Object saveTemp(JourneyDay journeyDay) {
         String cityName = journeyDay.getTitle().replaceAll(",", "-");
         journeyDay.setTitle(cityName);
-        if(StringUtils.isBlank(journeyDay.getId()))journeyDay.setIsNewRecord(false);
+        if(StringUtils.isBlank(journeyDay.getId())){
+            journeyDay.setIsNewRecord(false);
+            journeyDay.preInsert();
+        }
         EhCacheUtils.put(journeyDay.getGroupId(),journeyDay.getId(),journeyDay);
         return new JourneyDayBo(journeyDay);
 
@@ -126,6 +129,11 @@ public class JourneyDayController  extends BaseController {
 //        return new ResponseBo(1,"success");
 //    }
 
+    /**
+     * 行程保存并排序
+     * @param json
+     * @return
+     */
     @RequestMapping(value = "/sort",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(readOnly = false)
@@ -142,6 +150,15 @@ public class JourneyDayController  extends BaseController {
     public Object copy(JourneyDay journeyDay){
 
         return journeyDayService.copy(journeyDay);
+    }
+
+    @RequestMapping(value = "/preview",method = RequestMethod.GET)
+    @ResponseBody
+    @Transactional(readOnly = false)
+    public Object preview(@RequestParam("json")String json){
+        json = json.replaceAll("&quot;","\"");
+        JourneyBo journeyBo = JSONObject.parseObject(json,JourneyBo.class);
+        return journeyDayService.preview(journeyBo );
     }
 
 }

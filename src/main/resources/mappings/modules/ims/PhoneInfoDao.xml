@@ -9,6 +9,7 @@
         <result property="status" column="status"/>
         <result property="leaseholder" column="leaseholder"/>
         <result property="stockOrderId" column="stock_order_id"/>
+        <result property="orderNo" column="orderNo"/>
         <result property="comment" column="comment"/>
         <result property="updateDate" column="update_date"/>
         <result property="createDate" column="create_date"/>
@@ -18,7 +19,7 @@
     <!-- 用于select查询公用抽取的列 -->
     <sql id="BaseColumns">
         <![CDATA[
-            id,code,status,leaseholder,stock_order_id,comment,remarks
+            phone_info.id,phone_info.code,phone_info.status,phone_info.leaseholder,phone_info.stock_order_id,phone_info.comment,phone_info.remarks
 	    ]]>
     </sql>
 
@@ -225,18 +226,19 @@
     <!--</select>-->
 
     <select id="findList" resultMap="PhoneInfo">
-        SELECT <include refid="BaseColumns" />
+        SELECT <include refid="BaseColumns" />,s.order_id as orderNo
         FROM phone_info
+        LEFT JOIN stock_order s on phone_info.stock_order_id = s.id
         <where>
-            status != 0
+            phone_info.status != 0
             <if test="code!=null and code!=''">
-              AND  code = #{code}
+              AND  phone_info.code = #{code}
             </if>
             <if test="id!=null and id!=''">
-                AND  id = #{id}
+                AND  phone_info.id = #{id}
             </if>
             <if test="stockOrderId != null and stockOrderId != ''">
-                AND stock_order_id = #{stockOrderId}
+                AND phone_info.stock_order_id = #{stockOrderId}
             </if>
         </where>
     </select>

@@ -72,6 +72,7 @@
     <update id="update">
         UPDATE `group` SET
             name = #{name},
+            customer = #{customer},
             from_date = #{fromDate},
             to_date = #{toDate},
             description = #{description},

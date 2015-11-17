@@ -67,6 +67,7 @@ public class AppUserController extends BaseController {
 		ResponseBo responseBo = this.appUserService.deleteUser(appUser);
 		addMessage(redirectAttributes, responseBo.getMsg());
 		if(responseBo.getStatus()==1) {
+			appUserService.refresh();
 			return "redirect:" + adminPath + "/crm/appuser/list/?repage";
 		}
 		return form(appUser, model);

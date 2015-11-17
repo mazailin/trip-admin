@@ -11,11 +11,18 @@ public class PhoneInfo extends DataEntity<PhoneInfo> implements java.io.Serializ
 	private String stockOrderId;
 	private String comment;
 	private String refundFlag;
+	private String orderNo;
 
 	public PhoneInfo(){
 	}
 
+	public String getOrderNo() {
+		return orderNo;
+	}
 
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
 
 	public void setCode(String value) {
 		this.code = value;

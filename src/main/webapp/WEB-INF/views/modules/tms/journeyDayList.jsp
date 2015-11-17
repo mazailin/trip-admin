@@ -19,10 +19,8 @@
             width: 100%;
             text-align: center;
             vertical-align:middle;
-            background-color: #939595;
-            opacity: 0.9;
+            background-color: #F1F1F1;
             z-index: 10001;
-            filter:Alpha(opacity=90);
             position:fixed;
         }
         .select2-drop{
@@ -74,6 +72,7 @@
         .border {
             border:1px solid #cc3331;
             border-style: solid none;
+            background-color: #f8f6f2;
         }
         #sortable1, #sortable2 {
             border: 1px solid #B4D434;
@@ -97,7 +96,9 @@
 <sys:message content="${message}"/>
 <div style="margin-left: auto;margin-right: auto">
     <input type="hidden" value="${groupId}" id="group_id" />
+    <input type="hidden" id="changeFlag" value="0"/>
     <button id="addJourneyDay" type="button" class="btn btn-lg btn-primary">添加一天行程</button>&nbsp;&nbsp;&nbsp;
+    <button id="preview" type="button" class="btn btn-lg">预览当前行程</button>&nbsp;&nbsp;&nbsp;
     <button id="saveJourney" type="button" class="btn btn-lg btn-success">保存当前行程</button>&nbsp;&nbsp;&nbsp;
     <div style="margin-left: 10%;margin-top: 10px">
         <p>
@@ -236,10 +237,18 @@
         var _groupId = $("#group_id").val();
         /**=======================页面效果====**/
         $( "#sortable1, #sortable2" ).sortable({
-            connectWith: ".connectedSortable"
+            connectWith: ".connectedSortable",
+            distance:20,
+            activate : function(){
+                $("#changeFlag").val(1);
+            }
         }).disableSelection();
         $(".sortable-content" ).sortable({
-            connectWith: ".sortable-content"
+            connectWith: ".sortable-content",
+            distance:20,
+            activate : function(){
+                $("#changeFlag").val(1);
+            }
         }).disableSelection();
         $(".fa-times").live('mouseover',function(){
             $(this).addClass("fa-spin");
@@ -285,6 +294,7 @@
                 type:"get",
                 dataType:"json",
                 success : function(data){
+                    $("#changeFlag").val(1);
                     var str = "";
                     for(var n in data){
                         var obj = data[n];
@@ -326,6 +336,7 @@
         /**=========================导入模板end======**/
         /**========================删除==============**/
         $(".close-day").live('click',function(){
+            $("#changeFlag").val(1);
             var _div = $(this).parent().parent().parent();
             var groupId = _div.attr("groupId");
             if(groupId!=_groupId){
@@ -347,6 +358,7 @@
             <%--})--%>
         });
         $(".close-plan").live('click',function(){
+            $("#changeFlag").val(1);
             var _div = $(this).parent().parent();
             var groupId = _div.attr("groupId");
             if(groupId!=_groupId){
@@ -449,16 +461,6 @@
                 type:"get",
                 dataType:"json",
                 success:function(data) {
-//                    var options = data.infos;
-//
-//                    var str1 = '';
-//                    for(var i in options){
-//                        var option = options[i];
-//                        if(option.id===data.infoId)
-//                            str1 += "<option value='"+ option.id +"' selected >"+ option.name +"</option>";
-//                        else
-//                            str1 += "<option value='"+ option.id +"'>"+ option.name +"</option>";
-//                    }
                     if(groupId!=_groupId)id='';
                     $("#plan-time").val(data.time);
                     $("#planId").val(id);
@@ -467,12 +469,10 @@
                     $("#plan-message").val(data.message);
                     $("input[name='hasTime'][value="+ data.timeFlag +"]").attr("checked",true);
                     $("#plan-type").val(data.type).trigger("change");
-//                    $("#plan-list").empty();
-//                    $("#plan-list").append(str1);
 
-//                    $("#plan-name").val(data.name);
+                    $("#plan-name").val(data.name);
 
-//                    $("#plan-description").val(data.description);
+                    $("#plan-description").val(data.description);
 
 //                    $("#plan-longitude").val(data.longitude === undefined ? '':data.longitude);
 //                    $("#plan-latitude").val(data.latitude === undefined ? '':data.latitude);
@@ -482,6 +482,7 @@
         });
 
         $("#plan-btnSubmit").click(function(){
+            $("#changeFlag").val(1);
             var id = $("#planId").val();
             var l = $("#plan-type");
             var type = l.val();
@@ -578,8 +579,8 @@
                 url:"${ctx}/tms/journeyPlan/findTypeList",
                 dataType:"json",
                 type:"post",
-                data:{"dayId":dayId,"type":type},
-                ansyc:false,
+                data:{"dayId":dayId,"type":type,"groupId":_groupId},
+                async:false,
                 success:function(data){
                     $("#plan-list").empty();
                     var str = '<option value=\"\" selected>请选择</option>';
@@ -672,6 +673,7 @@
         });
 
         $("#btnSubmit").click(function(){
+            $("#changeFlag").val(1);
             var id = $("#id").val();
             var cityId = $("#cityId").val();
             if(cityId.length==0){
@@ -685,6 +687,7 @@
                 data:{"id":$("#id").val(),"cityIds":$("#cityId").val()
                     ,"title":$("#cityName").val(),"groupId":_groupId},
                 success:function(data){
+                    $("#changeFlag").val(1);
                     if(id!=null && id.length>0){
                       $("#"+id).find("p[class='p-header-top']").html(
                           data.title
@@ -774,17 +777,33 @@
                 type:"post",
                 data:{json:json+""},
                 success:function(data){
-                    swal("保存成功!", data.msg, "success");
+                    $("#changeFlag").val(0);
+                    swal({title:"保存成功!", text:data.msg, type:"success"},function(isConfirm){
+                        window.location.href = "${ctx}/tms/journeyDay/?groupId=" + _groupId;
+                    });
+                },
+                error:function(data){
+                    $("#changeFlag").val(1);
+                    swal("保存失败!", "保存失败，请联系管理员", "error");
                 }
 
             });
         });
 
-
-
+        $("#preview").click(function(){
+        });
 
 
     });
+    /**
+     关闭时校验*
+     */
+    window.onbeforeunload = function(){
+        if($("#changeFlag").val()=='1'){
+            return "当前行程未保存，关闭或刷新会导致数据丢失，是否继续？";
+        }
+
+    }
 
     function plan(obj1,groupId){
         var str1 =

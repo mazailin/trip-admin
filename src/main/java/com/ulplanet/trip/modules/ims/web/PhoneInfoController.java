@@ -53,17 +53,7 @@ public class PhoneInfoController extends BaseController {
     @RequestMapping(value = {"/list",""})
     public String list(PhoneInfo phoneInfo, HttpServletRequest request, HttpServletResponse response, Model model){
         Page<PhoneInfo> page = this.phoneInfoService.findPage(new Page<>(request, response), phoneInfo);
-        List<PhoneInfoBo> phoneInfoBos = new ArrayList<>();
-        for(PhoneInfo phone : page.getList()){
-            PhoneInfoBo phoneInfoBo = new PhoneInfoBo(phone);
-            phoneInfoBos.add(phoneInfoBo);
-        }
-        Page<PhoneInfoBo> page1 =  new Page<>(request, response);
-        page1.setCount(page.getCount());
-        page1.setPageNo(page.getPageNo());
-        page1.setPageSize(page.getPageSize());
-        page1.setList(phoneInfoBos);
-        model.addAttribute("page",page1);
+        model.addAttribute("page",page);
         return "modules/ims/phoneList";
     }
 
