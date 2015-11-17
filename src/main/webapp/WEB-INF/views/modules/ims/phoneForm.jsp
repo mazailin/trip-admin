@@ -78,9 +78,16 @@
   <div class="control-group">
     <label class="control-label">状态:</label>
     <div class="controls">
-      <form:select path="status" cssStyle="width:150px">
-        <form:options items="${fns:getDictList('phone_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-      </form:select>
+      <c:choose>
+        <c:when test="${phoneInfo.status!=9999}">
+          <form:select path="status" cssStyle="width:150px">
+            <form:options items="${fns:getDictList('phone_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+          </form:select>
+        </c:when>
+        <c:otherwise>
+          <input type="text" id="status" name="status" value="退货" readonly="true"/>
+        </c:otherwise>
+      </c:choose>
     </div>
   </div>
   <div class="control-group">

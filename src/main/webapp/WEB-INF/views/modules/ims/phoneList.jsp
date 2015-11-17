@@ -38,8 +38,8 @@
   <c:forEach items="${page.list}" var="phone">
     <tr>
       <td>${phone.code}</td>
-      <td><a href="${ctx}/ims/phoneOrder/form?id=${phone.stockOrderId}">${phone.stockOrderId}</td>
-      <td>${phone.statusValue}</td>
+      <td><a href="${ctx}/ims/phoneOrder/form?id=${phone.stockOrderId}">${phone.orderNo}</td>
+      <td>${fns:getDictLabel(phone.status,"phone_status","0")}</td>
       <td>
         <shiro:hasPermission name="ims:phone:edit"><a href="${ctx}/ims/phone/form?id=${phone.id}">修改</a></shiro:hasPermission>
         <shiro:hasPermission name="ims:phone:refund">

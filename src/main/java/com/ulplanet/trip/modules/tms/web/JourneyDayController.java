@@ -129,6 +129,11 @@ public class JourneyDayController  extends BaseController {
 //        return new ResponseBo(1,"success");
 //    }
 
+    /**
+     * 行程保存并排序
+     * @param json
+     * @return
+     */
     @RequestMapping(value = "/sort",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(readOnly = false)
