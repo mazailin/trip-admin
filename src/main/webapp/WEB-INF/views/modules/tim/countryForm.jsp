@@ -46,6 +46,12 @@
 			</div>
 		</div>
         <div class="control-group">
+            <label class="control-label">国家区号:</label>
+            <div class="controls">
+                <form:input path="zcode" htmlEscape="false" maxlength="16"/>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">急救电话:</label>
             <div class="controls">
                 <form:input path="ambulance" htmlEscape="false" maxlength="64"/>

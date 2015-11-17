@@ -118,7 +118,7 @@ INSERT INTO sys_user (id,login_name,password,name,email,phone,mobile,user_type,l
 UPDATE sys_user SET id = LOWER(REPLACE(id,'-',''));
 
 /* country */
-INSERT INTO country (id,name,description,ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks) SELECT id,name,description,ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks FROM aws.country;
+INSERT INTO country (id,name,description,zcode,ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks) SELECT id,name,description,'',ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks FROM aws.country;
 UPDATE country SET id = LOWER(REPLACE(id,'-',''));
 UPDATE country JOIN sys_user ON country.create_by = sys_user.login_name SET country.create_by = sys_user.id;
 UPDATE country JOIN sys_user ON country.update_by = sys_user.login_name SET country.update_by = sys_user.id;
@@ -206,6 +206,6 @@ INSERT INTO user (id,name,gender,identity_card,photo,passport,phone,email,create
 UPDATE user SET id = LOWER(REPLACE(id,'-',''));
 
 /* group_user */
-INSERT INTO group_user (id,`group`,user,code,im_token,type,create_by,create_date,update_by,update_date,remarks) SELECT id,`group`,user,code,im_token,type,'1',create_date,'1',update_date,remarks FROM aws.group_user;
+INSERT INTO group_user (id,`group`,user,code,cphone,im_token,type,create_by,create_date,update_by,update_date,remarks) SELECT id,`group`,user,code,'',im_token,type,'1',create_date,'1',update_date,remarks FROM aws.group_user;
 UPDATE group_user SET id = LOWER(REPLACE(id,'-','')), `group` = LOWER(REPLACE(`group`,'-','')), user = LOWER(REPLACE(user,'-',''));
 
