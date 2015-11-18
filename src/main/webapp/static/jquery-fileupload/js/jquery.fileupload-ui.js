@@ -552,6 +552,8 @@
                 data.dataType = "json";
                 data.data = inputs.serializeArray();
                 $.ajax(data).done(function() {
+                    template.find('.toggle')
+                        .prop('checked', false);
                     showTip("图片内容更新成功。");
                 });
             }
