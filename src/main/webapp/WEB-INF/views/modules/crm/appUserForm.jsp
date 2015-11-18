@@ -151,7 +151,10 @@
         type:"get",
         success:function(data){
           if(data.id!=null&&data.id.length>0){
-            swal("用户已存在", "名字："+data.name+",电话："+data.phone, "error");
+            if($("#id").val()==data.id){
+              return true;
+            }
+            swal("用户已存在", "姓名："+data.name+",电话："+data.phone, "error");
             $("#btnSubmit").hide();
             return true;
           }
