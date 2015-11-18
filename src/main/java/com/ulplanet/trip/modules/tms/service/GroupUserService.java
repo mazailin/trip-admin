@@ -85,8 +85,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     public ResponseBo updateUser(GroupUser groupUser){
         groupUser.preUpdate();
-        groupUserDao.updateGroupUser(groupUser);
-        return ResponseBo.getResult(groupUserDao.updateUser(groupUser));
+        return ResponseBo.getResult(groupUserDao.updateGroupUser(groupUser));
     }
 
     public ResponseBo deleteUser(GroupUser groupUser){
