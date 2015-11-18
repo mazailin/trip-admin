@@ -21,11 +21,9 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
 
     int updateGroupUser(GroupUser groupUser);
 
-    int updateUser(GroupUser groupUser);
 
     int deleteGroupUser(GroupUser groupUser);
 
-    int deleteUser(GroupUser groupUser);
 
     String findMaxCode(Parameter parameter);
 

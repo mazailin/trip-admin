@@ -31,8 +31,25 @@
   <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
   <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
   <input type="hidden" id="group" name="group" value="${groupId}"/>
-  <label>用户名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
-  &nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+  <div class="row">
+    <div class="col-md-4">
+      <label>用户名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
+    </div>
+    <div class="col-md-4">
+      <label>护照号 ：</label><form:input path="passport" htmlEscape="false" maxlength="50" class="input-medium"/>
+    </div>
+    <div class="col-md-4">
+      <label>手机号 ：</label><form:input path="phone" htmlEscape="false" maxlength="50" class="input-medium"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+    </div>
+    <div class="col-md-4">
+      <input id="form_code" class="btn" type="submit" value="批量生成二维码"/>
+    </div>
+  </div>
 </form:form>
 <sys:message content="${message}"/>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">

@@ -5,6 +5,8 @@ import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.dao.CustomerDao;
 import com.ulplanet.trip.modules.crm.entity.Customer;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.sys.entity.VersionTag;
+import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.dao.GroupDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import io.rong.ApiHttpClient;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class GroupService extends CrudService<GroupDao,Group> {
     private GroupDao groupDao;
     @Autowired
     private CustomerDao customerDao;
+    @Resource
+    private VersionTagService versionTagService;
 
     public ResponseBo addGroup(Group group) {
         group.preInsert();
@@ -39,6 +44,7 @@ public class GroupService extends CrudService<GroupDao,Group> {
         group.preUpdate();
         try {
             ApiHttpClient.refreshGroupInfo(group.getId(), group.getName());
+            versionTagService.save(new VersionTag(group.getId(),1));
             return ResponseBo.getResult(this.groupDao.update(group));
         } catch (Exception e) {
             logger.error("更新群组 " + group.getName() + " 失败，", e);
