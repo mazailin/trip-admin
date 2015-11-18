@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS `journey_plan`;
 DROP TABLE IF EXISTS `phone_info`;
 DROP TABLE IF EXISTS `stock_order`;
 DROP TABLE IF EXISTS `apk`;
+DROP TABLE IF EXISTS `version_tag`;
 
 /* Create Tables */
 
@@ -147,6 +148,7 @@ CREATE TABLE `country` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(64) NOT NULL COMMENT '名称',
   `description` VARCHAR(255) COMMENT '描述',
+  `zcode` VARCHAR(16) COMMENT '区号',
   `ambulance` VARCHAR(64) COMMENT '急救电话',
   `police` VARCHAR(64) COMMENT '匪警',
   `fire` VARCHAR(64) COMMENT '火警',
@@ -380,6 +382,7 @@ CREATE TABLE `group_user` (
   `group` VARCHAR(36) NOT NULL COMMENT '团队',
   `user` VARCHAR(36) NOT NULL COMMENT '用户',
   `code` VARCHAR(36) NOT NULL COMMENT '登录编码',
+  `cphone` VARCHAR(36) COMMENT '本机号码',
   `im_token` VARCHAR(255) COMMENT '用户融云token',
   `type` CHAR(1) DEFAULT '1' COMMENT '类型：\n0：导游\n1：游客',
   `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
@@ -542,3 +545,10 @@ CREATE TABLE `apk` (
   `remarks` VARCHAR(255) COMMENT '标注',
   PRIMARY KEY (`id`)
 ) COMMENT='安装包更新记录表';
+
+CREATE TABLE `version_tag` (
+  `id` VARCHAR(64) NOT NULL COMMENT '版本标识',
+  `type` INT(2) NOT NULL COMMENT '版本类型： 1：成员列表，2：行程',
+  `tag` VARCHAR(36) NOT NULL COMMENT '版本标签',
+  PRIMARY KEY (`id`,`type`)
+) COMMENT='数据更新标签';
