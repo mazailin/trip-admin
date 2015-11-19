@@ -28,7 +28,13 @@
 <form:form id="searchForm" modelAttribute="phoneInfo" action="${ctx}/ims/phone/" method="post" class="breadcrumb form-search">
   <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
   <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+  <input id="stockOrderId" name="stockOrderId" type="hidden" value="${stockOrderId}"/>
   <label>手机编号 ：</label><form:input path="code" htmlEscape="false" maxlength="50" class="input-medium"/>
+  <label class="control-label">状态:</label>
+        <form:select path="status" cssStyle="width:150px">
+          <form:option value="" cssStyle="checked:true">所有状态</form:option>
+          <form:options items="${fns:getDictList('phone_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+        </form:select>
   &nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form:form>
 <sys:message content="${message}"/>

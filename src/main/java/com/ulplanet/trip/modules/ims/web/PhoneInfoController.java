@@ -52,6 +52,7 @@ public class PhoneInfoController extends BaseController {
     @RequiresPermissions("ims:phone:view")
     @RequestMapping(value = {"/list",""})
     public String list(PhoneInfo phoneInfo, HttpServletRequest request, HttpServletResponse response, Model model){
+        model.addAttribute("stockOrderId",phoneInfo.getStockOrderId());
         Page<PhoneInfo> page = this.phoneInfoService.findPage(new Page<>(request, response), phoneInfo);
         model.addAttribute("page",page);
         return "modules/ims/phoneList";

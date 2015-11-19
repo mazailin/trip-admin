@@ -231,6 +231,9 @@
         LEFT JOIN stock_order s on phone_info.stock_order_id = s.id
         <where>
             phone_info.status != 0
+            <if test="status!=null">
+              AND phone_info.status = #{status}
+            </if>
             <if test="code!=null and code!=''">
               AND  phone_info.code = #{code}
             </if>

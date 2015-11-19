@@ -24,7 +24,6 @@
   <sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
   <ul class="ul-form">
     <li><label>航班号：</label><form:input path="flightNo" htmlEscape="false" maxlength="64" class="input-medium"/></li>
-    <li><label>航空公司：</label><form:input path="company" htmlEscape="false" maxlength="64" class="input-medium"/></li>
     <li class="clearfix"></li>
     <li><label>出发城市：</label>
       <sys:treeselect id="departureCity" name="departureCity.id" value="" labelName="departureCity.name" labelValue=""
