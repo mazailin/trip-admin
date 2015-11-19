@@ -93,7 +93,7 @@
 		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
 		<init-param>
 			<param-name>allow</param-name>
-			<param-value>127.0.0.1</param-value>
+			<param-value>127.0.0.1,49.213.12.237,54.64.246.63</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

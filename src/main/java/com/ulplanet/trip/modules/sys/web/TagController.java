@@ -40,5 +40,17 @@ public class TagController extends BaseController {
 		model.addAttribute("value", request.getParameter("value"));
 		return "modules/sys/tagIconselect";
 	}
+
+    /**
+     * 地图选择标签（mapselect.tag）
+     */
+    @RequiresPermissions("user")
+    @RequestMapping(value = "mapselect")
+    public String mapselect(HttpServletRequest request, Model model) {
+        model.addAttribute("addr", request.getParameter("addr"));
+        model.addAttribute("lng", request.getParameter("lng"));
+        model.addAttribute("lat", request.getParameter("lat"));
+        return "modules/sys/tagMapselect";
+    }
 	
 }

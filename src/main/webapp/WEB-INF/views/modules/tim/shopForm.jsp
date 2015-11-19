@@ -88,18 +88,7 @@
                 <form:textarea path="address" htmlEscape="false" rows="3" maxlength="255" class="input-xlarge"/>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label">纬度:</label>
-            <div class="controls">
-                <form:input path="latitude" htmlEscape="false" maxlength="255" class="required"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">经度:</label>
-            <div class="controls">
-                <form:input path="longitude" htmlEscape="false" maxlength="255" class="required"/>
-            </div>
-        </div>
+        <sys:mapselect addr="" lng="${shop.longitude}" lat="${shop.latitude}" />
         <div class="control-group">
             <label class="control-label">营业时间:</label>
             <div class="controls">
