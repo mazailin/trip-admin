@@ -31,25 +31,17 @@
   <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
   <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
   <input type="hidden" id="group" name="group" value="${groupId}"/>
-  <div class="row">
-    <div class="col-md-4">
-      <label>用户名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
-    </div>
-    <div class="col-md-4">
-      <label>护照号 ：</label><form:input path="passport" htmlEscape="false" maxlength="50" class="input-medium"/>
-    </div>
-    <div class="col-md-4">
-      <label>手机号 ：</label><form:input path="phone" htmlEscape="false" maxlength="50" class="input-medium"/>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-      <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
-    </div>
-    <div class="col-md-4">
-      <input id="form_code" class="btn" type="submit" value="批量生成二维码"/>
-    </div>
-  </div>
+  <ul class="ul-form">
+    <li><label>用户名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/></li>
+    <li><label>护照号 ：</label><form:input path="passport" htmlEscape="false" maxlength="50" class="input-medium"/></li>
+    <li><label>手机号 ：</label><form:input path="phone" htmlEscape="false" maxlength="50" class="input-medium"/></li>
+    <li class="clearfix"></li>
+    <li><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="generate" class="btn" type="button" value="批量生成二维码" onclick="qrcode();"/></li>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<shiro:hasPermission name="tms:group:import">
+       <label>导入Excel：</label><form id="import_form" action="${ctx}/tms/groupUser/import"><input type="file" name="file"/><button id="import" class="btn">导入 </button></form>
+    </shiro:hasPermission></li>
+  </ul>
 </form:form>
 <sys:message content="${message}"/>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -72,7 +64,10 @@
   </tbody>
 </table>
 <div class="pagination">${page}</div>
+<form id="qrcode" action="../groupQRCode">
+  <input type="hidden" id="data" name="data" value="">
 
+</form>
 <script type="text/javascript">
   function getBarcode(name,code,phone){
       swal.setDefaults({'margin-top':'0px'});
@@ -82,6 +77,19 @@
     var qrcode = new QRCode(document.getElementById("qrcode"), {width:300,height:300});
     qrcode.makeCode(code+","+phone);
   }
+  function qrcode(){
+    window.open("${ctx}/tms/groupUser/groupQRCode?groupId=${groupId}");
+  }
+  $(function(){
+    $("#import").click(function(){
+      var file = $("#file").val();
+      if(file.indexOf(".xls")<0){
+        alertx("请选择xls格式的Excel文件");
+        return false;
+      }
+      $("#import_form").submit();
+    })
+  });
 </script>
 </body>
 </html>

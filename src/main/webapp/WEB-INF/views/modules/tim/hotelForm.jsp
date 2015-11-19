@@ -21,6 +21,12 @@
           level : {
             range : [0, 5],
             digits: true
+          },
+          "city.id" : {
+            required:true
+          },
+          "city.name" : {
+            required:true
           }
         },
         submitHandler: function(form){
@@ -51,7 +57,7 @@
   <div class="control-group">
     <label class="control-label">城市:</label>
     <div class="controls">
-      <sys:treeselect id="city" name="city.id" value="${hotel.city.id}" labelName="city.name" labelValue="${hotel.city.name}"
+      <sys:treeselect id="city" name="city.id"  value="${hotel.city.id}" labelName="city.name" labelValue="${hotel.city.name}"
                       title="城市" url="/tim/city/treeData" notAllowSelectParent="true" cssClass="required input-small" allowClear="false"/>
       <span class="help-inline"><font color="red">*</font> </span>
     </div>

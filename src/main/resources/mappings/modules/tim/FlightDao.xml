@@ -200,10 +200,10 @@
           <if test="flightNo!=null and flightNo!=''">
               AND flight_no = #{flightNo}
           </if>
-          <if test="departureCity!=null and departureCity!=''">
+          <if test="departureCity!=null and departureCity.id!=null and departureCity.id!=''">
               AND departure_city = #{departureCity.id}
           </if>
-          <if test="arrivalCity!=null and arrivalCity!=''">
+          <if test="arrivalCity!=null and arrivalCity.id!=null and arrivalCity.id!=''">
               AND arrival_city = #{arrivalCity.id}
           </if>
         </where>

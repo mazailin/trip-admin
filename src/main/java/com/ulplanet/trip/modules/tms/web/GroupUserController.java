@@ -11,11 +11,13 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/10/27.
@@ -71,7 +73,7 @@ public class GroupUserController  extends BaseController {
         Page<GroupUser> page = this.groupUserService.findPage(new Page<>(request, response), groupUser);
 
         model.addAttribute("page",page);
-        model.addAttribute("groupId",groupUser.getGroup());
+        model.addAttribute("groupId", groupUser.getGroup());
         return "modules/tms/groupUserList";
     }
 
@@ -89,4 +91,21 @@ public class GroupUserController  extends BaseController {
         model.addAttribute("groupUser", group);
         return "modules/tms/groupUserForm";
     }
+
+    @RequestMapping(value = "/groupQRCode")
+    public String groupQRCode(@RequestParam String groupId,Model model){
+        GroupUser groupUser = new GroupUser();
+        groupUser.setGroup(groupId);
+        List<GroupUser> list = groupUserService.findList(groupUser);
+        model.addAttribute("list",list);
+        return "modules/tms/groupQRCode";
+    }
+
+//    @RequestMapping(value = "/import")
+//    public String importExcel(@RequestParam MultipartFile file,Model model){
+//        List<GroupUser> list = groupUserService.findList(groupUser);
+//        model.addAttribute("list",list);
+//        return "modules/tms/groupQRCode";
+//    }
+
 }

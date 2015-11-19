@@ -19,6 +19,7 @@ import io.rong.models.SdkHttpResult;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -143,6 +144,10 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
+//    public ResponseBo importExcel(MultipartFile multipartFile){
+//
+//    }
+
     private String getUserCode(String groupid) {
         String lock;
         synchronized (this) {
@@ -169,6 +174,9 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     }
 
     private boolean isIn(Date oldSDate,Date oldEDate,Date newSDate,Date newEDate){
+        if(oldSDate==null||oldEDate==null){
+            return false;
+        }
         if(oldSDate.before(newSDate) && oldEDate.after(newSDate))return true;
         if(oldSDate.before(newEDate) && oldEDate.after(newEDate))return true;
         if(oldSDate.after(newSDate) && oldEDate.before(newEDate))return true;

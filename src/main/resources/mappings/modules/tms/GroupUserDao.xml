@@ -130,8 +130,6 @@
             user.gender,
             user.identity_card,
             user.passport,
-            user.phone,
-            user.email
         FROM
             user
             LEFT JOIN group_user ON user.id = group_user.user
