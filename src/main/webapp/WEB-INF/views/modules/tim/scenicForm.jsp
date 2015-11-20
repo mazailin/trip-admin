@@ -102,7 +102,7 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">实用贴士:</label>
+            <label class="control-label">注意事项:</label>
             <div class="controls">
                 <form:textarea path="tips" htmlEscape="false" rows="3" maxlength="255" class="input-xlarge"/>
             </div>
