@@ -35,6 +35,88 @@
     </select>
 
 
+    <insert id="insertUsers">
+        REPLACE INTO user(
+        id,
+        name,
+        weChat,
+        qq,
+        birth,
+        issue_date,
+        expiry_date,
+        birth_place,
+        issue_place,
+        gender,
+        identity_card,
+        passport,
+        phone,
+        email,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.user},
+            #{item.name},
+            #{item.weChat},
+            #{item.qq},
+            #{item.birth},
+            #{item.issueDate},
+            #{item.expiryDate},
+            #{item.birthPlace},
+            #{item.issuePlace},
+            #{item.gender},
+            #{item.identityCard},
+            #{item.passport},
+            #{item.phone},
+            #{item.email},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+
+    </insert>
+
+    <insert id="insertGroupUsers">
+        INSERT INTO group_user(
+        id,
+        `group`,
+        im_token,
+        user,
+        code,
+        type,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.id},
+            #{item.group},
+            #{item.imToken},
+            #{item.user},
+            #{item.code},
+            #{item.type},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+    </insert>
+
+
+
+
     <select id="get" resultType="GroupUser">
         SELECT
         group_user.id,

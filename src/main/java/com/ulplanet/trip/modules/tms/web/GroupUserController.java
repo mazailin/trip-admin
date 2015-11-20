@@ -9,6 +9,7 @@ import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.service.GroupUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +62,7 @@ public class GroupUserController  extends BaseController {
     @RequestMapping(value = "/delete")
     public String delete(GroupUser groupUser,Model model, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupUserService.deleteUser(groupUser);
-        addMessage(redirectAttributes,responseBo.getMsg());
+        addMessage(redirectAttributes, responseBo.getMsg());
         if(responseBo.getStatus()==1) {
             return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
         }
@@ -101,11 +102,13 @@ public class GroupUserController  extends BaseController {
         return "modules/tms/groupQRCode";
     }
 
-//    @RequestMapping(value = "/import")
-//    public String importExcel(@RequestParam MultipartFile file,Model model){
-//        List<GroupUser> list = groupUserService.findList(groupUser);
-//        model.addAttribute("list",list);
-//        return "modules/tms/groupQRCode";
-//    }
+    @RequestMapping(value = "/import")
+    @Transactional(readOnly = false)
+    public String importExcel(@RequestParam MultipartFile file,@RequestParam String groupId,Model model, RedirectAttributes redirectAttributes){
+        ResponseBo responseBo = groupUserService.importExcel(file, groupId);
+        addMessage(redirectAttributes, responseBo.getMsg());
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupId + "&&repage";
+    }
+
 
 }

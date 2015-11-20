@@ -17,12 +17,14 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
 
     int insertGroupUser(GroupUser groupUser);
 
-    int insertUser(GroupUser groupUser);
+    int insertUsers(List<GroupUser> groupUser);
+    int insertGroupUsers(List<GroupUser> groupUser);
 
     int updateGroupUser(GroupUser groupUser);
 
 
     int deleteGroupUser(GroupUser groupUser);
+
 
 
     String findMaxCode(Parameter parameter);
