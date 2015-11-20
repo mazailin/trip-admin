@@ -30,6 +30,12 @@
             <if test="name!=null and name!=''">
               AND user.name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="passport!=null and passport!=''">
+                AND user.passport = #{passport}
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND user.phone = #{phone}
+            </if>
         </where>
         ORDER BY group_user.update_date DESC
     </select>
