@@ -38,9 +38,6 @@
     <li class="clearfix"></li>
     <li><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="generate" class="btn" type="button" value="批量生成二维码" onclick="qrcode();"/></li>
-    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<shiro:hasPermission name="tms:group:import">
-       <label>导入Excel：</label><form id="import_form" action="${ctx}/tms/groupUser/import"><input type="file" name="file"/><button id="import" class="btn">导入 </button></form>
-    </shiro:hasPermission></li>
   </ul>
 </form:form>
 <sys:message content="${message}"/>
@@ -64,10 +61,6 @@
   </tbody>
 </table>
 <div class="pagination">${page}</div>
-<form id="qrcode" action="../groupQRCode">
-  <input type="hidden" id="data" name="data" value="">
-
-</form>
 <script type="text/javascript">
   function getBarcode(name,code,phone){
       swal.setDefaults({'margin-top':'0px'});
