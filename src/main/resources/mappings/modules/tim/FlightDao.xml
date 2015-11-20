@@ -192,10 +192,10 @@
               AND flight.id = #{id}
           </if>
           <if test="createBy!=null and createBy.name!=null and createBy.name!=''">
-              AND createName like concat('%',#{CreateBy.name},'%')
+              AND sc.name like concat('%',#{createBy.name},'%')
           </if>
           <if test="updateBy!=null and updateBy.name!=null and updateBy.name!=''">
-              AND updateName like concat('%',#{updateBy.name},'%')
+              AND su.name like concat('%',#{updateBy.name},'%')
           </if>
           <if test="flightNo!=null and flightNo!=''">
               AND flight_no = #{flightNo}
