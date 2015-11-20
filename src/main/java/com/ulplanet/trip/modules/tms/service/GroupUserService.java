@@ -78,6 +78,37 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         return responseBo;
     }
 
+
+    public ResponseBo saveGroupUsers(List<GroupUser> list,Group group){
+        ResponseBo  responseBo = new ResponseBo();
+        for(GroupUser groupUser : list) {
+            groupUser.setId(IdGen.uuid());
+            String code = this.getUserCode(groupUser.getGroup());
+            groupUser.setCode(code);
+            try {
+                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
+                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
+                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
+                            new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+                } else {
+                    logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
+                    throw new RuntimeException("接口调用失败!");
+                }
+            } catch (Exception e) {
+                logger.error("用户创建失败", e);
+                responseBo.setMsg("用户创建失败");
+                responseBo.setStatus(0);
+                return responseBo;
+            }
+        }
+        responseBo.setStatus(groupUserDao.insertGroupUsers(list));
+        return responseBo;
+    }
+
+
     public ResponseBo addGroupUser(GroupUser groupUser){
         groupUser.preInsert();
         return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
@@ -159,23 +190,35 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                 return new ResponseBo(0,error);
             }
             List<GroupUser> list = (List<GroupUser>)map.get("data");
-            if(list.size()==0){
-                return new ResponseBo(1,"插入成功");
-            }
+            List<GroupUser> addList = new ArrayList<>();
+            List<GroupUser> addGroupList = new ArrayList<>();
             int i = 0;
             for(GroupUser groupUser : list){
                 if(StringUtils.isBlank(groupUser.getPassport())){
                     continue;
                 }
                 i++;
+                String id = groupUserDao.hasPassport(groupUser.getPassport());
                 groupUser.preInsert();
                 groupUser.setGroup(groupId);
-                groupUser.setUser(groupUser.getId());
-                groupUser.setId("");
-                saveGroupUser(groupUser);
+                if(StringUtils.isNotBlank(id)){
+                    groupUser.setUser(id);
+                    groupUserDao.updateUser(groupUser);
+                }else {
+                    groupUser.setUser(groupUser.getId());
+                    addList.add(groupUser);
+                }
+                addGroupList.add(groupUser);
             }
-            groupUserDao.insertUsers(list);
-            return new ResponseBo(1,"插入成功,共插入"+i+"条数据");
+            if(addList.size()>0){
+                groupUserDao.insertUsers(addList);
+            }
+
+            Group group = groupService.get(groupId);
+            if(addGroupList.size()>0) {
+                saveGroupUsers(addGroupList, group);
+            }
+            return new ResponseBo(1,"导入成功,共导入"+i+"条数据");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseBo(0,"系统异常");

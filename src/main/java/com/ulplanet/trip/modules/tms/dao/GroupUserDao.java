@@ -22,8 +22,11 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
 
     int updateGroupUser(GroupUser groupUser);
 
+    int updateUser(GroupUser updateUser);
 
     int deleteGroupUser(GroupUser groupUser);
+
+    String hasPassport(@Param("passport")String passport);
 
 
 

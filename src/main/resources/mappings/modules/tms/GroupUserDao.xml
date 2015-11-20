@@ -30,13 +30,19 @@
             <if test="name!=null and name!=''">
               AND user.name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="name!=null and name!=''">
+                AND user.passport = #{passport}
+            </if>
+            <if test="name!=null and name!=''">
+                AND user.phone = #{phone}
+            </if>
         </where>
         ORDER BY group_user.update_date DESC
     </select>
 
 
     <insert id="insertUsers">
-        REPLACE INTO user(
+        INSERT INTO user(
         id,
         name,
         weChat,
@@ -84,7 +90,7 @@
     </insert>
 
     <insert id="insertGroupUsers">
-        INSERT INTO group_user(
+        REPLACE INTO group_user(
         id,
         `group`,
         im_token,
@@ -234,5 +240,50 @@
         from user
         where id = #{id}
     </select>
+
+
+    <select id="hasPassport" resultType="java.lang.String">
+        SELECT id
+        FROM user
+        WHERE passport = #{passport}
+    </select>
+
+    <update id="updateUser">
+        UPDATE user
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="birth!=null">
+                birth = #{birth},
+            </if>
+            <if test="issueDate!=null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="expiryDate!=null">
+                expiry_date = #{expiryDate},
+            </if>
+            <if test="birthPlace!=null">
+                birth_place = #{birthPlace},
+            </if>
+            <if test="issuePlace!=null">
+                issue_place = #{issuePlace},
+            </if>
+            <if test="gender!=null">
+                gender = #{gender},
+            </if>
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        </set>
+        WHERE id = #{user}
+
+    </update>
 
 </mapper>

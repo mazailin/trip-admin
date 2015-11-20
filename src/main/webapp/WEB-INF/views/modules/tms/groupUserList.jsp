@@ -49,7 +49,7 @@
     <input type="hidden" id="groupId" name="groupId" value="${groupId}"/>
     <input id="file" name="file" type="file" style="width:330px" value=""/><br/><br/>　　
     <input id="btnImportSubmit" class="btn btn-primary" type="submit" value="   导    入   " onclick="_import(event)"/>
-    <a href="http://7xluz8.dl1.z0.glb.clouddn.com/%E6%97%85%E8%A1%8C%E5%9B%A2%E7%94%A8%E6%88%B7%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xls">下载模板</a>
+    <a href="http://7xluz8.dl1.z0.glb.clouddn.com/%E6%97%85%E8%A1%8C%E5%9B%A2%E7%94%A8%E6%88%B7%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xls?attrname=">下载模板</a>
   </form>
 </div>
 <sys:message content="${message}"/>

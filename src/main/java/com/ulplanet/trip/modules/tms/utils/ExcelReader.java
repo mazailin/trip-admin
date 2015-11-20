@@ -89,6 +89,9 @@ public class ExcelReader {
             row = sheet.getRow(i);
             for(int j = 0;j < cols.size();j++){
                 String temp = getStringCellValue(row,j).toString();
+                if(temp!=null && temp.length()==0){
+                    continue;
+                }
                 String str;
                 if((str = checkCol(j,temp))!=null){
                     PropertyDescriptor pd = new PropertyDescriptor(cols.get(j), clazz);
