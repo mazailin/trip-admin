@@ -14,6 +14,7 @@ import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
+import com.ulplanet.trip.modules.tms.utils.ExcelReader;
 import io.rong.ApiHttpClient;
 import io.rong.models.SdkHttpResult;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,23 +42,19 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     @Resource
     private AppUserService appUserService;
 
-    public ResponseBo addUser(GroupUser groupUser){
-        groupUser.preInsert();
-        groupUser.setUser(IdGen.uuid());
-        return ResponseBo.getResult(groupUserDao.insertUser(groupUser));
-    }
+    private static List<String> title;
+
 
     public ResponseBo saveGroupUser(GroupUser groupUser){
         ResponseBo  responseBo = new ResponseBo();
 
         if(StringUtils.isBlank(groupUser.getId())){//添加用户
             Group group = groupService.get(groupUser.getGroup());
-            groupUser.preInsert();
             String code =  this.getUserCode(groupUser.getGroup());
             groupUser.setCode(code);
             try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
+                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
+                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
                 if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
                     Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
                             new TypeToken<Map<String, Object>>() {
@@ -78,6 +77,37 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         }
         return responseBo;
     }
+
+
+    public ResponseBo saveGroupUsers(List<GroupUser> list,Group group){
+        ResponseBo  responseBo = new ResponseBo();
+        for(GroupUser groupUser : list) {
+            groupUser.setId(IdGen.uuid());
+            String code = this.getUserCode(groupUser.getGroup());
+            groupUser.setCode(code);
+            try {
+                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
+                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
+                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
+                            new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+                } else {
+                    logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
+                    throw new RuntimeException("接口调用失败!");
+                }
+            } catch (Exception e) {
+                logger.error("用户创建失败", e);
+                responseBo.setMsg("用户创建失败");
+                responseBo.setStatus(0);
+                return responseBo;
+            }
+        }
+        responseBo.setStatus(groupUserDao.insertGroupUsers(list));
+        return responseBo;
+    }
+
 
     public ResponseBo addGroupUser(GroupUser groupUser){
         groupUser.preInsert();
@@ -144,9 +174,73 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
-//    public ResponseBo importExcel(MultipartFile multipartFile){
-//
-//    }
+    public ResponseBo importExcel(MultipartFile multipartFile,String groupId){
+        ExcelReader excelReader = new ExcelReader();
+        String error;
+        try {
+            InputStream in = multipartFile.getInputStream();
+            error = excelReader.checkExcelTitle(in, title(),multipartFile.getOriginalFilename());
+            if(error.length()>0){
+                return new ResponseBo(0,error);
+            }
+            Class<GroupUser> clazz = GroupUser.class;
+            Map<String,Object> map = excelReader.readExcelContent(in, title(), clazz);
+            error = map.get("error").toString();
+            if(error.length()>0){
+                return new ResponseBo(0,error);
+            }
+            List<GroupUser> list = (List<GroupUser>)map.get("data");
+            List<GroupUser> addList = new ArrayList<>();
+            List<GroupUser> addGroupList = new ArrayList<>();
+            int i = 0;
+            for(GroupUser groupUser : list){
+                if(StringUtils.isBlank(groupUser.getPassport())){
+                    continue;
+                }
+                i++;
+                String id = groupUserDao.hasPassport(groupUser.getPassport());
+                groupUser.preInsert();
+                groupUser.setGroup(groupId);
+                if(StringUtils.isNotBlank(id)){
+                    groupUser.setUser(id);
+                    groupUserDao.updateUser(groupUser);
+                }else {
+                    groupUser.setUser(groupUser.getId());
+                    addList.add(groupUser);
+                }
+                addGroupList.add(groupUser);
+            }
+            if(addList.size()>0){
+                groupUserDao.insertUsers(addList);
+            }
+
+            Group group = groupService.get(groupId);
+            if(addGroupList.size()>0) {
+                saveGroupUsers(addGroupList, group);
+            }
+            return new ResponseBo(1,"导入成功,共导入"+i+"条数据");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBo(0,"系统异常");
+        }
+    }
+
+    private static List<String> title(){
+        if(title!=null)return title;
+        title = new ArrayList<>();
+        title.add("passport");
+        title.add("name");
+        title.add("phone");
+        title.add("gender");
+        title.add("type");
+        title.add("birth");
+        title.add("birthPlace");
+        title.add("issueDate");
+        title.add("issuePlace");
+        title.add("expiryDate");
+        title.add("email");
+        return title;
+    }
 
     private String getUserCode(String groupid) {
         String lock;

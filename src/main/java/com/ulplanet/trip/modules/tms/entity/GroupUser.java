@@ -3,6 +3,7 @@ package com.ulplanet.trip.modules.tms.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.persistence.DataEntity;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class GroupUser extends DataEntity<GroupUser> {
     }
 
     public String getBirth() {
-        return birth;
+        return StringUtils.isBlank(birth)?null:birth;
     }
 
     public void setBirth(String birth) {
@@ -93,7 +94,7 @@ public class GroupUser extends DataEntity<GroupUser> {
     }
 
     public String getIssueDate() {
-        return issueDate;
+        return StringUtils.isBlank(issueDate)?null:issueDate;
     }
 
     public void setIssueDate(String issueDate) {
@@ -101,7 +102,7 @@ public class GroupUser extends DataEntity<GroupUser> {
     }
 
     public String getExpiryDate() {
-        return expiryDate;
+        return StringUtils.isBlank(expiryDate)?null:expiryDate;
     }
 
     public void setExpiryDate(String expiryDate) {

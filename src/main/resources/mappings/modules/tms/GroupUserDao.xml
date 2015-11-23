@@ -30,9 +30,97 @@
             <if test="name!=null and name!=''">
               AND user.name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="passport!=null and passport!=''">
+                AND user.passport = #{passport}
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND user.phone = #{phone}
+            </if>
         </where>
         ORDER BY group_user.update_date DESC
     </select>
+
+
+    <insert id="insertUsers">
+        INSERT INTO user(
+        id,
+        name,
+        weChat,
+        qq,
+        birth,
+        issue_date,
+        expiry_date,
+        birth_place,
+        issue_place,
+        gender,
+        identity_card,
+        passport,
+        phone,
+        email,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.user},
+            #{item.name},
+            #{item.weChat},
+            #{item.qq},
+            #{item.birth},
+            #{item.issueDate},
+            #{item.expiryDate},
+            #{item.birthPlace},
+            #{item.issuePlace},
+            #{item.gender},
+            #{item.identityCard},
+            #{item.passport},
+            #{item.phone},
+            #{item.email},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+
+    </insert>
+
+    <insert id="insertGroupUsers">
+        REPLACE INTO group_user(
+        id,
+        `group`,
+        im_token,
+        user,
+        code,
+        type,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.id},
+            #{item.group},
+            #{item.imToken},
+            #{item.user},
+            #{item.code},
+            #{item.type},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+    </insert>
+
+
 
 
     <select id="get" resultType="GroupUser">
@@ -152,5 +240,50 @@
         from user
         where id = #{id}
     </select>
+
+
+    <select id="hasPassport" resultType="java.lang.String">
+        SELECT id
+        FROM user
+        WHERE passport = #{passport}
+    </select>
+
+    <update id="updateUser">
+        UPDATE user
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="birth!=null">
+                birth = #{birth},
+            </if>
+            <if test="issueDate!=null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="expiryDate!=null">
+                expiry_date = #{expiryDate},
+            </if>
+            <if test="birthPlace!=null">
+                birth_place = #{birthPlace},
+            </if>
+            <if test="issuePlace!=null">
+                issue_place = #{issuePlace},
+            </if>
+            <if test="gender!=null">
+                gender = #{gender},
+            </if>
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        </set>
+        WHERE id = #{user}
+
+    </update>
 
 </mapper>
