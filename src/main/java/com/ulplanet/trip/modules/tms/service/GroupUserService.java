@@ -162,10 +162,10 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
+    @SuppressWarnings("unchecked")
     public List<AppUser> getPassportList(String group) {
         if(EhCacheUtils.get("userPassportList", "userPassportList")!=null){
-            List<AppUser> list = (List<AppUser>)EhCacheUtils.get("userPassportList","userPassportList");
-            return list;
+            return (List<AppUser>)EhCacheUtils.get("userPassportList","userPassportList");
         }
         List<AppUser> list = appUserService.findList(new AppUser());
         EhCacheUtils.put("userPassportList", "userPassportList",list);
@@ -173,6 +173,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
+    @SuppressWarnings("unchecked")
     public ResponseBo importExcel(MultipartFile multipartFile,String groupId){
         ExcelReader excelReader = new ExcelReader();
         String error;
