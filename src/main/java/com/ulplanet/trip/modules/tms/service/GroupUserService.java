@@ -1,32 +1,29 @@
 package com.ulplanet.trip.modules.tms.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ulplanet.trip.common.persistence.Parameter;
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.*;
+import com.ulplanet.trip.common.utils.DateUtils;
+import com.ulplanet.trip.common.utils.EhCacheUtils;
+import com.ulplanet.trip.common.utils.IdGen;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.crm.service.AppUserService;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.sys.service.CodeService;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.utils.ExcelReader;
 import io.rong.ApiHttpClient;
 import io.rong.models.SdkHttpResult;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,6 +38,8 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private GroupService groupService;
     @Resource
     private AppUserService appUserService;
+    @Resource
+    private CodeService codeService;
 
     private static List<String> title;
 
@@ -50,7 +49,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
         if(StringUtils.isBlank(groupUser.getId())){//添加用户
             Group group = groupService.get(groupUser.getGroup());
-            String code =  this.getUserCode(groupUser.getGroup());
+            String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             try {
                 SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
@@ -83,7 +82,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         ResponseBo  responseBo = new ResponseBo();
         for(GroupUser groupUser : list) {
             groupUser.setId(IdGen.uuid());
-            String code = this.getUserCode(groupUser.getGroup());
+            String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             try {
                 SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
@@ -240,31 +239,6 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         title.add("expiryDate");
         title.add("email");
         return title;
-    }
-
-    private String getUserCode(String groupid) {
-        String lock;
-        synchronized (this) {
-            lock = groupid.intern();
-        }
-
-        synchronized (lock) {
-            return _getUserCode();
-        }
-    }
-
-    private String _getUserCode() {
-        String date = DateUtils.formatDate(new Date(), "yyyyMMdd");
-        Parameter parameter = new Parameter(new Object[][]{
-                {"code", date}
-        });
-        String code = this.groupUserDao.findMaxCode(parameter);
-        if (StringUtils.isEmpty(code)) {
-            code = date + "001";
-        } else {
-            code = NumberUtils.toLong(code) + 1 + "";
-        }
-        return code;
     }
 
     private boolean isIn(Date oldSDate,Date oldEDate,Date newSDate,Date newEDate){
