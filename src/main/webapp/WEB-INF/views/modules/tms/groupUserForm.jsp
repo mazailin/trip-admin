@@ -103,14 +103,18 @@
 
 <script type="text/javascript">
   $(function(){
+    var passport = $("#passport");
     if($("#user").val()!=null&&$("#user").val().length>0){
-       $("#passport").attr("disabled",true);
+      passport.attr("disabled",true);
     }else{
-      $("#passport").attr("disabled",false);
+      passport.attr("disabled",false);
     }
-    $("#passport").change(function(e){
+    passport.change(function(e){
+      if(passport.val().length==0){
+        return false;
+      }
       $.ajax({
-        url:"${ctx}/tms/groupUser/getPassport?query="+$("#passport").val()+"&group=${groupUser.group}",
+        url:"${ctx}/tms/groupUser/getPassport?query="+passport.val()+"&group=${groupUser.group}",
         dataType:"json",
         type:"get",
         success:function(data){
@@ -121,7 +125,7 @@
               return false;
             }
             $("#id").val('');
-            $("#passport").val(e.target.value);
+            passport.val(e.target.value);
             $("#user").val(data.user);
             $("#name").val(data.name);
             $("#type").val(data.type);

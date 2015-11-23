@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.sys.dao.CodeDao">
+    
+	<select id="get" resultType="Code">
+		SELECT
+            `id`,
+            `mod_type`,
+            `prefix`,
+            `use_date`,
+            `date_fmt`,
+            `num_length`,
+            `next_num`,
+            `separator`,
+            `create_by`,
+            `create_date`,
+            `update_by`,
+            `update_date`,
+            `remarks`
+		FROM code_opt
+		WHERE mod_type = #{modType}
+	</select>
+	
+	<update id="updateNext">
+		UPDATE code_opt SET
+			next_num = #{nextNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE mod_type = #{modType}
+	</update>
+
+</mapper>
