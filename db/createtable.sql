@@ -390,7 +390,8 @@ CREATE TABLE `group_user` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC)
 ) COMMENT='团队成员';
 
 CREATE TABLE `flight` (
@@ -530,7 +531,7 @@ CREATE TABLE `stock_order` (
 ) COMMENT='订单信息';
 
 CREATE TABLE `apk` (
-  `id` VARCHAR(36) NOT NULL COMMENT 'id',
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(50) COMMENT '包名',
   `version` VARCHAR(20) COMMENT '版本号',
   `package_name` VARCHAR(255) COMMENT '包名',
@@ -552,3 +553,21 @@ CREATE TABLE `version_tag` (
   `tag` VARCHAR(36) NOT NULL COMMENT '版本标签',
   PRIMARY KEY (`id`,`type`)
 ) COMMENT='数据更新标签';
+
+CREATE TABLE `code_opt` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `mod_type` INT(2) NOT NULL COMMENT '类型',
+  `prefix` VARCHAR(36) COMMENT '前缀',
+  `use_date` INT(2) COMMENT '是否包括日期',
+  `date_fmt` VARCHAR(36) COMMENT '日期格式',
+  `num_length` INT(2) COMMENT '长度',
+  `next_num` VARCHAR(36) COMMENT '下一个编号',
+  `separator` VARCHAR(36) COMMENT '分隔符',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `mod_type_UNIQUE` (`mod_type` ASC)
+) COMMENT='编码表';
