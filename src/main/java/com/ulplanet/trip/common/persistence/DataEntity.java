@@ -37,7 +37,7 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 	@Override
 	public void preInsert(){
 		// 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
-		if (!this.getIsNewRecord()){
+		if (!this.isNewRecord){
 			setId(IdGen.uuid());
 		}
 		User user = UserUtils.getUser();
