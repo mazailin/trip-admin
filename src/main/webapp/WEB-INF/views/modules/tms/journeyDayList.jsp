@@ -94,6 +94,9 @@
     <li class="active"><a>旅游团行程</a></li>
 </ul>
 <sys:message content="${message}"/>
+<form action="${ctx}/tms/journeyDay/preview" method="post" target="_blank" id="previewForm">
+    <input type="hidden" name="json" id="previewJson"/>
+</form>
 <div style="margin-left: auto;margin-right: auto">
     <input type="hidden" value="${groupId}" id="group_id" />
     <input type="hidden" id="changeFlag" value="0"/>
@@ -199,13 +202,12 @@
             <input type="text" class="form-control" id="plan-name" placeholder="请输入标题"/>
         </div>
         <div class="form-group">
-            <label for="hasTime">是否有时间</label>
-            <label class="radio-inline" >
-                <input type="radio" name="hasTime" id="hasTime" value="1"> 是
-            </label>
-            <label class="radio-inline" >
-                <input type="radio" name="hasTime" value="0"> 否
-            </label>
+            <label for="hasTime">是否需要闹钟提醒</label>
+            <select name="hasTime" id="hasTime">
+                <c:forEach items="${fns:getDictList('yes_no')}" var="item">
+                    <option value="${item.value}">${item.label}</option>
+                </c:forEach>
+            </select>
         </div>
         <div class="form-group">
             <label for="plan-time">时间</label>
@@ -258,7 +260,7 @@
         });
         $("#plan-time").live('blur',function(){
             if($("#plan-time").val().length>0) {
-                $("#hasTime").attr("checked", "checked");
+                $("#hasTime").val(1).trigger('change');
             }
         });
         $(".title").live('click',function(e){
@@ -346,16 +348,6 @@
             var id = _div.attr("id");
 
             _div.parent().remove();
-            <%--$.ajax({--%>
-                <%--url:"${ctx}/tms/journeyDay/delete?id="+id,--%>
-                <%--type:"get",--%>
-                <%--success:function(data){--%>
-                    <%--data = eval("("+data+")");--%>
-                    <%--if(data.status == 1){--%>
-                        <%--_div.parent().remove();--%>
-                    <%--}--%>
-                <%--}--%>
-            <%--})--%>
         });
         $(".close-plan").live('click',function(){
             $("#changeFlag").val(1);
@@ -367,16 +359,6 @@
             }
             var id = _div.attr("id");
             _div.parent().remove();
-            <%--$.ajax({--%>
-                <%--url:"${ctx}/tms/journeyPlan/delete?id="+id,--%>
-                <%--type:"get",--%>
-                <%--success:function(data){--%>
-                    <%--data = eval("("+data+")");--%>
-                    <%--if(data.status == 1){--%>
-                        <%--_div.parent().remove();--%>
-                    <%--}--%>
-                <%--}--%>
-            <%--})--%>
         });
         /**========================删除end==============**/
         /**============更新具体行程========**/
@@ -388,7 +370,7 @@
                 url:"${ctx}/tms/journeyDay/get?id="+dayId+"&groupId="+_groupId,
                 type:"get",
                 dataType:"json",
-                ansyc :false,
+                async :false,
                 success:function(data) {
                     cityIds = data.cityIds;
                     $("#cityIds").val(data.cityIds);
@@ -412,7 +394,7 @@
             $("#plan-message").val('');
             $("#plan-longitude").val('');
             $("#plan-latitude").val('');
-            $("input[name='hasTime'][value='0']").attr("checked",true);
+            $("#hasTime").val(0).trigger('change');
             $("#journeyPlan").show(300);
         });
 
@@ -467,7 +449,7 @@
                     $("#dayId").val(dayId);
                     $("#infoId").val(data.infoId);
                     $("#plan-message").val(data.message);
-                    $("input[name='hasTime'][value="+ data.timeFlag +"]").attr("checked",true);
+                    $("#hasTime").val(data.timeFlag).trigger('change');
                     $("#plan-type").val(data.type).trigger("change");
 
                     $("#plan-name").val(data.name);
@@ -521,7 +503,7 @@
             }else{
                 l.parent().find('.msg').remove();
             }
-            var hasTime = $("input[name='hasTime']:checked").val();
+            var hasTime = $("#hasTime").val();
             var data = {
                 "dayId":dayId,
                 "id":id,
@@ -729,48 +711,7 @@
 
         /**最终保存**/
         $("#saveJourney").on('click',function(){
-            var day = {};
-            var days = [];
-            var plan = {};
-            var plans = [];
-            var d = 0;
-            var p = 0;
-            var journey = {};
-            journey.groupId = _groupId;
-
-            $("#sortable1").find("li").each(function(){
-                var _this = $(this);
-                var div = _this.children("div");
-                var id = div.attr("id");
-                var groupId = div.attr("groupId");
-                if(d == 0 && days.length==0){
-                    days[d] = day;
-                    day.id = id;
-                    day.groupId = groupId;
-                    day.children = plans;
-                    return true;
-                }
-
-                if(_this.parent().attr("id") == 'sortable1'){//Day ul
-                    d++;
-                    day = new Object();
-                    plans = new Array();
-                    days[d] = day;
-                    day.children = plans;
-                    day.id = id;
-                    day.groupId = groupId;
-                    p = 0;
-                }else{//Plan ul
-                    plan = new Object();
-                    plan.id = id;
-                    plan.groupId = groupId;
-                    plans[p] = plan;
-
-                    p++;
-                }
-            });
-            journey.list = days;
-            var json = JSON.stringify(journey);
+            var json = getJson();
             $.ajax({
                 url:"${ctx}/tms/journeyDay/sort",
                 dataType:"json",
@@ -790,7 +731,11 @@
             });
         });
 
-        $("#preview").click(function(){
+        $("#preview").click(function(e){
+            e.preventDefault();
+            $("#previewJson").val(getJson());
+            $("#previewForm").submit();
+
         });
 
 
@@ -803,6 +748,52 @@
             return "当前行程未保存，关闭或刷新会导致数据丢失，是否继续？";
         }
 
+    }
+
+    function getJson(){
+        var day = {};
+        var days = [];
+        var plan = {};
+        var plans = [];
+        var d = 0;
+        var p = 0;
+        var journey = {};
+        journey.groupId = $("#group_id").val();
+
+        $("#sortable1").find("li").each(function(){
+            var _this = $(this);
+            var div = _this.children("div");
+            var id = div.attr("id");
+            var groupId = div.attr("groupId");
+            if(d == 0 && days.length==0){
+                days[d] = day;
+                day.id = id;
+                day.groupId = groupId;
+                day.children = plans;
+                return true;
+            }
+
+            if(_this.parent().attr("id") == 'sortable1'){//Day ul
+                d++;
+                day = new Object();
+                plans = new Array();
+                days[d] = day;
+                day.children = plans;
+                day.id = id;
+                day.groupId = groupId;
+                p = 0;
+            }else{//Plan ul
+                plan = new Object();
+                plan.id = id;
+                plan.groupId = groupId;
+                plans[p] = plan;
+
+                p++;
+            }
+        });
+        journey.list = days;
+        var json = JSON.stringify(journey);
+        return json;
     }
 
     function plan(obj1,groupId){

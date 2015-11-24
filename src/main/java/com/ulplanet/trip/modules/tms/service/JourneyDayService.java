@@ -7,6 +7,7 @@ import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.bo.JourneyBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
+import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
 import com.ulplanet.trip.modules.tms.bo.SortBo;
 import com.ulplanet.trip.modules.tms.dao.JourneyDayDao;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
@@ -36,9 +37,13 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
         List<JourneyDay> list = journeyDayDao.findList(j);
         List<JourneyDayBo> journeyDayBos = new ArrayList<>();
         for(JourneyDay journeyDay : list){
+            EhCacheUtils.put(journeyDay.getGroupId(),journeyDay.getId(),journeyDay);
             JourneyPlan journeyPlan = new JourneyPlan();
             journeyPlan.setDayId(journeyDay.getId());
             List<JourneyPlan> plans = journeyPlanService.findList(journeyPlan);
+            for(JourneyPlan jp : plans){
+                EhCacheUtils.put(jp.getDayId(),jp.getId(),jp);
+            }
             JourneyDayBo journeyDayBo = new JourneyDayBo(journeyDay);
             journeyDayBo.setList(plans);
             journeyDayBos.add(journeyDayBo);
@@ -68,7 +73,11 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
             SortBo sortBo = sortBos[i];
             JourneyDay journeyDay ;
             if(!groupId.equals(sortBo.getGroupId())){
-                journeyDay = journeyDayDao.get(sortBo.getId());
+                if(EhCacheUtils.get(sortBo.getGroupId(),sortBo.getId())==null){
+                    journeyDay = journeyDayDao.get(sortBo.getId());
+                }else {
+                    journeyDay = (JourneyDay) EhCacheUtils.get(sortBo.getGroupId(), sortBo.getId());
+                }
                 journeyDay.preInsert();
                 journeyDay.setDayNumber(i+1);
                 journeyDay.setGroupId(groupId);
@@ -88,7 +97,11 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
                 SortBo sortBo1 = sortBos1[j];
                 JourneyPlan journeyPlan;
                 if(!groupId.equals(sortBo1.getGroupId())){
-                    journeyPlan = journeyPlanService.get(sortBo1.getId());
+                    if(EhCacheUtils.get(sortBo.getId(),sortBo1.getId()) == null){
+                        journeyPlan = journeyPlanService.get(sortBo1.getId());
+                    }else {
+                        journeyPlan = (JourneyPlan) EhCacheUtils.get(sortBo.getId(), sortBo1.getId());
+                    }
                     journeyPlan.preInsert();
                     journeyPlan.setSort(j);
                     journeyPlan.setDayId(journeyDay.getId());
@@ -138,47 +151,31 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
 
     public List<JourneyDayBo> preview(JourneyBo journeyBo){
         SortBo[] sortBos = journeyBo.getList();
-        String groupId = journeyBo.getGroupId();
         List<JourneyDayBo> addDayList = new ArrayList<>();
         for(int i = 0;i < sortBos.length;i++){//每天行程保存
             SortBo sortBo = sortBos[i];
             JourneyDay journeyDay ;
-            if(!groupId.equals(sortBo.getGroupId())){
+            if(EhCacheUtils.get(sortBo.getGroupId(),sortBo.getId())==null){
                 journeyDay = journeyDayDao.get(sortBo.getId());
-                journeyDay.setDayNumber(i + 1);
             }else {
-                if(EhCacheUtils.get(groupId,sortBo.getId())==null){
-                    journeyDay = journeyDayDao.get(sortBo.getId());
-                }else {
-                    journeyDay = (JourneyDay) EhCacheUtils.get(groupId, sortBo.getId());
-                }
-                journeyDay.setDayNumber(i + 1);
+                journeyDay = (JourneyDay) EhCacheUtils.get(sortBo.getGroupId(), sortBo.getId());
             }
+            journeyDay.setDayNumber(i + 1);
             SortBo[] sortBos1 = sortBo.getChildren();
-            List<JourneyPlan> addPlanList = new ArrayList<>();
+            List<JourneyPlan> journeyPlans = new ArrayList<>();
             for(int j = 0;j < sortBos1.length;j++){//每天详细行程保存
                 SortBo sortBo1 = sortBos1[j];
                 JourneyPlan journeyPlan;
-                if(!groupId.equals(sortBo1.getGroupId())){
+                if(EhCacheUtils.get(sortBo.getId(),sortBo1.getId()) == null){
                     journeyPlan = journeyPlanService.get(sortBo1.getId());
-                    journeyPlan.preInsert();
-                    journeyPlan.setSort(j);
-                    journeyPlan.setDayId(journeyDay.getId());
-                    addPlanList.add(journeyPlan);
                 }else {
-                    if(EhCacheUtils.get(sortBo.getId(),sortBo1.getId()) == null){
-                        journeyPlan = journeyPlanService.get(sortBo1.getId());
-                    }else {
-                        journeyPlan = (JourneyPlan) EhCacheUtils.get(sortBo.getId(), sortBo1.getId());
-                    }
-                    journeyPlan.preInsert();
-                    journeyPlan.setSort(j);
-                    journeyPlan.setDayId(journeyDay.getId());
-                    addPlanList.add(journeyPlan);
+                    journeyPlan = (JourneyPlan) EhCacheUtils.get(sortBo.getId(), sortBo1.getId());
                 }
+                journeyPlan.setSort(j+1);
+                journeyPlans.add(journeyPlan);
             }
             JourneyDayBo journeyDayBo = new JourneyDayBo(journeyDay);
-            journeyDayBo.setList(addPlanList);
+            journeyDayBo.setList(journeyPlans);
             addDayList.add(journeyDayBo);
         }
         return addDayList;

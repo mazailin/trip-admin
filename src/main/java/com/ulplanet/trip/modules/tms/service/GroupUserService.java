@@ -51,15 +51,16 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             Group group = groupService.get(groupUser.getGroup());
             String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
+            groupUser.preInsert();
             try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
+                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
+                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
                 if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
                     Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
                             new TypeToken<Map<String, Object>>() {
                             }.getType());
                     groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                    responseBo = addGroupUser(groupUser);
+                    return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
                 } else {
                     logger.error(sdkHttpResult1.getResult()  + sdkHttpResult2.getResult());
                     throw new RuntimeException("接口调用失败!");
