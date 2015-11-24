@@ -504,12 +504,6 @@
             <version>1.13</version>
         </dependency>
 
-        <!-- qiniu cloud-->
-        <dependency>
-            <groupId>com.qiniu</groupId>
-            <artifactId>qiniu-java-sdk</artifactId>
-            <version>[7.0.0, 7.0.99]</version>
-        </dependency>
         <!--parse apk-->
         <dependency>
             <groupId>net.erdfelt.android</groupId>
