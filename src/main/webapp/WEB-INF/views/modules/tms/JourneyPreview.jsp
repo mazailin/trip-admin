@@ -11,8 +11,10 @@
 <head>
     <title>行程预览</title>
   <style type="text/css">
-    ul{list-sytle:none}
-    ul li{ list-sytle:none}
+    ul{list-style-type:none;}
+    li{list-style-type:none;}
+    .p-header{color:#ff600f  }
+    .title{color: #912525}
   </style>
 </head>
 <body>
@@ -20,13 +22,13 @@
     <ul>
     <c:forEach items="${list}" var="journeyDay" >
       <li>
-        第${journeyDay.dayNumber}天 ：${journeyDay.title}
+        <h2 class="title">第${journeyDay.dayNumber}天 ：${journeyDay.title}</h2>
         <ul>
         <c:forEach items="${journeyDay.list}" var="plan">
           <li>
             <div id="${plan.id}" class="border" groupId="${journeyDay.groupId}">
-              <p class="p-header">${plan.name}
-              </p>
+              <h4 class="p-header">${plan.sort}.${plan.name}
+              </h4>
               <c:if test="${plan.timeFlag==1}">
                 <p class='p-message'>${plan.time}</p>
               </c:if>
