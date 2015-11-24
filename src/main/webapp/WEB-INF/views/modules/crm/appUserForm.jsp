@@ -141,14 +141,16 @@
 
 <script type="text/javascript">
   $(function(){
+    var passport = $("#passport");
     if($("#user").val()!=null&&$("#user").val().length>0){
-      $("#passport").attr("disabled",true);
+      passport.attr("disabled",true);
     }else{
-      $("#passport").attr("disabled",false);
+      passport.attr("disabled",false);
     }
-    $("#passport").blur(function(e){
+    passport.blur(function(e){
+      if(passport.val().length==0)return false;
       $.ajax({
-        url:"${ctx}/crm/appuser/hasPassport?passport="+$("#passport").val(),
+        url:"${ctx}/crm/appuser/hasPassport?passport="+passport.val(),
         dataType:"json",
         type:"get",
         success:function(data){
