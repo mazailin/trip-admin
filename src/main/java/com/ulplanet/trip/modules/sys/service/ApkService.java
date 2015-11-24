@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.sys.service;
 
-import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.security.Digests;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.Encodes;
@@ -10,8 +9,6 @@ import com.ulplanet.trip.common.utils.fservice.FileIndex;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.sys.dao.ApkDao;
 import com.ulplanet.trip.modules.sys.entity.Apk;
-import com.ulplanet.trip.modules.sys.utils.QiniuUploadUtil;
-import net.erdfelt.android.apk.AndroidApk;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +17,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by makun on 2015/11/11.

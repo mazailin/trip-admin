@@ -1,26 +1,24 @@
 package com.ulplanet.trip.modules.sys.web;
 
-import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.persistence.Page;
-import com.ulplanet.trip.common.utils.FileManager;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.sys.entity.Apk;
 import com.ulplanet.trip.modules.sys.service.ApkService;
-import com.ulplanet.trip.modules.sys.utils.QiniuUploadUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Map;
 
 /**
  * Created by makun on 2015/11/11.

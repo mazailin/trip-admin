@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.crm.web;
 
-import com.qiniu.util.StringMap;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.FileManager;
 import com.ulplanet.trip.common.utils.StringUtils;
@@ -8,7 +7,6 @@ import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.crm.service.AppUserService;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
-import com.ulplanet.trip.modules.sys.utils.QiniuUploadUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
