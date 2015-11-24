@@ -59,7 +59,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                             new TypeToken<Map<String, Object>>() {
                             }.getType());
                     groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                    responseBo = addGroupUser(groupUser);
+                    return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
                 } else {
                     logger.error(sdkHttpResult1.getResult()  + sdkHttpResult2.getResult());
                     throw new RuntimeException("接口调用失败!");
