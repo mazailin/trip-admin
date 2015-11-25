@@ -34,7 +34,8 @@
                 }
             }, loaded:function(h){
                 $(".jbox-content", top.document).css("overflow-y","hidden");
-            }
+            },
+            opacity: 0.5
         });
 	});
 </script>
