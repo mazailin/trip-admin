@@ -14,6 +14,7 @@ public class Country extends DataEntity<Country> {
     private String name;
     private String description;
     private String zcode;
+    private String cnzcode;
     private String ambulance;
     private String police;
     private String fire;
@@ -59,6 +60,15 @@ public class Country extends DataEntity<Country> {
 
     public void setZcode(String zcode) {
         this.zcode = zcode;
+    }
+
+    @Length(min=0, max=16, message="国家区号长度必须介于 1 和 16 之间")
+    public String getCnzcode() {
+        return cnzcode;
+    }
+
+    public void setCnzcode(String cnzcode) {
+        this.cnzcode = cnzcode;
     }
 
     @Length(min=0, max=64, message="急救电话长度必须介于 1 和 64 之间")

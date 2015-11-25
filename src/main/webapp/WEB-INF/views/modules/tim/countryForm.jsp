@@ -46,9 +46,15 @@
 			</div>
 		</div>
         <div class="control-group">
-            <label class="control-label">国家区号:</label>
+            <label class="control-label">当地区号:</label>
             <div class="controls">
                 <form:input path="zcode" htmlEscape="false" maxlength="16"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">中国区号:</label>
+            <div class="controls">
+                <form:input path="cnzcode" htmlEscape="false" maxlength="16"/>
             </div>
         </div>
         <div class="control-group">
