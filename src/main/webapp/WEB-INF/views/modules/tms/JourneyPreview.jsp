@@ -10,16 +10,41 @@
 <html>
 <head>
     <title>行程预览</title>
+  <style type="text/css">
+    ul{list-style-type:none;}
+    li{list-style-type:none;}
+    .p-header{color:#ff600f  }
+    .title{color: #912525}
+  </style>
 </head>
 <body>
   <div>
-    <c:forEach items="${journeyDayList}" var="journeyDay">
-      <ul></ul>
-        <c:forEach items="${journeyDay.getList}" var="plan">
-
+    <ul>
+    <c:forEach items="${list}" var="journeyDay" >
+      <li>
+        <h2 class="title">第${journeyDay.dayNumber}天 ：${journeyDay.title}</h2>
+        <ul>
+        <c:forEach items="${journeyDay.list}" var="plan">
+          <li>
+            <div id="${plan.id}" class="border" groupId="${journeyDay.groupId}">
+              <h4 class="p-header">${plan.sort}.${plan.name}
+              </h4>
+              <c:if test="${plan.timeFlag==1}">
+                <p class='p-message'>${plan.time}</p>
+              </c:if>
+              <p class="p-description">${plan.description}</p>
+              <c:if test="${plan.longitude!=null && plan.latitude!=null}">
+                <p class="p-longitude">维度：${plan.longitude}</p>
+                <p class="p-latitude">经度：${plan.latitude}</p>
+              </c:if>
+              <p class="p-message">${plan.message}</p>
+            </div>
+          </li>
         </c:forEach>
-
+        </ul>
+      </li>
     </c:forEach>
+    </ul>
 
   </div>
 </body>

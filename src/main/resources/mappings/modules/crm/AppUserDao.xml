@@ -63,6 +63,7 @@
         passport,
         phone,
         email,
+        passport_photo,
         create_by,
         create_date,
         update_by ,
@@ -83,6 +84,7 @@
         #{passport},
         #{phone},
         #{email},
+        #{passportPhoto},
         #{createBy.id},
         #{createDate},
         #{updateBy.id} ,
@@ -127,6 +129,7 @@
             <if test="passport!=null">
                 passport = #{passport},
             </if>
+                passport_photo = #{passportPhoto},
             <if test="phone!=null">
                 phone = #{phone},
             </if>
@@ -157,7 +160,8 @@
         user.identity_card,
         user.passport,
         user.phone,
-        user.email
+        user.email,
+        user.passport_photo
         FROM
         user
         <where>

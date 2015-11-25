@@ -6,6 +6,8 @@ import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.crm.entity.Customer;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
+import com.ulplanet.trip.modules.sys.entity.VersionTag;
+import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.service.GroupService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,6 +33,8 @@ import java.util.List;
 public class GroupController  extends BaseController {
     @Resource
     GroupService groupService;
+    @Resource
+    VersionTagService versionTagService;
 
     @ModelAttribute
     public Group get(@RequestParam(required=false) String id) {
@@ -81,6 +85,7 @@ public class GroupController  extends BaseController {
 
         addMessage(redirectAttributes, responseBo.getMsg());
         if(responseBo.getStatus()==1) {
+            versionTagService.save(new VersionTag(group.getId(),1));
             return "redirect:" + adminPath + "/tms/group/list/?repage";
         }
         return form(group, model);

@@ -152,13 +152,13 @@ public class JourneyDayController  extends BaseController {
         return journeyDayService.copy(journeyDay);
     }
 
-    @RequestMapping(value = "/preview",method = RequestMethod.GET)
-    @ResponseBody
+    @RequestMapping(value = "/preview",method = RequestMethod.POST)
     @Transactional(readOnly = false)
-    public Object preview(@RequestParam("json")String json){
+    public String preview(@RequestParam("json")String json,Model model){
         json = json.replaceAll("&quot;","\"");
         JourneyBo journeyBo = JSONObject.parseObject(json,JourneyBo.class);
-        return journeyDayService.preview(journeyBo );
+        model.addAttribute("list",journeyDayService.preview(journeyBo));
+        return "modules/tms/JourneyPreview";
     }
 
 }

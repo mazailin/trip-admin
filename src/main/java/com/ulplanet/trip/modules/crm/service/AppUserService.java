@@ -4,13 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
+import com.ulplanet.trip.common.utils.FileManager;
 import com.ulplanet.trip.common.utils.JedisUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.utils.fservice.FileIndex;
 import com.ulplanet.trip.modules.crm.dao.AppUserDao;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -26,7 +29,15 @@ public class AppUserService extends CrudService<AppUserDao, AppUser> {
     @Resource
     private AppUserDao appUserDao;
 
-    public ResponseBo saveAppUser(AppUser user){
+    public ResponseBo saveAppUser(AppUser user,MultipartFile file){
+        if(file.getSize()>0){
+            FileIndex ufi = new FileIndex();
+            ufi.setmUpfile(file);
+            ufi.setTruename(file.getOriginalFilename());
+            ufi.setMcode("passport");
+            ufi = FileManager.save(ufi);
+            user.setPassportPhoto(ufi.getPath());
+        }
         if(StringUtils.isBlank(user.getId())) {
             user.preInsert();
             return ResponseBo.getResult(appUserDao.insert(user));
@@ -38,6 +49,7 @@ public class AppUserService extends CrudService<AppUserDao, AppUser> {
     public ResponseBo deleteUser(AppUser user){
         return ResponseBo.getResult(appUserDao.delete(user));
     }
+
 
     public AppUser hasPassport(String passport){
         AppUser appUser = new AppUser();

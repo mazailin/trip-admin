@@ -10,4 +10,5 @@ import com.ulplanet.trip.modules.crm.entity.AppUser;
  */
 @MyBatisDao
 public interface AppUserDao extends CrudDao<AppUser> {
+    int deletePhoto(AppUser appUser);
 }

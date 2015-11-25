@@ -17,6 +17,20 @@
       $("#inputForm").validate({
 
         submitHandler: function(form){
+          var file = $("#photoFile").val();
+          if(file.length>0){
+            file = file.split('.');
+            file = file[file.length-1];
+            file = file.toLocaleLowerCase();
+            if(file!='jpg'&&file!='jpeg'&&file!='bmp'&&file!='png'){
+              alertx("请上传图片格式的文件");
+              document.getElementById('passportFile').src='';
+              document.getElementById('photoFile').value = '';
+              return false;
+            }
+          }else{
+            $("#photoFile").val(null);
+          }
           loading('正在提交，请稍等...');
           form.submit();
         },
@@ -33,14 +47,19 @@
 
     });
   </script>
+  <style type="text/css">
+    img { max-width:300px;
+      max-height: 500px; }
+  </style>
 </head>
 <body>
 <ul class="nav nav-tabs">
-  <li><a href="${ctx}/crm/appuser/?group=${groupUser.group}">用户列表</a></li>
-  <li class="active"><a href="${ctx}/crm/appuser/form?id=${groupUser.id}">用户${not empty groupUser.id?'修改':'添加'}</a></li>
+  <li><a href="${ctx}/crm/appuser/">用户列表</a></li>
+  <li class="active"><a href="${ctx}/crm/appuser/form?id=${appUser.id}">用户${not empty appUser.id?'修改':'添加'}</a></li>
 </ul><br/>
-<form:form id="inputForm" modelAttribute="appUser" action="${ctx}/crm/appuser/save" method="post" class="form-horizontal">
+<form:form id="inputForm" modelAttribute="appUser" action="${ctx}/crm/appuser/save" method="post" class="form-horizontal" enctype="multipart/form-data">
   <form:hidden path="id"/>
+  <form:hidden path="passportPhoto"/>
   <sys:message content="${message}"/>
   <div class="control-group">
     <label class="control-label">护照:</label>
@@ -131,6 +150,16 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <label class="control-label">护照首页图片:</label>
+    <div class="controls">
+      <input type="file" id="photoFile" name="photoFile" onchange="previewImage(this)"/><button type="button" onclick="deletePhoto(event);">删除图片</button><br/>
+      <div id="preview">
+        <img id="passportFile" <c:if test="${appUser.passportPhoto != null && appUser.passportPhoto.length()>0}">src="${ctx}/userfiles/${appUser.passportPhoto}" " </c:if>/>
+      </div>
+    </div>
+  </div>
+
   <div class="form-actions">
     <shiro:hasPermission name="crm:appuser:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/></shiro:hasPermission>&nbsp;
     <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
@@ -138,17 +167,87 @@
 </form:form>
 
 <script type="text/javascript">
-  $(function(){
-    var passport = $("#passport");
-    if($("#user").val()!=null&&$("#user").val().length>0){
-      passport.attr("disabled",true);
-    }else{
-      passport.attr("disabled",false);
+
+
+  function deletePhoto(e){
+    e.preventDefault();
+    document.getElementById('passportFile').src='';
+    document.getElementById('photoFile').value = '';
+    document.getElementById('passportPhoto').value = '';
+  }
+
+  function previewImage(file)
+  {
+    var MAXWIDTH  = 300;
+    var MAXHEIGHT = 500;
+    var div = document.getElementById('preview');
+    if(file.value.length==0)return false;
+    var v = file.value.split('.');
+    v = v[v.length-1];
+    v = v.toLocaleLowerCase();
+    if(v!='jpg'&&v!='jpeg'&&v!='bmp'&&v!='png'){
+      alertx("请上传图片格式的文件");
+      document.getElementById('passportFile').src='';
+      file.value = '';
+      return false;
     }
-    passport.blur(function(e){
-      if(passport.val().length==0)return false;
+    if (file.files && file.files[0])
+    {
+      div.innerHTML ='<img id=passportFile>';
+      var img = document.getElementById('passportFile');
+      img.onload = function(){
+        var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+        img.width  =  rect.width;
+        img.height =  rect.height;
+      }
+      var reader = new FileReader();
+      reader.onload = function(evt){img.src = evt.target.result;}
+      reader.readAsDataURL(file.files[0]);
+    }
+    else //兼容IE
+    {
+      var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+      file.select();
+      var src = document.selection.createRange().text;
+      div.innerHTML = '<img id=passportFile>';
+      var img = document.getElementById('passportFile');
+      img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+      var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+      status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+      div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;"+sFilter+src+"\"'></div>";
+    }
+  }
+  function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+    var param = {top:0, left:0, width:width, height:height};
+    if( width>maxWidth || height>maxHeight )
+    {
+      rateWidth = width / maxWidth;
+      rateHeight = height / maxHeight;
+
+      if( rateWidth > rateHeight )
+      {
+        param.width =  maxWidth;
+        param.height = Math.round(height / rateWidth);
+      }else
+      {
+        param.width = Math.round(width / rateHeight);
+        param.height = maxHeight;
+      }
+    }
+
+    param.left = Math.round((maxWidth - param.width) / 2);
+    param.top = Math.round((maxHeight - param.height) / 2);
+    return param;
+  }
+  $(function(){
+    if($("#user").val()!=null&&$("#user").val().length>0){
+      $("#passport").attr("disabled",true);
+    }else{
+      $("#passport").attr("disabled",false);
+    }
+    $("#passport").blur(function(e){
       $.ajax({
-        url:"${ctx}/crm/appuser/hasPassport?passport="+passport.val(),
+        url:"${ctx}/crm/appuser/hasPassport?passport="+$("#passport").val(),
         dataType:"json",
         type:"get",
         success:function(data){
