@@ -16,7 +16,7 @@
       $("#value").focus();
       jQuery.validator.addMethod("tar",function(){
         var file = $("#tarFile");
-        if(file.value.indexOf(".tar")>0||file.value.indexOf(".zip")>0&&file.value.indexOf(".rar")>0){
+        if(file.val().indexOf(".tar")>0||file.val().indexOf(".zip")>0||file.val().indexOf(".rar")>0){
           return true;
         }
         return false;

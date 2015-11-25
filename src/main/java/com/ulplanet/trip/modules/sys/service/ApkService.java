@@ -79,6 +79,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
                 i = apkDao.insert(apk);
             }
         }else{
+            apk.preInsert();
             i = apkDao.update(apk);
         }
         return ResponseBo.getResult(i);

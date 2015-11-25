@@ -16,6 +16,7 @@
             identity_card,
             passport,
             phone,
+            photo,
             email,
             create_by,
             create_date,
@@ -160,6 +161,7 @@
         user.identity_card,
         user.passport,
         user.phone,
+        user.photo,
         user.email,
         user.passport_photo
         FROM
