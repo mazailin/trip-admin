@@ -62,6 +62,12 @@
   <form:hidden path="passportPhoto"/>
   <sys:message content="${message}"/>
   <div class="control-group">
+    <label class="control-label">头像:</label>
+    <div class="controls">
+      <img <c:if test="${appUser.photo!=null && appUser.photo.length()>0}"> src="${appUser.photo}" </c:if> />
+    </div>
+  </div>
+  <div class="control-group">
     <label class="control-label">护照:</label>
     <div class="controls">
       <form:input path="passport" htmlEscape="false" maxlength="50" class="required"/>
@@ -108,7 +114,7 @@
   <div class="control-group">
     <label class="control-label">出生日期:</label>
     <div class="controls">
-      <input id="birth" name="birth" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate required"
+      <input id="birth" name="birth" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
              value="<fmt:formatDate value="${appUser.birth}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
     </div>
   </div>
@@ -123,7 +129,7 @@
   <div class="control-group">
     <label class="control-label">签发日期:</label>
     <div class="controls">
-      <input id="issueDate" name="issueDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate required"
+      <input id="issueDate" name="issueDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
              value="<fmt:formatDate value="${appUser.issueDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
     </div>
   </div>
@@ -138,7 +144,7 @@
   <div class="control-group">
     <label class="control-label">到期日期:</label>
     <div class="controls">
-      <input id="expiryDate" name="expiryDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate required"
+      <input id="expiryDate" name="expiryDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
              value="<fmt:formatDate value="${appUser.expiryDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
     </div>
   </div>
@@ -155,7 +161,7 @@
     <div class="controls">
       <input type="file" id="photoFile" name="photoFile" onchange="previewImage(this)"/><button type="button" onclick="deletePhoto(event);">删除图片</button><br/>
       <div id="preview">
-        <img id="passportFile" <c:if test="${appUser.passportPhoto != null && appUser.passportPhoto.length()>0}">src="${ctx}/userfiles/${appUser.passportPhoto}" " </c:if>/>
+        <img id="passportFile" <c:if test="${appUser.passportPhoto != null && appUser.passportPhoto.length()>0}"> src="${ctx}/userfiles/${appUser.passportPhoto}" </c:if>/>
       </div>
     </div>
   </div>
