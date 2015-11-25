@@ -41,10 +41,11 @@ public class ApkController  extends BaseController {
 
     @RequiresPermissions("sys:apk:upload")
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public String upload(Apk apk,@RequestParam MultipartFile tarFile,Model model
+    public String upload(Apk apk,@RequestParam MultipartFile tarFile,RedirectAttributes redirectAttributes
     ) {
-        apk = apkService.upload(apk,tarFile);
-        return form(apk, model);
+        apk = apkService.upload(apk, tarFile);
+        addMessage(redirectAttributes,"上传成功，安装包大小:"+apk.getSize()+"安装包MD5"+apk.getMd5());
+        return "redirect:" + adminPath + "/sys/apk/list/?repage";
     }
 
     @RequiresPermissions("sys:apk:view")

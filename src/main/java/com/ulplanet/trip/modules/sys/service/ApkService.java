@@ -59,7 +59,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
 
 
     public ResponseBo saveApk(Apk apk) {
-        int i = 0;
+        int i;
         if(StringUtils.isBlank(apk.getId())) {
             List<Apk> list = apkDao.findByParam(apk);
             if (list.size() > 0) {
@@ -79,7 +79,7 @@ public class ApkService  extends CrudService<ApkDao, Apk> {
                 i = apkDao.insert(apk);
             }
         }else{
-            apk.preInsert();
+            apk.preUpdate();
             i = apkDao.update(apk);
         }
         return ResponseBo.getResult(i);

@@ -52,7 +52,7 @@
   <li class="active"><a href="${ctx}/sys/apk/form?id=${apk.id}">安装包${not empty apk.id?'修改':'添加'}</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="apk" action="${ctx}${empty apk.id?'/sys/apk/upload':'/sys/apk/save'}"
-           method="post" class="form-horizontal"  enctype="multipart/form-data">
+           method="post" class="form-horizontal"  enctype="multipart/form-data" onsubmit="loading('正在上传...')">
   <form:hidden path="id"/>
   <sys:message content="${message}"/>
   <div class="control-group">
