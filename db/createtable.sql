@@ -148,7 +148,8 @@ CREATE TABLE `country` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(64) NOT NULL COMMENT '名称',
   `description` VARCHAR(255) COMMENT '描述',
-  `zcode` VARCHAR(16) COMMENT '区号',
+  `zcode` VARCHAR(16) COMMENT '当地区号',
+  `cnzcode` VARCHAR(16) COMMENT '中国区号',
   `ambulance` VARCHAR(64) COMMENT '急救电话',
   `police` VARCHAR(64) COMMENT '匪警',
   `fire` VARCHAR(64) COMMENT '火警',
@@ -202,7 +203,8 @@ CREATE TABLE `user` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `passport_UNIQUE` (`passport` ASC)
 ) COMMENT='用户';
 
 CREATE TABLE `food` (
@@ -385,6 +387,7 @@ CREATE TABLE `group_user` (
   `cphone` VARCHAR(36) COMMENT '本机号码',
   `im_token` VARCHAR(255) COMMENT '用户融云token',
   `type` CHAR(1) DEFAULT '1' COMMENT '类型：\n0：导游\n1：游客',
+  `position_flag` INT(1) DEFAULT 0 COMMENT '是否显示位置信息 0不显示 1显示',
   `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
   `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
