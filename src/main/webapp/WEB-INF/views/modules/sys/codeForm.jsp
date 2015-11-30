@@ -63,16 +63,16 @@
 			<label class="control-label">日期格式:</label>
 			<div class="controls">
                 <select name="dateFmt" class="input-small" required>
-                    <option value="yyyyMMdd" ${('yyyyMMdd' == code.dateFmt) ? 'selected' : ''}>YYYYMMDD</option>
-                    <option value="ddMMyyyy" ${('ddMMyyyy' == code.dateFmt) ? 'selected' : ''}>DDMMYYYY</option>
-                    <option value="MMddyyyy" ${('MMddyyyy' == code.dateFmt) ? 'selected' : ''}>MMDDYYYY</option>
-                    <option value="yyMMdd" ${('yyMMdd' == code.dateFmt) ? 'selected' : ''}>YYMMDD</option>
-                    <option value="ddMMyy" ${('ddMMyy' == code.dateFmt) ? 'selected' : ''}>DDMMYY</option>
-                    <option value="MMddyy" ${('MMddyy' == code.dateFmt) ? 'selected' : ''}>MMDDYY</option>
-                    <option value="yyMM" ${('yyMM' == code.dateFmt) ? 'selected' : ''}>YYMM</option>
-                    <option value="MMyy" ${('MMyy' == code.dateFmt) ? 'selected' : ''}>MMYY</option>
-                    <option value="yyyy" ${('yyyy' == code.dateFmt) ? 'selected' : ''}>YYYY</option>
-                    <option value="yy" ${('yy' == code.dateFmt) ? 'selected' : ''}>YY</option>
+                    <option value="yyyyMMdd" ${('yyyyMMdd' == code.dateFmt) ? 'selected' : ''}>yyyyMMdd</option>
+                    <option value="ddMMyyyy" ${('ddMMyyyy' == code.dateFmt) ? 'selected' : ''}>ddMMyyyy</option>
+                    <option value="MMddyyyy" ${('MMddyyyy' == code.dateFmt) ? 'selected' : ''}>MMddyyyy</option>
+                    <option value="yyMMdd" ${('yyMMdd' == code.dateFmt) ? 'selected' : ''}>yyMMdd</option>
+                    <option value="ddMMyy" ${('ddMMyy' == code.dateFmt) ? 'selected' : ''}>ddMMyy</option>
+                    <option value="MMddyy" ${('MMddyy' == code.dateFmt) ? 'selected' : ''}>MMddyy</option>
+                    <option value="yyMM" ${('yyMM' == code.dateFmt) ? 'selected' : ''}>yyMM</option>
+                    <option value="MMyy" ${('MMyy' == code.dateFmt) ? 'selected' : ''}>MMyy</option>
+                    <option value="yyyy" ${('yyyy' == code.dateFmt) ? 'selected' : ''}>yyyy</option>
+                    <option value="yy" ${('yy' == code.dateFmt) ? 'selected' : ''}>yy</option>
                 </select>
 			</div>
 		</div>
