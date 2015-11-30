@@ -34,8 +34,17 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String toDate;
     private String fromDate;
     private String imToken;
+    private String cphone;
     private List<AppUser> list;
 
+
+    public String getCphone() {
+        return cphone;
+    }
+
+    public void setCphone(String cphone) {
+        this.cphone = cphone;
+    }
 
     public List<AppUser> getList() {
         return list;

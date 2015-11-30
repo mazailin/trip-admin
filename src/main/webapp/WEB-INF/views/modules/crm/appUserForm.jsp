@@ -252,6 +252,9 @@
       $("#passport").attr("disabled",false);
     }
     $("#passport").blur(function(e){
+      if($("#passport").val().length == 0){
+        return false;
+      }
       $.ajax({
         url:"${ctx}/crm/appuser/hasPassport?passport="+$("#passport").val(),
         dataType:"json",

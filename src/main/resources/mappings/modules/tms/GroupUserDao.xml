@@ -9,6 +9,7 @@
             group_user.user,
             group_user.code,
             group_user.type,
+            group_user.cphone,
             user.name,
             user.weChat,
             user.qq,
@@ -37,7 +38,7 @@
                 AND user.phone = #{phone}
             </if>
         </where>
-        ORDER BY group_user.update_date DESC
+        ORDER BY group_user.code
     </select>
 
 
@@ -130,6 +131,7 @@
         group_user.user,
         group_user.code,
         group_user.type,
+        group_user.cphone,
         user.name,
         user.weChat,
         user.qq,
@@ -159,6 +161,7 @@
             user,
             code,
             type,
+            cphone,
             create_by,
             create_date,
             update_by ,
@@ -171,6 +174,7 @@
             #{user},
             #{code},
             #{type},
+            #{cphone},
             #{createBy.id},
             #{createDate},
             #{updateBy.id} ,
@@ -185,7 +189,10 @@
             type = #{type},
             update_by = #{updateBy.id},
             update_date = #{updateDate},
-            remarks = #{remarks}
+            remarks = #{remarks},
+            <if test="cphone!=null">
+                cphone = #{cphone}
+            </if>
         WHERE id = #{id}
     </update>
 
@@ -245,7 +252,9 @@
     <select id="hasPassport" resultType="java.lang.String">
         SELECT id
         FROM user
+        INNER JOIN group_user on user.id = group_user.user
         WHERE passport = #{passport}
+        AND group_user.group = #{groupId}
     </select>
 
     <update id="updateUser">

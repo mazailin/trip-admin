@@ -1,6 +1,10 @@
 package com.ulplanet.trip.modules.sys.entity;
 
 import com.ulplanet.trip.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 编码Entity
@@ -31,6 +35,7 @@ public class Code extends DataEntity<Code> {
         this.nextNum = nextNum;
     }
 
+    @NotNull
     public int getModType() {
         return modType;
     }
@@ -39,6 +44,7 @@ public class Code extends DataEntity<Code> {
         this.modType = modType;
     }
 
+    @Length(min=0, max=10, message="前缀长度必须介于 1 和 10 之间")
     public String getPrefix() {
         return prefix;
     }
@@ -47,6 +53,7 @@ public class Code extends DataEntity<Code> {
         this.prefix = prefix;
     }
 
+    @NotNull
     public int getUseDate() {
         return useDate;
     }
@@ -55,6 +62,7 @@ public class Code extends DataEntity<Code> {
         this.useDate = useDate;
     }
 
+    @NotNull
     public String getDateFmt() {
         return dateFmt;
     }
@@ -63,6 +71,7 @@ public class Code extends DataEntity<Code> {
         this.dateFmt = dateFmt;
     }
 
+    @Range(min = 3, max = 8, message = "数字长度必须介于 3 和 8 之间")
     public int getNumLength() {
         return numLength;
     }
@@ -79,6 +88,7 @@ public class Code extends DataEntity<Code> {
         this.nextNum = nextNum;
     }
 
+    @Length(min=0, max=2, message="分隔符长度必须介于 1 和 10 之间")
     public String getSeparator() {
         return separator;
     }

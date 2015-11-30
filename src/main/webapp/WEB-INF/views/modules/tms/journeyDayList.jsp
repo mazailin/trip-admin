@@ -166,11 +166,20 @@
             <form:hidden path="id"/>
             <form:hidden path="groupId"/>
             <sys:message content="${message}"/>
-            <label style="font-size: 15px;font-weight:bold;">城市:</label>
-            <sys:treeselect id="city" name="city.id" value="" labelName="city.name" labelValue=""
+            <%--<div class="form-group" >--%>
+                    <%--第--%>
+                        <%--<input type="input" id="dayNumber" name="dayNumber" style="width:50px"/>--%>
+                    <%--天--%>
+            <%--</div>--%>
+            <div class="form-group" >
+                <label style="font-size: 15px;font-weight:bold;">城市:</label>
+                <sys:treeselect id="city" name="city.id" value="" labelName="city.name" labelValue=""
                             cssStyle="width:300px" checked="true"   title="城市" url="/tim/city/treeData" notAllowSelectParent="true" cssClass="input-small" allowClear="true"/><br>
-            <input id="btnSubmit" class="btn btn-default" type="button" value="保 存"/>&nbsp;
-            <input id="btnCancel" class="btn" type="button" value="返 回" />
+            </div>
+            <div class="form-group" >
+                <input id="btnSubmit" class="btn btn-default" type="button" value="保 存"/>&nbsp;
+                <input id="btnCancel" class="btn" type="button" value="返 回" />
+            </div>
 
         </form:form>
     </div>
