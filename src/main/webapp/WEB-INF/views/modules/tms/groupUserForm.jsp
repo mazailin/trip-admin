@@ -95,6 +95,13 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <label class="control-label">本机号码:</label>
+    <div class="controls">
+      <form:input path="cphone" htmlEscape="false" maxlength="50"/>
+    </div>
+  </div>
+
   <div class="form-actions">
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
     <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

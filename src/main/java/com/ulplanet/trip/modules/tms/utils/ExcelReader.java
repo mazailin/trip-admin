@@ -114,7 +114,7 @@ public class ExcelReader {
         }
         switch (num){
             case 0 : {//护照
-                if(col.matches("1[45][0-9]{7}|G[0-9]{8}|P[0-9]{7}|S[0-9]{7,8}|D[0-9]{7,8}|E[0-9]{8}")){
+                if(col.matches("[0-9]+|G[0-9]{8}|P[0-9]{7}|S[0-9]{7,8}|D[0-9]{7,8}|E[0-9]{8}")){
                     return col;
                 }
                 return null;
