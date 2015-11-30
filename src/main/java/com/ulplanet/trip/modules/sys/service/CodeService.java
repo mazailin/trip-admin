@@ -39,7 +39,7 @@ public class CodeService extends CrudService<CodeDao, Code> {
 
     private String _getCode(String type) {
 
-        Code code = codeDao.get(new Code(NumberUtils.toInt(type, 0)));
+        Code code = codeDao.getByType(new Code(NumberUtils.toInt(type, 0)));
 
         if (code == null) {
             return null;
@@ -99,4 +99,10 @@ public class CodeService extends CrudService<CodeDao, Code> {
         return sResult;
     }
 
+    public void update(Code code) {
+        if (StringUtils.isNotEmpty(code.getId())) {
+            code.preUpdate();
+            codeDao.update(code);
+        }
+    }
 }
