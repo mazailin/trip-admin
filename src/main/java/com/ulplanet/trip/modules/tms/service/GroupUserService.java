@@ -199,7 +199,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                     continue;
                 }
                 i++;
-                String id = groupUserDao.hasPassport(groupUser.getPassport());
+                String id = groupUserDao.hasPassport(groupUser.getPassport(),groupId);
                 groupUser.preInsert();
                 groupUser.setGroup(groupId);
                 if(StringUtils.isNotBlank(id)){
