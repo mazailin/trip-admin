@@ -574,3 +574,128 @@ CREATE TABLE `code_opt` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `mod_type_UNIQUE` (`mod_type` ASC)
 ) COMMENT='编码表';
+
+
+-- 订单与库存管理
+
+CREATE TABLE `product` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `unit` VARCHAR(100) COMMENT '计量单位',
+  `avg_price` DECIMAL(10,2) COMMENT '平均价格',
+  `rent_price` DECIMAL(10,2) COMMENT '出租价格',
+  `pay_price` DECIMAL(10,2) COMMENT '赔偿价格',
+  `total_amt` DECIMAL(10,2) COMMENT '总数',
+  `rent_amt` DECIMAL(10,2) COMMENT '在租数量',
+  `rsv_amt` DECIMAL(10,2) COMMENT '库存数量',
+  `avl_amt` DECIMAL(10,2) COMMENT '可用数量',
+  `upper_limit` DECIMAL(10,2) COMMENT '上限',
+  `low_limit` DECIMAL(10,2) COMMENT '下限',
+  `use_detail` CHAR(1) COMMENT '是否按明细管理',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品列表';
+
+CREATE TABLE `product_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `in_id` VARCHAR(36) COMMENT '入库单id',
+  `out_id` VARCHAR(36) COMMENT '出库单id',
+  `code` VARCHAR(36) COMMENT '编码',
+  `device` VARCHAR(64) COMMENT '设备号',
+  `status` VARCHAR(36) COMMENT '状态',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品明细';
+
+CREATE TABLE `product_in` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) NOT NULL COMMENT '单号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品id',
+  `device` INT(2) COMMENT '平均价格',
+  `status` VARCHAR(36) COMMENT '出租价格',
+  `comment` VARCHAR(36) COMMENT '是否按明细管理',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品入库';
+
+CREATE TABLE `in_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` INT(2) NOT NULL COMMENT '名称',
+  `code` VARCHAR(36) COMMENT '单位',
+  `device` INT(2) COMMENT '平均价格',
+  `status` VARCHAR(36) COMMENT '出租价格',
+  `comment` VARCHAR(36) COMMENT '是否按明细管理',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品入库明细';
+
+CREATE TABLE `product_out` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` INT(2) NOT NULL COMMENT '名称',
+  `code` VARCHAR(36) COMMENT '单位',
+  `device` INT(2) COMMENT '平均价格',
+  `status` VARCHAR(36) COMMENT '出租价格',
+  `comment` VARCHAR(36) COMMENT '是否按明细管理',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品出库';
+
+CREATE TABLE `out_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` INT(2) NOT NULL COMMENT '名称',
+  `code` VARCHAR(36) COMMENT '单位',
+  `device` INT(2) COMMENT '平均价格',
+  `status` VARCHAR(36) COMMENT '出租价格',
+  `comment` VARCHAR(36) COMMENT '是否按明细管理',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品出库明细';
+
+CREATE TABLE `product_discard` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` INT(2) NOT NULL COMMENT '名称',
+  `code` VARCHAR(36) COMMENT '单位',
+  `device` INT(2) COMMENT '平均价格',
+  `status` VARCHAR(36) COMMENT '出租价格',
+  `comment` VARCHAR(36) COMMENT '是否按明细管理',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '标注',
+  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品报废';
