@@ -34,7 +34,7 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
 
     public PhoneInfo updatePhoneInfo(PhoneInfo phoneInfo) {
         PhoneInfo old = phoneInfoDao.get(phoneInfo);
-        if(old.getStatus().intValue()==9999){
+        if(old.getStatus()==9999){
             return null;
         }
         if(!old.getStockOrderId().equals(phoneInfo.getStockOrderId())){
@@ -49,7 +49,7 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
 
     public PhoneInfo startRefund(PhoneInfo phoneInfo) {
         PhoneInfo p = phoneInfoDao.getById(phoneInfo.getId());
-        if(p.getStatus().intValue()==9999) {
+        if(p.getStatus()==9999) {
             return p;
         }
         phoneInfo.setStatus(9999);
@@ -79,7 +79,7 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
             o2.setStatus(1);
             stockOrderService.updateOrder(o2);
         }
-        if(++num1 >= o1.getQuantity().intValue()){//判断新增手机后订单是否已满
+        if(++num1 >= o1.getQuantity()){//判断新增手机后订单是否已满
             o1.setStatus(3);
             stockOrderService.updateOrder(o1);
         }

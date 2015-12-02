@@ -97,7 +97,7 @@ public class PhoneInfoController extends BaseController {
         phoneInfo.setStatus(9000);
         phoneInfo = this.phoneInfoService.updatePhoneInfo(phoneInfo);
         if(phoneInfo!=null) {
-            addMessage(redirectAttributes, "报废" + phoneInfo.getId() + "成功");
+            addMessage(redirectAttributes, "报废" + phoneInfo.getCode() + "成功");
         }
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }
@@ -113,7 +113,7 @@ public class PhoneInfoController extends BaseController {
     public String refund(PhoneInfo phoneInfo, RedirectAttributes redirectAttributes) {
         phoneInfo = this.phoneInfoService.startRefund(phoneInfo);
         if(phoneInfo!=null) {
-            addMessage(redirectAttributes, "退货" + phoneInfo.getId() + "成功");
+            addMessage(redirectAttributes, "退货" + phoneInfo.getCode() + "成功");
         }
         return "redirect:" + adminPath + "/ims/phone/list/?repage";
     }

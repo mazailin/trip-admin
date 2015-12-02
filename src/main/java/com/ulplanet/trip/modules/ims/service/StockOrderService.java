@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.ims.service;
 
-import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
@@ -11,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by makun on 2015/10/22.
@@ -50,8 +47,8 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
         stockOrder.setQuantity(--quantity);
         stockOrder.setTotalPrice(totalPrice - unitPrice);
         stockOrder.preUpdate();
-        stockOrder.setComment(stockOrder.getComment() + "/n 手机退货 on "
-                + DateUtils.formatDate(new Date()) + " ==id==" + stockOrder.getId());
+        stockOrder.setComment(stockOrder.getComment() + "<br> 手机退货 on "
+                + DateUtils.formatDate(new Date()) + "==id==" + stockOrder.getId());
         return stockOrderDao.update(stockOrder);
     }
 
