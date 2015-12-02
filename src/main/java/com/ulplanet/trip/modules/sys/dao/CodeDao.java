@@ -13,4 +13,6 @@ public interface CodeDao extends CrudDao<Code> {
 
     int updateNext(Code code);
 
+    Code getByType(Code code);
+
 }
