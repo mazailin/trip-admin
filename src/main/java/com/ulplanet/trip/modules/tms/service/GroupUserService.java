@@ -10,7 +10,9 @@ import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.crm.service.AppUserService;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
+import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.CodeService;
+import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
@@ -40,6 +42,8 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private AppUserService appUserService;
     @Resource
     private CodeService codeService;
+    @Resource
+    private VersionTagService versionTagService;
 
     private static List<String> title;
 
@@ -74,6 +78,9 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         }else{
             updateUser(groupUser);
             responseBo = updateUser(groupUser);
+        }
+        if(responseBo.getStatus() == 1){
+            versionTagService.save(new VersionTag(groupUser.getGroup(),1));
         }
         return responseBo;
     }
@@ -123,6 +130,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.quitGroup(groupUser.getId(), groupUser.getGroup());
             if (sdkHttpResult.getHttpCode() == 200) {
+                versionTagService.save(new VersionTag(groupUser.getGroup(),1));
                 return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
             }
         } catch (Exception e) {
@@ -218,6 +226,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             Group group = groupService.get(groupId);
             if(addGroupList.size()>0) {
                 saveGroupUsers(addGroupList, group);
+                versionTagService.save(new VersionTag(groupId, 1));
             }
             return new ResponseBo(1,"导入成功,共导入"+i+"条数据");
         } catch (Exception e) {

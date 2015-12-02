@@ -27,7 +27,6 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
     public StockOrder addOrder(StockOrder stockOrder) {
         stockOrder.preInsert();
         stockOrder.setBuyer(UserUtils.getUser().getName());
-        Map<String, Object> result = new HashMap<>();
         if(stockOrderDao.insert(stockOrder) > 0){
             return stockOrder;
         }
@@ -36,29 +35,12 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
 
     public StockOrder updateOrder(StockOrder stockOrder) {
         stockOrder.preUpdate();
-        Map<String, Object> result = new HashMap<>();
         if(stockOrderDao.update(stockOrder) > 0){
             return stockOrder;
         }
         return null;
     }
 
-    public Page<StockOrder> findStockOrders(int page, int size) {
-        Page<StockOrder> pager = new Page<>(page,size);
-        StockOrder stockOrder = new StockOrder();
-        stockOrder.setPage(pager);
-        List<StockOrder> stockOrders = stockOrderDao.findList(stockOrder);
-//        List<StockOrderBo> stockOrderBos = new ArrayList<>();
-//        for(StockOrder s : stockOrders){
-//            stockOrderBos.add(new StockOrderBo(s));
-//        }
-        pager.setList(stockOrders);
-        return pager;
-    }
-
-    public List<StockOrder> findListByParams(StockOrder stockOrder) {
-        return stockOrderDao.findListByParams(stockOrder);
-    }
 
     public int refund(String id) {
         StockOrder stockOrder = stockOrderDao.getById(id);

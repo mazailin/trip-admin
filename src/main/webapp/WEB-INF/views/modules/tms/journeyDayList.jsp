@@ -385,13 +385,6 @@
                     $("#cityIds").val(data.cityIds);
                 }
             });
-            var groupId = $(this).parent().parent().parent().attr("groupId");
-            if(groupId!=_groupId){
-                if(!check(dayId))return false;
-                var data = copyDay(dayId);
-                $(this).parent().parent().parent().attr("id",data.id);
-                $(this).parent().parent().parent().attr("groupId",_groupId);
-            }
             $("#plan-type").val('-1').trigger("change");
             $("#plan-list").val('').trigger("change");
             $("#plan-list").empty();
@@ -412,13 +405,6 @@
             var groupId = $(this).parent().parent().attr("groupId");
             var dayId = $(this).parent().parent().parent().parent().attr("id");
             dayId = dayId.substring(5);
-            if(groupId!=_groupId){
-                if(!check(id))return false;
-                var data = copyDay(dayId);
-                $(this).parent().parent().attr("id",data.id);
-                $(this).parent().parent().attr("groupId",_groupId);
-            }
-
             var cityIds = '';
             $.ajax({
                 url:"${ctx}/tms/journeyDay/get?id="+dayId+"&groupId="+_groupId,
@@ -426,7 +412,6 @@
                 dataType:"json",
                 async:false,
                 success:function(data) {
-                    if(groupId!=_groupId)id='';
                     cityIds = data.cityIds;
                     $("#cityIds").val(data.cityIds);
                 }
@@ -434,18 +419,6 @@
 
             if(id==undefined){
                 return false;
-            }
-            if(groupId!=_groupId){
-                if(!check(id))return false;
-                var data = copyDay(dayId);
-                $(this).parent().parent().parent().parent().attr("id","plan-" + data.id);
-                $(this).parent().parent().attr("groupId",_groupId);
-                $("#"+dayId).attr("groupId",_groupId);
-                $("#"+dayId).attr("id",data.id);
-                dayId=data.id;
-                var plan = copyPlan(id,dayId);
-                id = plan.id;
-                $(this).parent().parent().attr("id",id);
             }
             $.ajax({
                 url:"${ctx}/tms/journeyPlan/get?id="+id+"&dayId="+dayId,
@@ -629,19 +602,11 @@
                 return false;
             }
             var groupId = $("#"+id).attr("groupId");
-            if(groupId!=_groupId){
-                if(!check(id))return false;
-                $("#"+id).attr("groupId",_groupId);
-                var data = copyDay(id);
-                $("#"+id).attr("id",data.id);
-                id = data.id;
-
-            }
             $.ajax({
                 url:"${ctx}/tms/journeyDay/get?id="+id+"&groupId="+_groupId,
                 type:"get",
                 dataType:"json",
-                ansyc :false,
+                async :false,
                 success:function(data) {
                     if(groupId!=_groupId)id='';
                     $("#id").val(id);
@@ -824,48 +789,6 @@
         str1 +=  "</div>";
         return str1;
     }
-
-    function copyDay(dayId){//复制模板的Day
-        var _data = {};
-        $.ajax({
-            url:"${ctx}/tms/journeyDay/copy?id="+dayId+"&groupId="+$("#group_id").val(),
-            dataType:"json",
-            type:"get",
-            success:function(data){
-                _data = data;
-            }
-        });
-        return _data;
-    }
-    function copyPlan(id,dayId){//复制模板的plan
-        var _data = {};
-        $.ajax({
-            url:"${ctx}/tms/journeyPlan/copy?id="+id
-            +"&dayId"+dayId,
-            dataType:"json",
-            type:"get",
-            success:function(data){
-                _data = data;
-            }
-        });
-        return _data;
-    }
-
-    function check(id){//验证ID是否存在
-        if($("#sortable1").find("#"+id).length==0){//不存在
-            swal({   title: "修改拒绝!",
-                text: "请拖拽至<span style=\"color:#F8BB86\">当前团队行程</span>中修改.",
-                html:true,
-                timer: 2000,
-                showConfirmButton: true }
-            );
-            return false;
-
-        }
-        return true;
-    }
-
-
 
 </script>
 

@@ -3,9 +3,7 @@ package com.ulplanet.trip.modules.ims.web;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
-import com.ulplanet.trip.modules.ims.bo.PhoneInfoBo;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
-import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.ims.service.PhoneInfoService;
 import com.ulplanet.trip.modules.ims.service.StockOrderService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -17,9 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by makun on 2015/10/13.
@@ -73,6 +68,10 @@ public class PhoneInfoController extends BaseController {
             return form(phoneInfo, model);
         }
         if(StringUtils.isNotBlank(phoneInfo.getId())){
+            if(phoneInfo.getStatus()!=null && phoneInfo.getStatus() == 9999){
+                addMessage(redirectAttributes,"非法操作！！");
+                return "redirect:" + adminPath + "/ims/phone/form/?id="+phoneInfo.getId();
+            }
             phoneInfo = this.phoneInfoService.updatePhoneInfo(phoneInfo);
         }else {
             phoneInfo = this.phoneInfoService.addPhoneInfo(phoneInfo);

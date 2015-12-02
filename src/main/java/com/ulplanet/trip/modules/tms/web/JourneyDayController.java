@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.tms.web;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
@@ -9,7 +8,6 @@ import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.bo.*;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
-import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 import com.ulplanet.trip.modules.tms.service.GroupService;
 import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import org.springframework.stereotype.Controller;
@@ -122,13 +120,6 @@ public class JourneyDayController  extends BaseController {
     }
 
 
-//    @RequestMapping(value = "/sort",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Object sort(JourneyBo journeyBo){
-//        journeyDayService.sort(journeyBo);
-//        return new ResponseBo(1,"success");
-//    }
-
     /**
      * 行程保存并排序
      * @param json
@@ -142,14 +133,6 @@ public class JourneyDayController  extends BaseController {
         JourneyBo journeyBo = JSONObject.parseObject(json,JourneyBo.class);
         journeyDayService.sort(journeyBo);
         return new ResponseBo(1,"success");
-    }
-
-    @RequestMapping(value = "/copy",method = RequestMethod.GET)
-    @ResponseBody
-    @Transactional(readOnly = false)
-    public Object copy(JourneyDay journeyDay){
-
-        return journeyDayService.copy(journeyDay);
     }
 
     @RequestMapping(value = "/preview",method = RequestMethod.POST)
