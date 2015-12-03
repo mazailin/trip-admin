@@ -91,7 +91,7 @@
   <div class="control-group">
     <label class="control-label">性别:</label>
     <div class="controls">
-      <input name="gender" id="gender" value="${fns:getDictLabel(groupUser.gender,'sex','0')}" readonly="true"/>
+      <input name="gender" id="gender" value="${fns:getDictLabel(groupUser.gender,'sex','未知')}" readonly="true"/>
     </div>
   </div>
 
