@@ -118,7 +118,7 @@ INSERT INTO sys_user (id,login_name,password,name,email,phone,mobile,user_type,l
 UPDATE sys_user SET id = LOWER(REPLACE(id,'-',''));
 
 /* country */
-INSERT INTO country (id,name,description,zcode,cnzocde,ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks) SELECT id,name,description,'','',ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks FROM aws.country;
+INSERT INTO country (id,name,description,zcode,cnzcode,ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks) SELECT id,name,description,'','',ambulance,police,fire,sea_emerg,road_emerg,unionpay_call,embassy_call,embassy_time,embassy_addr,embassy_city,create_by,create_date,update_by,update_date,remarks FROM aws.country;
 UPDATE country SET id = LOWER(REPLACE(id,'-',''));
 UPDATE country JOIN sys_user ON country.create_by = sys_user.login_name SET country.create_by = sys_user.id;
 UPDATE country JOIN sys_user ON country.update_by = sys_user.login_name SET country.update_by = sys_user.id;
@@ -143,7 +143,7 @@ UPDATE car_rental JOIN sys_user ON car_rental.update_by = sys_user.login_name SE
 
 /* food */
 INSERT INTO food (id,name,city,type,description,address,longitude,latitude,score,worktime,price,phone,cooper,level,published,create_by,create_date,update_by,update_date,remarks) SELECT id,name,city,type,description,address,longitude,latitude,score,worktime,price,phone,cooper,level,published,create_by,create_date,update_by,update_date,remarks FROM aws.food;
-UPDATE food SET id = LOWER(REPLACE(id,'-','')), city = LOWER(REPLACE(id,'-',''));
+UPDATE food SET id = LOWER(REPLACE(id,'-','')), city = LOWER(REPLACE(city,'-',''));
 UPDATE food JOIN sys_user ON food.create_by = sys_user.login_name SET food.create_by = sys_user.id;
 UPDATE food JOIN sys_user ON food.update_by = sys_user.login_name SET food.update_by = sys_user.id;
 UPDATE food SET create_by = '1' WHERE create_by = 'lvrui';

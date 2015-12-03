@@ -27,7 +27,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/tim/car/list">租车列表</a></li>
-		<li class="active"><a href="${ctx}/tim/car/form?id=${customer.id}">租车<shiro:hasPermission name="tim:car:edit">${not empty carRental.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:car:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/car/form?id=${carRental.id}">租车<shiro:hasPermission name="tim:car:edit">${not empty carRental.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:car:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="carRental" action="${ctx}/tim/car/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

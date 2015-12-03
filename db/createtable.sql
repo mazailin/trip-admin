@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `phone_info`;
 DROP TABLE IF EXISTS `stock_order`;
 DROP TABLE IF EXISTS `apk`;
 DROP TABLE IF EXISTS `version_tag`;
+DROP TABLE IF EXISTS `code_opt`;
 
 /* Create Tables */
 
@@ -52,6 +53,7 @@ CREATE TABLE `sys_user` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` DATETIME NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='用户表';
 
@@ -68,6 +70,7 @@ CREATE TABLE `sys_dict` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` DATETIME NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='字典表';
 
@@ -102,6 +105,7 @@ CREATE TABLE `sys_menu` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` DATETIME NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='菜单表';
 
@@ -115,6 +119,7 @@ CREATE TABLE `sys_role` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` DATETIME NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='角色表';
 
@@ -140,6 +145,7 @@ CREATE TABLE `customer` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT ' 备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 ) COMMENT='旅行社';
@@ -165,6 +171,7 @@ CREATE TABLE `country` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='国家';
 
@@ -178,13 +185,14 @@ CREATE TABLE `city` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='城市';
 
 CREATE TABLE `user` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(64) NOT NULL COMMENT '姓名',
-  `gender` CHAR(1) COMMENT '性别\n1：男\n2：女',
+  `gender` CHAR(1) DEFAULT '0' COMMENT '性别\n0：未知\n1：男\n2：女',
   `identity_card` VARCHAR(36) COMMENT '身份证',
   `wechat` VARCHAR(50) COMMENT '微信',
   `qq` VARCHAR(20) COMMENT 'QQ',
@@ -203,6 +211,7 @@ CREATE TABLE `user` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `passport_UNIQUE` (`passport` ASC)
 ) COMMENT='用户';
@@ -228,6 +237,7 @@ CREATE TABLE `food` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='美食';
 
@@ -243,6 +253,7 @@ CREATE TABLE `food_file` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='美食文件';
 
@@ -267,6 +278,7 @@ CREATE TABLE `scenic` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='景点';
 
@@ -282,6 +294,7 @@ CREATE TABLE `scenic_file` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='景点文件';
 
@@ -304,6 +317,7 @@ CREATE TABLE `shop` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='商家';
 
@@ -319,6 +333,7 @@ CREATE TABLE `shop_file` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='商家文件';
 
@@ -333,6 +348,7 @@ CREATE TABLE `guide` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='导购';
 
@@ -348,6 +364,7 @@ CREATE TABLE `guide_file` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='导购文件';
 
@@ -361,6 +378,7 @@ CREATE TABLE `car_rental` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='租车';
 
@@ -376,6 +394,7 @@ CREATE TABLE `group` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='团队';
 
@@ -393,6 +412,7 @@ CREATE TABLE `group_user` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC)
 ) COMMENT='团队成员';
@@ -413,6 +433,7 @@ CREATE TABLE `flight` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT ' 备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='航班';
 
@@ -430,6 +451,7 @@ CREATE TABLE `hotel` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT ' 备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='酒店';
 
@@ -444,6 +466,7 @@ CREATE TABLE `group_flight` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT ' 备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='团队航班';
 
@@ -458,6 +481,7 @@ CREATE TABLE `group_hotel` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT ' 备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='团队酒店';
 
@@ -472,6 +496,7 @@ CREATE TABLE `journey_day` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='行程天数表';
 
@@ -494,6 +519,7 @@ CREATE TABLE `journey_plan` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='具体行程表';
 
@@ -509,6 +535,7 @@ CREATE TABLE `phone_info` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='手机信息';
 
@@ -530,6 +557,7 @@ CREATE TABLE `stock_order` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='订单信息';
 
@@ -546,7 +574,8 @@ CREATE TABLE `apk` (
   `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
-  `remarks` VARCHAR(255) COMMENT '标注',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='安装包更新记录表';
 
@@ -570,7 +599,8 @@ CREATE TABLE `code_opt` (
   `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
-  `remarks` VARCHAR(255) COMMENT '标注',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `mod_type_UNIQUE` (`mod_type` ASC)
 ) COMMENT='编码表';
