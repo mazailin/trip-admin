@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.iom.dao.ProductDao">
+
+    <sql id="productColumns">
+        `id`,
+        `name`,
+        `unit`,
+        `avg_price`,
+        `rent_price`,
+        `pay_price`,
+        `total_amt`,
+        `rent_amt`,
+        `rsv_amt`,
+        `avl_amt`,
+        `upper_limit`,
+        `low_limit`,
+        `use_detail`,
+        `comment`
+    </sql>
+	<select id="findList" resultType="Product">
+		SELECT
+            <include refid="productColumns"/>
+        FROM product
+        WHERE del_flag = #{DEL_FLAG_NORMAL}
+        <if test="name != null and name != ''">
+            AND name like CONCAT('%', #{name}, '%')
+        </if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY name
+            </otherwise>
+        </choose>
+	</select>
+    <select id="get" resultType="Product">
+        SELECT
+        <include refid="productColumns"/>
+        FROM product
+        WHERE id = #{id}
+    </select>
+	<insert id="insert">
+        INSERT INTO product(
+            `id`,
+            `name`,
+            `unit`,
+            `avg_price`,
+            `rent_price`,
+            `pay_price`,
+            `total_amt`,
+            `rent_amt`,
+            `rsv_amt`,
+            `avl_amt`,
+            `upper_limit`,
+            `low_limit`,
+            `use_detail`,
+            `comment`,
+            `create_by`,
+            `create_date`,
+            `update_by`,
+            `update_date`,
+            `remarks`,
+            `del_flag`
+        ) VALUES (
+            #{id},
+            #{name},
+            #{unit},
+            #{avgPrice},
+            #{rentPrice},
+            #{payPrice},
+            #{totalAmt},
+            #{rentAmt},
+            #{rsvAmt},
+            #{avlAmt},
+            #{upperLimit},
+            #{lowLimit},
+            #{useDetail},
+            #{comment},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+	</insert>
+	
+	<update id="update">
+        UPDATE product SET
+            `name` = #{name},
+            `unit` = #{unit},
+            `avg_price` = #{avgPrice},
+            `rent_price` = #{rentPrice},
+            `pay_price` = #{payPrice},
+            `total_amt` = #{totalAmt},
+            `rent_amt` = #{rentAmt},
+            `rsv_amt` = #{rsvAmt},
+            `avl_amt` = #{avlAmt},
+            `upper_limit` = #{upperLimit},
+            `low_limit` = #{lowLimit},
+            `use_detail` = #{useDetail},
+            `comment` = #{comment},
+            `update_by` = #{updateBy.id},
+            `update_date` = #{updateDate},
+            `remarks` = #{remarks}
+        WHERE id = #{id}
+	</update>
+	<delete id="delete">
+		UPDATE product SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
+	</delete>
+</mapper>

@@ -577,6 +577,15 @@ CREATE TABLE `code_opt` (
 
 
 -- 订单与库存管理
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `product_detail`;
+DROP TABLE IF EXISTS `product_in`;
+DROP TABLE IF EXISTS `in_detail`;
+DROP TABLE IF EXISTS `in_pro_detail`;
+DROP TABLE IF EXISTS `product_out`;
+DROP TABLE IF EXISTS `out_detail`;
+DROP TABLE IF EXISTS `out_pro_detail`;
+DROP TABLE IF EXISTS `product_discard`;
 CREATE TABLE `product` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(255) NOT NULL COMMENT '名称',
@@ -597,7 +606,7 @@ CREATE TABLE `product` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品列表';
 
@@ -613,7 +622,7 @@ CREATE TABLE `product_detail` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品明细';
 
@@ -630,7 +639,7 @@ CREATE TABLE `product_in` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品入库';
 
@@ -647,7 +656,7 @@ CREATE TABLE `in_detail` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品入库明细';
 
@@ -668,7 +677,7 @@ CREATE TABLE `product_out` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品出库';
 
@@ -682,7 +691,7 @@ CREATE TABLE `out_detail` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品出库明细';
 
@@ -705,6 +714,6 @@ CREATE TABLE `product_discard` (
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
   `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
   `remarks` VARCHAR(255) COMMENT '备注信息',
-  `delflag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品报废';
