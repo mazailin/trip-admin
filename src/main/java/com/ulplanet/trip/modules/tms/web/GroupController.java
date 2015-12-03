@@ -5,7 +5,6 @@ import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.crm.entity.Customer;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
-import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.entity.Group;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

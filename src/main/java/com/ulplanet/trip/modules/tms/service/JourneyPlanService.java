@@ -28,18 +28,6 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
         return journeyPlan;
     }
 
-    public JourneyPlanBo getJourneyPlan(String id,String cityIds){
-        JourneyPlan journeyPlan = journeyPlanDao.get(id);
-        JourneyPlanBo journeyPlanBo = new JourneyPlanBo(journeyPlan);
-        if(cityIds!=null){
-            List<InfoBo> list = getInfoList(journeyPlan.getType(),cityIds);
-            if(list.size()>0){
-                journeyPlanBo.setInfos(list);
-            }
-        }
-        return journeyPlanBo;
-    }
-
     /**
      * 根据ID获取通用表列表信息
      * @param type
@@ -141,12 +129,6 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
         }
 
     }
-
-//    public void save(JourneyPlan journeyPlan){
-//        if(StringUtils.isNotBlank(journeyPlan.getInfoId())){
-//
-//        }
-//    }
 
 
 

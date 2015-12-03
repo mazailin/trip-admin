@@ -3,24 +3,15 @@ package com.ulplanet.trip.modules.tms.web;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
-import com.ulplanet.trip.modules.ims.bo.ResponseBo;
-import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import com.ulplanet.trip.modules.tms.bo.InfoBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
 import com.ulplanet.trip.modules.tms.entity.JourneyPlan;
 import com.ulplanet.trip.modules.tms.service.JourneyDayService;
 import com.ulplanet.trip.modules.tms.service.JourneyPlanService;
-import org.springframework.context.i18n.LocaleContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -73,14 +64,6 @@ public class JourneyPlanController  extends BaseController {
         this.journeyPlanService.delete(journeyPlan);
         return "{\"status\":\"1\"}";
     }
-
-    @RequestMapping(value = "/copy")
-    @ResponseBody
-    @Transactional(readOnly = false)
-    public Object copy(JourneyPlan journeyPlan) {
-        return journeyPlanService.copy(journeyPlan);
-    }
-
 
     @RequestMapping(value = "/findTypeList",method = RequestMethod.POST)
     @ResponseBody
