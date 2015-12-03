@@ -33,7 +33,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/tim/country/list">国家列表</a></li>
-		<li class="active"><a href="${ctx}/tim/country/form?id=${customer.id}">国家<shiro:hasPermission name="tim:country:edit">${not empty country.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:country:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/tim/country/form?id=${country.id}">国家<shiro:hasPermission name="tim:country:edit">${not empty country.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="tim:country:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="country" action="${ctx}/tim/country/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

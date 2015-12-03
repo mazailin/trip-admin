@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `phone_info`;
 DROP TABLE IF EXISTS `stock_order`;
 DROP TABLE IF EXISTS `apk`;
 DROP TABLE IF EXISTS `version_tag`;
+DROP TABLE IF EXISTS `code_opt`;
 
 /* Create Tables */
 
@@ -191,7 +192,7 @@ CREATE TABLE `city` (
 CREATE TABLE `user` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(64) NOT NULL COMMENT '姓名',
-  `gender` CHAR(1) COMMENT '性别\n1：男\n2：女',
+  `gender` CHAR(1) DEFAULT '0' COMMENT '性别\n0：未知\n1：男\n2：女',
   `identity_card` VARCHAR(36) COMMENT '身份证',
   `wechat` VARCHAR(50) COMMENT '微信',
   `qq` VARCHAR(20) COMMENT 'QQ',
