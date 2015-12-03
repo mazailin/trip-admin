@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupUserDao">
+
+    <select id="findList" resultType="GroupUser">
+        SELECT
+            group_user.id,
+            group_user.`group`,
+            group_user.user,
+            group_user.code,
+            group_user.type,
+            group_user.cphone,
+            user.name,
+            user.weChat,
+            user.qq,
+            user.birth,
+            user.issue_date,
+            user.expiry_date,
+            user.birth_place,
+            user.issue_place,
+            user.gender,
+            user.identity_card,
+            user.passport,
+            user.phone,
+            user.email
+        FROM
+            user
+            JOIN group_user ON user.id = group_user.user
+        <where>
+            group_user.`group` = #{group}
+            <if test="name!=null and name!=''">
+              AND user.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="passport!=null and passport!=''">
+                AND user.passport = #{passport}
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND user.phone = #{phone}
+            </if>
+        </where>
+        ORDER BY group_user.code
+    </select>
+
+
+    <insert id="insertUsers">
+        INSERT INTO user(
+        id,
+        name,
+        weChat,
+        qq,
+        birth,
+        issue_date,
+        expiry_date,
+        birth_place,
+        issue_place,
+        gender,
+        identity_card,
+        passport,
+        phone,
+        email,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.user},
+            #{item.name},
+            #{item.weChat},
+            #{item.qq},
+            #{item.birth},
+            #{item.issueDate},
+            #{item.expiryDate},
+            #{item.birthPlace},
+            #{item.issuePlace},
+            #{item.gender},
+            #{item.identityCard},
+            #{item.passport},
+            #{item.phone},
+            #{item.email},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+
+    </insert>
+
+    <insert id="insertGroupUsers">
+        REPLACE INTO group_user(
+        id,
+        `group`,
+        im_token,
+        user,
+        code,
+        type,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+        (
+            #{item.id},
+            #{item.group},
+            #{item.imToken},
+            #{item.user},
+            #{item.code},
+            #{item.type},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id} ,
+            #{item.updateDate},
+            #{item.remarks}
+        )
+        </foreach>
+    </insert>
+
+
+
+
+    <select id="get" resultType="GroupUser">
+        SELECT
+        group_user.id,
+        group_user.`group`,
+        group_user.user,
+        group_user.code,
+        group_user.type,
+        group_user.cphone,
+        user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.email
+        FROM
+        user
+        JOIN group_user ON user.id = group_user.user
+        <where>
+            group_user.`id` = #{id}
+        </where>
+    </select>
+
+    <insert id="insertGroupUser">
+        INSERT INTO group_user(
+            id,
+            `group`,
+            im_token,
+            user,
+            code,
+            type,
+            cphone,
+            create_by,
+            create_date,
+            update_by ,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{group},
+            #{imToken},
+            #{user},
+            #{code},
+            #{type},
+            #{cphone},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id} ,
+            #{updateDate},
+            #{remarks}
+        )
+    </insert>
+
+
+    <update id="updateGroupUser">
+        UPDATE group_user SET
+            type = #{type},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks},
+            <if test="cphone!=null">
+                cphone = #{cphone}
+            </if>
+        WHERE id = #{id}
+    </update>
+
+
+    <delete id="deleteGroupUser">
+        DELETE FROM group_user WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteUser">
+        DELETE FROM user WHERE id = #{user}
+    </delete>
+
+    <select id="findMaxCode" resultType="java.lang.String">
+        SELECT
+            MAX(CODE)
+        FROM
+            group_user
+        WHERE
+            CODE LIKE CONCAT(#{code}, '___')
+    </select>
+
+    <select id="findUserByPassport" resultType="GroupUser">
+        SELECT
+            MAX(`group`.to_date) as toDate,
+            MIN(`group`.from_date) as fromDate,
+            group_user.id,
+            group_user.`group`,
+            user.id as `user`,
+            user.name,
+            user.gender,
+            user.identity_card,
+            user.passport
+        FROM
+            user
+            LEFT JOIN group_user ON user.id = group_user.user
+            LEFT JOIN `group` ON `group`.id = group_user.group
+        <where>
+            <if test="id != null and id != ''">
+                AND user.passport = #{id}
+            </if>
+            <if test="group!=null and group!=''">
+                AND `group`.id = #{group}
+            </if>
+        </where>
+        group by user.passport
+
+    </select>
+
+
+    <select id="getUserById"  resultType="GroupUser">
+        select `user`.id as user
+        from user
+        where id = #{id}
+    </select>
+
+
+    <select id="hasPassport" resultType="java.lang.String">
+        SELECT id
+        FROM user
+        INNER JOIN group_user on user.id = group_user.user
+        WHERE passport = #{passport}
+        AND group_user.group = #{groupId}
+    </select>
+
+    <update id="updateUser">
+        UPDATE user
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="birth!=null">
+                birth = #{birth},
+            </if>
+            <if test="issueDate!=null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="expiryDate!=null">
+                expiry_date = #{expiryDate},
+            </if>
+            <if test="birthPlace!=null">
+                birth_place = #{birthPlace},
+            </if>
+            <if test="issuePlace!=null">
+                issue_place = #{issuePlace},
+            </if>
+            <if test="gender!=null">
+                gender = #{gender},
+            </if>
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        </set>
+        WHERE id = #{user}
+
+    </update>
+
+</mapper>

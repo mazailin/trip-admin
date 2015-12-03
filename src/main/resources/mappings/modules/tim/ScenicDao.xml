@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.ScenicDao">
+
+    <sql id="scenicColumns">
+        a.id,
+        a.`name`,
+        a.city AS 'city.id',
+        c.`name` AS 'city.name',
+        a.type,
+        a.description,
+        a.address,
+        a.longitude,
+        a.latitude,
+        a.score,
+        a.level,
+        a.price,
+        a.hours,
+        a.tips,
+        a.cooper,
+        a.published,
+        a.create_by AS 'createBy.id',
+        a.update_by AS 'updateBy.id'
+    </sql>
+	<select id="findList" resultType="Scenic">
+		SELECT
+            <include refid="scenicColumns"/>,
+            sc.name AS 'createBy.name',
+            su.name AS 'updateBy.name'
+        FROM scenic a
+        JOIN city c
+        ON a.city = c.id
+        LEFT JOIN sys_user sc
+        ON a.create_by = sc.id
+        LEFT JOIN sys_user su
+        ON a.update_by = su.id
+        <where>
+            <if test="name != null and name != ''">
+                AND a.name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="city != null and city.id != null and city.id != ''">
+                AND a.city = #{city.id}
+            </if>
+            <if test="createBy != null and createBy.name != null and createBy.name != ''">
+                AND sc.name like CONCAT('%', #{createBy.name}, '%')
+            </if>
+            <if test="updateBy != null and updateBy.name != null and updateBy.name != ''">
+                AND su.name like CONCAT('%', #{updateBy.name}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.name
+            </otherwise>
+        </choose>
+	</select>
+    <select id="get" resultType="Scenic">
+        SELECT
+        <include refid="scenicColumns"/>
+        FROM scenic a
+        JOIN city c
+        ON a.city = c.id
+        WHERE a.id = #{id}
+    </select>
+	<insert id="insert">
+        INSERT INTO scenic(
+            id,
+            name,
+            city,
+            type,
+            description,
+            address,
+            longitude,
+            latitude,
+            score,
+            level,
+            hours,
+            price,
+            tips,
+            cooper,
+            published,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{name},
+            #{city.id},
+            #{type},
+            #{description},
+            #{address},
+            #{longitude},
+            #{latitude},
+            #{score},
+            #{level},
+            #{hours},
+            #{price},
+            #{tips},
+            #{cooper},
+            #{published},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks}
+        )
+	</insert>
+	
+	<update id="update">
+        UPDATE scenic SET
+            name = #{name},
+            city = #{city.id},
+            type = #{type},
+            description = #{description},
+            address = #{address},
+            longitude = #{longitude},
+            latitude = #{latitude},
+            score = #{score},
+            level = #{level},
+            hours = #{hours},
+            price = #{price},
+            tips = #{tips},
+            cooper = #{cooper},
+            published = #{published},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+	</update>
+	<delete id="delete">
+        DELETE FROM scenic WHERE id = #{id}
+	</delete>
+
+    <insert id="insertFile">
+        INSERT INTO scenic_file(
+        id,
+        scenic,
+        name,
+        type,
+        description,
+        path,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks
+        ) VALUES (
+        #{id},
+        #{scenic},
+        #{name},
+        #{type},
+        #{description},
+        #{path},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{remarks}
+        )
+    </insert>
+
+    <sql id="scenicFileColumns">
+        a.id,
+        a.name,
+        a.type,
+        a.description,
+        a.path
+    </sql>
+
+    <select id="getFileById" resultType="ScenicFile">
+        SELECT
+        <include refid="scenicFileColumns"/>
+        FROM scenic_file a
+        WHERE a.id = #{fileId}
+    </select>
+
+    <select id="findScenicFiles" resultType="ScenicFile">
+        SELECT
+        <include refid="scenicFileColumns"/>
+        FROM scenic_file a
+        WHERE scenic = #{scenic}
+        ORDER BY type
+    </select>
+    <update id="updateScenicFile">
+        UPDATE scenic_file
+        <set>
+            type=#{type},
+            description=#{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteScenicFileById">
+        DELETE FROM scenic_file WHERE id = #{id}
+    </delete>
+    <delete id="deleteScenicFileByScenic">
+        DELETE FROM scenic_file WHERE scenic = #{scenic}
+    </delete>
+</mapper>

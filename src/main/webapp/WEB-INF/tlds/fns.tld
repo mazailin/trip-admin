@@ -212,5 +212,15 @@
     <function-signature>java.lang.String toJsonString(java.lang.Object)</function-signature>
     <example>${fns:toJson(object)}</example>  
   </function>
-  
+
+  <function>
+    <description>获取七牛云URL</description>
+    <name>getQiniuUrl</name>
+    <function-class>com.ulplanet.trip.modules.sys.utils.QiniuUploadUtil</function-class>
+    <function-signature>java.lang.String getQiniuUrl()</function-signature>
+    <example>${fns:getQiniuUrl()}</example>
+  </function>
+
+
+
 </taglib>

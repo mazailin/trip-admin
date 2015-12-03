@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tim.dao.ShopDao">
+
+    <sql id="shopColumns">
+        a.id,
+        a.`name`,
+        a.city AS 'city.id',
+        c.`name` AS 'city.name',
+        a.type,
+        a.description,
+        a.address,
+        a.longitude,
+        a.latitude,
+        a.score,
+        a.level,
+        a.worktime,
+        a.cooper,
+        a.published,
+        a.create_by AS 'createBy.id',
+        a.update_by AS 'updateBy.id'
+    </sql>
+	<select id="findList" resultType="Shop">
+		SELECT
+            <include refid="shopColumns"/>,
+            sc.name AS 'createBy.name',
+            su.name AS 'updateBy.name'
+        FROM shop a
+        JOIN city c
+        ON a.city = c.id
+        LEFT JOIN sys_user sc
+        ON a.create_by = sc.id
+        LEFT JOIN sys_user su
+        ON a.update_by = su.id
+        <where>
+            <if test="name != null and name != ''">
+                AND a.name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="city != null and city.id != null and city.id != ''">
+                AND a.city = #{city.id}
+            </if>
+            <if test="createBy != null and createBy.name != null and createBy.name != ''">
+                AND sc.name like CONCAT('%', #{createBy.name}, '%')
+            </if>
+            <if test="updateBy != null and updateBy.name != null and updateBy.name != ''">
+                AND su.name like CONCAT('%', #{updateBy.name}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.name
+            </otherwise>
+        </choose>
+	</select>
+    <select id="get" resultType="Shop">
+        SELECT
+        <include refid="shopColumns"/>
+        FROM shop a
+        JOIN city c
+        ON a.city = c.id
+        WHERE a.id = #{id}
+    </select>
+	<insert id="insert">
+        INSERT INTO shop(
+            id,
+            name,
+            city,
+            type,
+            description,
+            address,
+            longitude,
+            latitude,
+            score,
+            level,
+            worktime,
+            cooper,
+            published,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{name},
+            #{city.id},
+            #{type},
+            #{description},
+            #{address},
+            #{longitude},
+            #{latitude},
+            #{score},
+            #{level},
+            #{worktime},
+            #{cooper},
+            #{published},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks}
+        )
+	</insert>
+	
+	<update id="update">
+        UPDATE shop SET
+            name = #{name},
+            city = #{city.id},
+            type = #{type},
+            description = #{description},
+            address = #{address},
+            longitude = #{longitude},
+            latitude = #{latitude},
+            score = #{score},
+            level = #{level},
+            worktime = #{worktime},
+            cooper = #{cooper},
+            published = #{published},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+	</update>
+	<delete id="delete">
+        DELETE FROM shop WHERE id = #{id}
+	</delete>
+
+    <insert id="insertFile">
+        INSERT INTO shop_file(
+        id,
+        shop,
+        name,
+        type,
+        description,
+        path,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks
+        ) VALUES (
+        #{id},
+        #{shop},
+        #{name},
+        #{type},
+        #{description},
+        #{path},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{remarks}
+        )
+    </insert>
+
+    <sql id="shopFileColumns">
+        a.id,
+        a.name,
+        a.type,
+        a.description,
+        a.path
+    </sql>
+
+    <select id="getFileById" resultType="ShopFile">
+        SELECT
+        <include refid="shopFileColumns"/>
+        FROM shop_file a
+        WHERE a.id = #{fileId}
+    </select>
+
+    <select id="findShopFiles" resultType="ShopFile">
+        SELECT
+        <include refid="shopFileColumns"/>
+        FROM shop_file a
+        WHERE shop = #{shop}
+        ORDER BY type
+    </select>
+    <update id="updateShopFile">
+        UPDATE shop_file
+        <set>
+            type=#{type},
+            description=#{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteShopFileById">
+        DELETE FROM shop_file WHERE id = #{id}
+    </delete>
+    <delete id="deleteShopFileByShop">
+        DELETE FROM shop_file WHERE shop = #{shop}
+    </delete>
+</mapper>

@@ -1,6 +1,5 @@
 package com.ulplanet.trip.common.config;
 
-import com.ckfinder.connector.ServletContextFactory;
 import com.google.common.collect.Maps;
 import com.ulplanet.trip.common.utils.PropertiesLoader;
 import com.ulplanet.trip.common.utils.StringUtils;
@@ -49,11 +48,6 @@ public class Global {
 	public static final String FALSE = "false";
 	
 	/**
-	 * 上传文件基础虚拟路径
-	 */
-	public static final String USERFILES_BASE_URL = "/userfiles/";
-	
-	/**
 	 * 获取当前对象实例
 	 */
 	public static Global getInstance() {
@@ -98,25 +92,6 @@ public class Global {
 		return null;
 	}
 
-	/**
-	 * 获取上传文件的根目录
-	 * @return
-	 */
-	public static String getUserfilesBaseDir() {
-		String dir = getConfig("userfiles.basedir");
-		if (StringUtils.isBlank(dir)){
-			try {
-				dir = ServletContextFactory.getServletContext().getRealPath("/");
-			} catch (Exception e) {
-				return "";
-			}
-		}
-		if(!dir.endsWith("/")) {
-			dir += "/";
-		}
-		return dir;
-	}
-	
     /**
      * 获取工程路径
      * @return

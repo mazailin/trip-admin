@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.crm.dao.AppUserDao">
+	<select id="findList" resultType="AppUser">
+		SELECT
+            id,
+            name,
+            weChat,
+            qq,
+            birth,
+            issue_date,
+            expiry_date,
+            birth_place,
+            issue_place,
+            gender,
+            identity_card,
+            passport,
+            phone,
+            photo,
+            email,
+            create_by,
+            create_date,
+            update_date,
+            remarks
+		FROM user
+        <where> 1 = 1
+            <if test="name != null and name != ''">
+                AND name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone = #{phone}
+            </if>
+            <if test="passport != null and passport != ''">
+                AND passport = #{passport}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY name
+            </otherwise>
+        </choose>
+	</select>
+
+    <delete id="delete">
+        DELETE FROM user where id = #{id}
+    </delete>
+
+    <insert id="insert">
+        INSERT INTO user(
+        id,
+        name,
+        weChat,
+        qq,
+        birth,
+        issue_date,
+        expiry_date,
+        birth_place,
+        issue_place,
+        gender,
+        identity_card,
+        passport,
+        phone,
+        email,
+        passport_photo,
+        create_by,
+        create_date,
+        update_by ,
+        update_date,
+        remarks
+        ) VALUES (
+        #{id},
+        #{name},
+        #{weChat},
+        #{qq},
+        #{birth},
+        #{issueDate},
+        #{expiryDate},
+        #{birthPlace},
+        #{issuePlace},
+        #{gender},
+        #{identityCard},
+        #{passport},
+        #{phone},
+        #{email},
+        #{passportPhoto},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id} ,
+        #{updateDate},
+        #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE user
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="weChat!=null">
+                weChat = #{weChat},
+            </if>
+            <if test="qq!=null">
+                qq = #{qq},
+            </if>
+            <if test="birth!=null">
+                birth = #{birth},
+            </if>
+            <if test="issueDate!=null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="expiryDate!=null">
+                expiry_date = #{expiryDate},
+            </if>
+            <if test="birthPlace!=null">
+                birth_place = #{birthPlace},
+            </if>
+            <if test="issuePlace!=null">
+                issue_place = #{issuePlace},
+            </if>
+            <if test="gender!=null">
+                gender = #{gender},
+            </if>
+            <if test="identityCard!=null">
+                identity_card = #{identityCard},
+            </if>
+            <if test="passport!=null">
+                passport = #{passport},
+            </if>
+                passport_photo = #{passportPhoto},
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        </set>
+        WHERE id = #{id}
+
+    </update>
+
+
+    <select id="get" resultType="AppUser">
+        SELECT
+        user.id,
+        user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.photo,
+        user.email,
+        user.passport_photo
+        FROM
+        user
+        <where>
+            `id` = #{id}
+        </where>
+    </select>
+</mapper>

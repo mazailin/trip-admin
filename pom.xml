@@ -4,7 +4,7 @@
     <groupId>com.ulplanet.trip</groupId>
     <artifactId>trip-admin</artifactId>
     <packaging>war</packaging>
-    <version>0.1</version>
+    <version>1.0.0beta</version>
     <name>trip-admin</name>
 
     <!-- 项目属性 -->
@@ -43,7 +43,8 @@
         <!-- environment setting -->
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+        <jetty.version>8.1.16.v20140903</jetty.version>
+        <webserver.port>8090</webserver.port>
     </properties>
 
     <!-- 设定主仓库，按设定顺序进行查找。 -->
@@ -406,12 +407,19 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- fastjson json
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+
+        <!--fastjson json-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency> -->
+            <version>1.2.7</version>
+        </dependency>
 
         <!-- xstream xml -->
         <dependency>
@@ -476,34 +484,6 @@
         </dependency>
         <!-- GENERAL UTILS end -->
 
-        <!-- CKFinder begin -->
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>0.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ckfinder</groupId>
-            <artifactId>apache-ant-zip</artifactId>
-            <version>2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ckfinder</groupId>
-            <artifactId>ckfinder</artifactId>
-            <version>2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ckfinder</groupId>
-            <artifactId>ckfinderplugin-fileeditor</artifactId>
-            <version>2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ckfinder</groupId>
-            <artifactId>ckfinderplugin-imageresize</artifactId>
-            <version>2.3</version>
-        </dependency>
-        <!-- CKFinder end -->
-
         <!-- TEST begin -->
         <dependency>
             <groupId>junit</groupId>
@@ -524,9 +504,17 @@
             <version>1.13</version>
         </dependency>
 
+        <!--parse apk-->
+        <dependency>
+            <groupId>net.erdfelt.android</groupId>
+            <artifactId>apk-parser</artifactId>
+            <version>1.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>admin</finalName>
         <plugins>
             <!-- compiler插件 -->
             <plugin>
@@ -557,6 +545,34 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.5.1</version>
+            </plugin>
+
+
+
+            <!-- jetty插件 -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopKey>foo</stopKey>
+                    <stopPort>9999</stopPort>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>${webserver.port}</port>
+                        </connector>
+                    </connectors>
+                    <webAppConfig>
+                        <contextPath>/${project.artifactId}</contextPath>
+                    </webAppConfig>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>org.mortbay.util.URI.charset</name>
+                            <value>${project.build.sourceEncoding}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
             </plugin>
         </plugins>
 

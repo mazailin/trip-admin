@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+	default-autowire="no">
+
+	<!-- getters -->
+	<!-- 默认的FileGetter,将使用当前App目录下的files目录存放文件,这个是系统默认的方式 
+		参数:
+		workfolderName:文件存放路径,(只能是相对当前AppPath的路径,而且http访问方式也一致,默认files	
+	-->
+	<bean id="defaultGetter" class="com.ulplanet.trip.common.utils.fservice.FileGetterInnerAppImpl">
+		<property name="workfolderName" value="files" />
+	</bean>
+
+	<!-- 以http下载方式,从指定服务器目录上下载文件到本地临时目录,
+		有两个参数:
+		serverurl:(!必须!)下载文件的基础url,这个url可以在当前App上访问.
+		tmpfolderName:临时文件存放目录,默认tmp_files(这个必须是相对路径)
+		!!!(后面所有的tmpfolderName与此一致).
+	-->
+	<bean id="httpGetter" class="com.ulplanet.trip.common.utils.fservice.FileGetterHttpImpl">
+		<property name="serverurl" value="http://localhost:8080/admin/files/" />
+	</bean>
+
+	<!-- 以文件拷贝方式,从指定文件目录下下载文件到本地临时目录,
+		有两个参数:
+		workfolderName:(!必须!),文件存放的目录,可以是相对当前AppPath的目录.
+	-->
+	<bean id="diskGetter" class="com.ulplanet.trip.common.utils.fservice.FileGetterDiskImpl">
+		<property name="workfolderName" value="/storage/files" />
+	</bean>
+
+	<!-- 
+		==================== savers =====================
+	-->
+	<!-- 系统默认的文件保存方式,将文件保存在本App目录下的files目录 
+	 -->
+	<bean id="defaultSaver" class="com.ulplanet.trip.common.utils.fservice.FileSaverInnerAppImpl">
+	</bean>
+
+	<!-- 以http上传方式
+
+		参数:
+		serverurl:(!必须!)基础目录.
+	-->
+	<bean id="httpSaver" class="com.ulplanet.trip.common.utils.fservice.FileSaverHttpImpl">
+		<property name="serverurl" value="http://localhost:8080/admin/" />
+	</bean>
+
+	<!-- 以文件拷贝方式,将文件保存到磁盘中的某个目录下 
+		参数:
+		workfolderName:文件保存的路径(可以是相对当前AppPath的路径).
+	-->
+	<bean id="diskSaver" class="com.ulplanet.trip.common.utils.fservice.FileSaverDiskImpl">
+		<property name="workfolderName" value="/storage/files" />
+	</bean>
+ 	
+	<!-- init the FileManger -->
+	<bean id="filemanagerInitor" class="com.ulplanet.trip.common.utils.fservice.FileManagerInitor">
+		<property name="fileGetter" ref="diskGetter" />
+		<property name="fileSaver" ref="diskSaver" />
+	</bean>
+
+</beans>
