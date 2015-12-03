@@ -438,8 +438,6 @@
 
                     $("#plan-description").val(data.description);
 
-//                    $("#plan-longitude").val(data.longitude === undefined ? '':data.longitude);
-//                    $("#plan-latitude").val(data.latitude === undefined ? '':data.latitude);
                     $("#journeyPlan").show(300);
                 }
             });
@@ -576,6 +574,7 @@
                             $("#plan-name").val(data.name);
                             $("#plan-longitude").val(data.longitude);
                             $("#plan-latitude").val(data.latitude);
+                            $("#infoId").val(id);
                             $("#plan-description").attr("readonly","true");
                             $("#plan-name").attr("readonly","true");
                             $("#plan-longitude").attr("readonly","true");
