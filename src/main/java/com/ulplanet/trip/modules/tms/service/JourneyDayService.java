@@ -2,12 +2,10 @@ package com.ulplanet.trip.modules.tms.service;
 
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
-import com.ulplanet.trip.modules.sys.dao.VersionTagDao;
 import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.bo.JourneyBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
-import com.ulplanet.trip.modules.tms.bo.JourneyPlanBo;
 import com.ulplanet.trip.modules.tms.bo.SortBo;
 import com.ulplanet.trip.modules.tms.dao.JourneyDayDao;
 import com.ulplanet.trip.modules.tms.entity.JourneyDay;
@@ -129,7 +127,7 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
     public JourneyDay copy(JourneyDay journeyDay){
         journeyDay = journeyDayDao.get(journeyDay);
         journeyDay.preInsert();
-        journeyDayDao.insert(journeyDay);
+        EhCacheUtils.put(journeyDay.getGroupId(),journeyDay.getId(),journeyDay);
         return journeyDay;
     }
 

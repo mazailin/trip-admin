@@ -322,7 +322,7 @@
 
     <select id="findList" resultMap="JourneyPlan">
         SELECT <![CDATA[
-            jp.id,jp.day_id,jp.type,jp.name as name,jp.time,jp.time_flag,jp.description,
+            jp.id,jp.info_id,jp.day_id,jp.type,jp.name as name,jp.time,jp.time_flag,jp.description,
             jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude
 	    ]]>
         <![CDATA[

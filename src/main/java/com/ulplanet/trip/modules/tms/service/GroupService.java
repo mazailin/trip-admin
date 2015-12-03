@@ -1,7 +1,6 @@
 package com.ulplanet.trip.modules.tms.service;
 
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.dao.CustomerDao;
 import com.ulplanet.trip.modules.crm.entity.Customer;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
@@ -17,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhangxd on 15/8/11.
@@ -81,6 +78,4 @@ public class GroupService extends CrudService<GroupDao,Group> {
         return list;
     }
 
-//    Map<String, Object> listGroup(int page, int size, String searchValue);
-//
 }

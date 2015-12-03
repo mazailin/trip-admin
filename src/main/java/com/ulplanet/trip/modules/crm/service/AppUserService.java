@@ -1,22 +1,17 @@
 package com.ulplanet.trip.modules.crm.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.FileManager;
-import com.ulplanet.trip.common.utils.JedisUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.utils.fservice.FileIndex;
 import com.ulplanet.trip.modules.crm.dao.AppUserDao;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
-import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
