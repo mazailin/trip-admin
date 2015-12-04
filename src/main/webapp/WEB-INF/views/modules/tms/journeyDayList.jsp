@@ -608,7 +608,8 @@
                     $("#id").val(id);
                     $("#groupId").val(data.groupId);
                     $("#cityId").val(data.cityIds);
-                    $("#cityName").val(data.title.replace(new RegExp(/(-)/g),","));
+                    $("#title").val(data.title);
+                    $("#cityName").val(data.cityNames);
                     $("#journeyList").show(300);
                     event.preventDefault();
                     return false;
