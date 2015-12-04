@@ -3,8 +3,10 @@ package com.ulplanet.trip.modules.iom.web;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
+import com.ulplanet.trip.modules.iom.entity.Product;
 import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 import com.ulplanet.trip.modules.iom.service.ProductDetailService;
+import com.ulplanet.trip.modules.iom.service.ProductService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 产品明细Controller
@@ -27,6 +30,8 @@ public class ProductDetailController extends BaseController {
 
     @Autowired
     private ProductDetailService productDetailService;
+    @Autowired
+    private ProductService productService;
 
     @ModelAttribute
     public ProductDetail get(@RequestParam(required=false) String id) {
@@ -48,6 +53,8 @@ public class ProductDetailController extends BaseController {
     @RequiresPermissions("iom:product:view")
     @RequestMapping(value = "form")
     public String form(ProductDetail productDetail, Model model) {
+        List<Product> productList = productService.findList(new Product(Product.USE_DETAIL_YES));
+        model.addAttribute("productList", productList);
         model.addAttribute("productDetail", productDetail);
         return "modules/iom/proDetailForm";
     }

@@ -32,63 +32,38 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/iom/product/list">产品明细</a></li>
-		<li class="active"><a href="${ctx}/iom/product/form?id=${product.id}">明细<shiro:hasPermission name="iom:product:edit">${not empty country.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/iom/product/detail/list">产品明细</a></li>
+		<li class="active"><a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">明细<shiro:hasPermission name="iom:product:edit">${not empty productDetail.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="product" action="${ctx}/iom/product/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
 		<div class="control-group">
-			<label class="control-label">名称:</label>
+			<label class="control-label">产品:</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="255" class="required"/>
+                <form:select id="product" path="product.id" class="input-large">
+                    <form:options items="${productList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+                </form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
         <div class="control-group">
-            <label class="control-label">计量单位:</label>
+            <label class="control-label">编号:</label>
             <div class="controls">
-                <form:select path="unit">
-                    <form:options items="${fns:getDictList('unit')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-small"/>
-                </form:select>
+                <form:input path="code" htmlEscape="false" disabled="true"/>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">平均价格:</label>
+            <label class="control-label">设备号:</label>
             <div class="controls">
-                <form:input path="avgPrice" htmlEscape="false" maxlength="16" disabled="true" class="input-small"/>
+                <form:input path="device" htmlEscape="false" maxlength="64"/>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">出租单价:</label>
+            <label class="control-label">状态:</label>
             <div class="controls">
-                <form:input path="rentPrice" htmlEscape="false" maxlength="64" class="input-small"/>
-                <label>&nbsp;&nbsp;&nbsp;元/天</label>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">赔偿价格:</label>
-            <div class="controls">
-                <form:input path="payPrice" htmlEscape="false" maxlength="64" class="input-small"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">库存上限:</label>
-            <div class="controls">
-                <form:input path="upperLimit" htmlEscape="false" maxlength="64" class="input-small"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">库存下限:</label>
-            <div class="controls">
-                <form:input path="lowLimit" htmlEscape="false" maxlength="64" class="input-small"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">按明细管理:</label>
-            <div class="controls">
-                <form:select path="useDetail">
-                    <form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+                <form:select path="status">
+                    <form:options items="${fns:getDictList('phone_status')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-small"/>
                 </form:select>
             </div>
         </div>

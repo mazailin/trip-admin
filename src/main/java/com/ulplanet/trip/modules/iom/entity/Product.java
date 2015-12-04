@@ -11,6 +11,9 @@ public class Product extends DataEntity<Product> {
 
 	private static final long serialVersionUID = 1L;
 
+    public static final String USE_DETAIL_YES = "1";
+    public static final String USE_DETAIL_NO = "0";
+
     private String name;
     private String unit;
     private double avgPrice;
@@ -22,7 +25,7 @@ public class Product extends DataEntity<Product> {
     private double avlAmt;
     private double upperLimit = 99999.0;
     private double lowLimit;
-    private String useDetail = "0";
+    private String useDetail = USE_DETAIL_NO;
     private String comment;
 
     public Product() {
@@ -32,6 +35,10 @@ public class Product extends DataEntity<Product> {
     public Product(String id, String name) {
         super(id);
         this.name = name;
+    }
+
+    public Product(String useDetail) {
+        this.useDetail = useDetail;
     }
 
     @Length(min=1, max=255, message="名称长度必须介于 1 和 255 之间")

@@ -23,6 +23,9 @@
             <include refid="productColumns"/>
         FROM product
         WHERE del_flag = #{DEL_FLAG_NORMAL}
+        <if test="useDetail != null and useDetail != ''">
+            AND use_detail = #{useDetail}
+        </if>
         <if test="name != null and name != ''">
             AND name like CONCAT('%', #{name}, '%')
         </if>
