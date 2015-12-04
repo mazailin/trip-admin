@@ -249,17 +249,23 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * 获得用户远程地址
 	 */
     public static String getRemoteAddr(HttpServletRequest request){
-        String remoteAddr = request.getHeader("X-Real-IP");
+        String remoteAddr = request.getHeader("X-Forwarded-For");
         if (isBlank(remoteAddr)) {
-            remoteAddr = request.getHeader("X-Forwarded-For");
+            remoteAddr = request.getHeader("X-Real-IP");
         }
         if (isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("Proxy-Client-IP");
         }
         if (isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("WL-Proxy-Client-IP");
+        } else {
+            int index = remoteAddr.indexOf(",");
+            if(index != -1){
+                remoteAddr = remoteAddr.substring(0,index);
+            }
         }
-        return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
+
+        return isBlank(remoteAddr) ? remoteAddr : request.getRemoteAddr();
     }
 
 	/**
