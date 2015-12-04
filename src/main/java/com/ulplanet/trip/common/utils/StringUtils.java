@@ -259,7 +259,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("WL-Proxy-Client-IP");
         }
-        return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
+        return isNotBlank(remoteAddr) ? remoteAddr : request.getRemoteAddr();
     }
 
 	/**
