@@ -166,11 +166,9 @@
             <form:hidden path="id"/>
             <form:hidden path="groupId"/>
             <sys:message content="${message}"/>
-            <%--<div class="form-group" >--%>
-                    <%--第--%>
-                        <%--<input type="input" id="dayNumber" name="dayNumber" style="width:50px"/>--%>
-                    <%--天--%>
-            <%--</div>--%>
+            <div class="form-group" >
+                <input type="input" id="title" name="title" />
+            </div>
             <div class="form-group" >
                 <label style="font-size: 15px;font-weight:bold;">城市:</label>
                 <sys:treeselect id="city" name="city.id" value="" labelName="city.name" labelValue=""
@@ -635,6 +633,8 @@
                 alertx("请选择城市！");
                 return false;
             }
+            var title = $("#title").val();
+            
             $.ajax({
                 url:"${ctx}/tms/journeyDay/saveTemp",
                 dataType:"json",
