@@ -252,9 +252,7 @@
     <select id="hasPassport" resultType="java.lang.String">
         SELECT id
         FROM user
-        INNER JOIN group_user on user.id = group_user.user
         WHERE passport = #{passport}
-        AND group_user.group = #{groupId}
     </select>
 
     <update id="updateUser">
