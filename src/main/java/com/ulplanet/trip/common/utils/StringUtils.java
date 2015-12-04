@@ -249,9 +249,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * 获得用户远程地址
 	 */
     public static String getRemoteAddr(HttpServletRequest request){
-        String remoteAddr = request.getHeader("X-Forwarded-For");
+        String remoteAddr = request.getHeader("X-Real-IP");
         if (isBlank(remoteAddr)) {
-            remoteAddr = request.getHeader("X-Real-IP");
+            remoteAddr = request.getHeader("X-Forwarded-For");
         }
         if (isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("Proxy-Client-IP");
@@ -265,7 +265,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             }
         }
 
-        return isBlank(remoteAddr) ? remoteAddr : request.getRemoteAddr();
+        return isNotBlank(remoteAddr) ? remoteAddr : request.getRemoteAddr();
     }
 
 	/**
