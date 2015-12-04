@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.utils.DateUtils;
+import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -26,7 +27,7 @@ public class LogReader {
 
     private static String PATH = "D:\\log\\collection.log";
 
-    private static String GOOGLE_URL = "http://maps.google.com/maps/api/geocode/json?latlng=%s,%s&language=zh-CN&sensor=false";
+    private static String GOOGLE_URL = "https://maps.google.com/maps/api/geocode/json?latlng=%s,%s&language=zh-CN&sensor=false&key=AIzaSyDysuPLHS6doj3d6tspSKUTFXjWe3OeNyc";
 
     public LogReader(){
 
@@ -143,6 +144,7 @@ public class LogReader {
                         map.put("type", "error");
                         i = 36;
                     }else continue;
+                    String d = line.substring(0,10);
                     line = line.substring(i);
                     String[] params = line.split(",");
                     for(String str : params){
@@ -152,11 +154,19 @@ public class LogReader {
                             if("package".equals(strs[0])){
                                 temp = "_package";
                             }
+                            if("date".equals(strs[0])){
+                                map.put("date",d);
+                                continue;
+                            }
                             map.put(temp,"");
                         }else if(strs.length > 1){
                             String temp = strs[0];
                             if("package".equals(strs[0])){
                                 temp = "_package";
+                            }
+                            if("date".equals(strs[0])){
+                                map.put("date",d);
+                                continue;
                             }
                             StringBuffer sb = new StringBuffer();
                             for(int k = 1;k<strs.length;k++){
@@ -186,8 +196,14 @@ public class LogReader {
         for(Map<String,String> map : list){
             Map<String,String> m = new HashMap<>();
             String date = map.get("date");
-            date = date.substring(0,6);
-            String[] strs = getCountry(sendGet(String.format(GOOGLE_URL,map.get("latitude"),map.get("longitude"))));
+            String sim = map.get("sim");
+            String[] strs;
+//            if(StringUtils.isNotEmpty(sim) && EhCacheUtils.get("logReader",sim)==null){
+//                strs = (String[]) EhCacheUtils.get("logReader",sim);
+//            }else {
+                strs = getCountry(sendGet(String.format(GOOGLE_URL, map.get("latitude"), map.get("longitude"))));
+//            }
+//            EhCacheUtils.put("logReader",sim,strs);
             if(infos.containsKey(date+strs[0])){//日期已存在
                 m = infos.get(date+strs[0]);
             }else{//日期不存在
@@ -221,12 +237,12 @@ public class LogReader {
                 boolean pFlag = false;
                 if (m.containsKey("param_sum")) pFlag = true;
                 if (j == 0) {
-                    cell.setCellValue(col.substring(0,6));
+                    cell.setCellValue(col.substring(0,10));
                 } else if (j <= 5) {
                     cell.setCellValue(m.get(body().get(j)));
                 } else if (j <= 23) {
                     if (m.containsKey("param_" + (j - 6)))
-                        cell.setCellValue(m.get("param_" + (j - 7)));
+                        cell.setCellValue(m.get("param_" + (j - 6)));
                 } else if (j <= 41) {
                     if (m.containsKey("param_" + (j - 24)) && pFlag)
                         cell.setCellValue(new BigDecimal(m.get("param_" + (j - 24))).divide(new BigDecimal(m.get("param_sum")), 4, BigDecimal.ROUND_HALF_EVEN).toString());
@@ -326,11 +342,11 @@ public class LogReader {
     private Map<String,String> getCount(Map<String,String> map,Map<String,String> m){
         if(map.containsKey("param")){
             Integer i = 1;
-            if(m.containsKey("param_"+map.get("param"))){
-                i = Integer.parseInt(m.get("param_"+map.get("param")));
+            if(m.containsKey("param_"+map.get("param").trim())){
+                i = Integer.parseInt(m.get("param_" + map.get("param")));
                 i++;
             }
-            m.put("param_"+map.get("param"),i.toString());
+            m.put("param_"+map.get("param").trim(),i.toString());
             if(m.containsKey("param_sum")){
                 Integer j = Integer.parseInt(m.get("param_sum"));
                 ++j;
@@ -491,18 +507,19 @@ public class LogReader {
     public static void main(String [] args) throws ParseException {
         LogReader logReader = new LogReader();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(DateUtils.parseDate("2015-11-27","yyyy-MM-dd"));
+        calendar.setTime(DateUtils.parseDate("2015-12-01","yyyy-MM-dd"));
         /**获取多天**/
-//        Map<String,Map<String,String>> m = new HashMap<>();
-//        for(int i = 0;i<3;i++) {
-//            calendar.add(Calendar.DATE,1);
-//            List<Map<String, String>> map = logReader.getMapList(DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd"));
-//            Map<String,Map<String,String>> infos =logReader.statistics(map);
-//            m.putAll(infos);
-//        }
+        Map<String,Map<String,String>> m = new HashMap<>();
+        for(int i = 0;i<3;i++) {
+            List<Map<String, String>> map = logReader.getMapList(DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd"));
+            Map<String,Map<String,String>> infos = logReader.statistics(map);
+            System.out.println(JSON.toJSONString(infos));
+            m.putAll(infos);
+            calendar.add(Calendar.DATE,1);
+        }
         /**获取指定天**/
-        List<Map<String, String>> map = logReader.getMapList("2015-11-30");
-        Map<String,Map<String,String>> m =logReader.statistics(map);
+//        List<Map<String, String>> map = logReader.getMapList("2015-11-30");
+//        Map<String,Map<String,String>> m =logReader.statistics(map);
         logReader.export(m);
     }
 }

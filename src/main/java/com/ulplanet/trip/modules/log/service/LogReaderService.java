@@ -1,6 +1,5 @@
 package com.ulplanet.trip.modules.log.service;
 
-import com.ulplanet.trip.common.log.LogReader;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

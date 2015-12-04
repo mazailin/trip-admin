@@ -167,7 +167,8 @@
             <form:hidden path="groupId"/>
             <sys:message content="${message}"/>
             <div class="form-group" >
-                <input type="input" id="title" name="title" />
+                <label style="font-size: 15px;font-weight:bold;" for="title">标题:</label>
+                <input type="text" id="title" name="title" class="form-control" style="width:353px" placeholder="请输入标题"/>
             </div>
             <div class="form-group" >
                 <label style="font-size: 15px;font-weight:bold;">城市:</label>
@@ -184,7 +185,6 @@
 </div>
 
 <div id="journeyPlan" style="display: none" class="popup">
-    <%--<div style="position:fixed;left:20%;top:10%;background-color: white;padding-top: 20px;padding-bottom: 20px;width:600px">--%>
     <form style="margin-top: 30px">
         <input type="hidden" id="planId"/>
         <input type="hidden" id="dayId"/>
@@ -239,7 +239,6 @@
         <input id="plan-btnSubmit" class="btn btn-default" type="button" value="保 存"/>&nbsp;
         <input id="plan-btnCancel" class="btn" type="button" value="返 回" />
     </form>
-    <%--</div>--%>
 </div>
 <script type="text/javascript">
     $(function(){
@@ -634,18 +633,20 @@
                 return false;
             }
             var title = $("#title").val();
-            
+            if(title!=null && title.length==0){
+                title = $("#cityName").val();
+            }
             $.ajax({
                 url:"${ctx}/tms/journeyDay/saveTemp",
                 dataType:"json",
                 type:"post",
                 data:{"id":$("#id").val(),"cityIds":$("#cityId").val()
-                    ,"title":$("#cityName").val(),"groupId":_groupId},
+                    ,"title":title,"groupId":_groupId},
                 success:function(data){
                     $("#changeFlag").val(1);
                     if(id!=null && id.length>0){
                       $("#"+id).find("p[class='p-header-top']").html(
-                          data.title
+                              title
                           +"<i class=\"fa fa-times close-day\" style=\"float: right;margin-right: 10px;\"></i>"
                           +"<a href=\"#\" style=\"float: right;margin-right: 10px;\"  id=\"updateDay\">修改</a>"
                           +"<a href=\"#\" style=\"float: right;margin-right: 10px;\" id=\"addPlan\">添加</a>"
