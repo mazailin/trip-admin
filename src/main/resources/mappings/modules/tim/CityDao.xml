@@ -40,6 +40,16 @@
         ON a.country = c.id
         WHERE a.id = #{id}
     </select>
+
+    <select id="getNames" resultType="java.lang.String">
+        SELECT
+         name
+        FROM city a
+        WHERE a.id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 	<select id="findByName" resultType="City">
 		SELECT
 		    <include refid="cityColumns"/>

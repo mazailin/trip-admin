@@ -2,8 +2,10 @@ package com.ulplanet.trip.modules.tms.service;
 
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
+import com.ulplanet.trip.modules.tim.service.CityService;
 import com.ulplanet.trip.modules.tms.bo.JourneyBo;
 import com.ulplanet.trip.modules.tms.bo.JourneyDayBo;
 import com.ulplanet.trip.modules.tms.bo.SortBo;
@@ -28,6 +30,8 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
     private JourneyPlanService journeyPlanService;
     @Resource
     private VersionTagService versionTagService;
+    @Resource
+    private CityService cityService;
 
     public List<JourneyDayBo> queryList(String groupId){
         JourneyDay j = new JourneyDay();
@@ -47,6 +51,27 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
             journeyDayBos.add(journeyDayBo);
         }
         return journeyDayBos;
+    }
+
+    public JourneyDay getJourneyDay(String id,String groupId){
+        JourneyDay j;
+        if(EhCacheUtils.get(groupId,id)!=null){
+            j = (JourneyDay)EhCacheUtils.get(groupId,id);
+        }else {
+            j = get(id);
+        }
+        if(StringUtils.isNotEmpty(j.getCityIds())){
+            String[] ids = j.getCityIds().split(",");
+            List<String> names = cityService.getNames(ids);
+            StringBuffer sb = new StringBuffer();
+            for(String name : names){
+                sb.append(name);
+                sb.append(",");
+            }
+            sb.delete(sb.lastIndexOf(","),sb.lastIndexOf(",")+1);
+            j.setCityNames(sb.toString());
+        }
+        return j;
     }
 
     @Override
@@ -131,21 +156,6 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
         return journeyDay;
     }
 
-    public List<JourneyDayBo> getJourneyTemplate(String groupId){
-        JourneyDay j = new JourneyDay();
-        j.setGroupId(groupId);
-        List<JourneyDay> list = journeyDayDao.findList(j);
-        List<JourneyDayBo> journeyDayBos = new ArrayList<>();
-        for(JourneyDay journeyDay : list){
-            JourneyPlan journeyPlan = new JourneyPlan();
-            journeyPlan.setDayId(journeyDay.getId());
-            List<JourneyPlan> plans = journeyPlanService.findList(journeyPlan);
-            JourneyDayBo journeyDayBo = new JourneyDayBo(journeyDay);
-            journeyDayBo.setList(plans);
-            journeyDayBos.add(journeyDayBo);
-        }
-        return journeyDayBos;
-    }
 
     public List<JourneyDayBo> preview(JourneyBo journeyBo){
         SortBo[] sortBos = journeyBo.getList();

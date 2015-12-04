@@ -47,10 +47,7 @@ public class JourneyDayController  extends BaseController {
     @RequestMapping(value = "/get")
     @ResponseBody
     public JourneyDay getJourneyDay(@RequestParam(value = "id") String id,@RequestParam String groupId) {
-            if(EhCacheUtils.get(groupId,id)!=null){
-                return (JourneyDay)EhCacheUtils.get(groupId,id);
-            }
-            return journeyDayService.get(id);
+            return journeyDayService.getJourneyDay(id,groupId);
     }
 
     @RequestMapping(value = "/queryList")
