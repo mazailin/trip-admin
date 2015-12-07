@@ -132,7 +132,8 @@
                 <input type="hidden" name="food" value="${food.id}" />
                 <select name="type" class="input-mini" required>
                     <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
-                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
+                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ?
+                            'selected' :  (${fileType.value == 2} ? 'selected' :'') %}>${fileType.label}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -188,7 +189,7 @@
                 <input type="hidden" name="id" value="{%=file.id%}" />
                 <select name="type" class="input-mini">
                     <c:forEach var="fileType" items="${fns:getDictList('food_file_type')}">
-                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : '' %}>${fileType.label}</option>
+                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : (${fileType.value == 2} ? 'selected' :'') %}>${fileType.label}</option>
                     </c:forEach>
                 </select>
             </td>

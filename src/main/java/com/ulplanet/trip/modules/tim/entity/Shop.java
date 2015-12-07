@@ -24,7 +24,7 @@ public class Shop extends DataEntity<Shop> {
     private int score;
     private int level;
     private String worktime;
-    private String cooper;
+    private String cooper = "0";
     private String published;
 
     public Shop() {
