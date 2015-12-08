@@ -49,37 +49,23 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
 
     public ResponseBo saveGroupUser(GroupUser groupUser){
-        ResponseBo  responseBo = new ResponseBo();
+        ResponseBo  responseBo;
 
         if(StringUtils.isBlank(groupUser.getId())){//添加用户
             Group group = groupService.get(groupUser.getGroup());
             String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             groupUser.preInsert();
-            try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
-                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
-                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                    return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
-                } else {
-                    logger.error(sdkHttpResult1.getResult()  + sdkHttpResult2.getResult());
-                    throw new RuntimeException("接口调用失败!");
-                }
-            } catch (Exception e) {
-                logger.error("用户创建失败", e);
-                responseBo.setMsg("用户创建失败");
-                responseBo.setStatus(0);
-                return responseBo;
-            }
+            responseBo = addChat(groupUser, group);
+
         }else{
-            updateUser(groupUser);
             responseBo = updateUser(groupUser);
         }
-        if(responseBo.getStatus() == 1){
+        if(responseBo.getStatus()==0){
+            return responseBo;
+        }
+        responseBo = ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
+        if(responseBo.getStatus() == 1) {
             versionTagService.save(new VersionTag(groupUser.getGroup(),1));
         }
         return responseBo;
@@ -92,29 +78,43 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             groupUser.setId(IdGen.uuid());
             String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
-            try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
-                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
-                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                } else {
-                    logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
-                    throw new RuntimeException("接口调用失败!");
-                }
-            } catch (Exception e) {
-                logger.error("用户创建失败", e);
-                responseBo.setMsg("用户创建失败");
-                responseBo.setStatus(0);
-                return responseBo;
-            }
+            responseBo = addChat(groupUser,group);
+        }
+        if(responseBo.getStatus()==0){
+            return responseBo;
         }
         responseBo.setStatus(groupUserDao.insertGroupUsers(list));
+        if(responseBo.getStatus() > 0){
+            versionTagService.save(new VersionTag(group.getId(),1));
+        }
         return responseBo;
     }
 
+
+    private ResponseBo addChat(GroupUser groupUser,Group group){
+        ResponseBo responseBo = new ResponseBo();
+        try {
+            SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
+            SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
+            if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+                Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
+                        new TypeToken<Map<String, Object>>() {
+                        }.getType());
+                groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+                responseBo.setStatus(1);
+            } else {
+                responseBo.setStatus(0);
+                responseBo.setMsg("接口调用失败!");
+                logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
+                throw new RuntimeException("接口调用失败!");
+            }
+        } catch (Exception e) {
+            responseBo.setStatus(0);
+            responseBo.setMsg("用户创建失败!");
+            logger.error("用户创建失败", e);
+        }
+        return responseBo;
+    }
 
     public ResponseBo addGroupUser(GroupUser groupUser){
         groupUser.preInsert();
