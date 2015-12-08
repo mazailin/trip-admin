@@ -49,19 +49,23 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
 
     public ResponseBo saveGroupUser(GroupUser groupUser){
-        ResponseBo  responseBo = new ResponseBo();
+        ResponseBo  responseBo;
 
         if(StringUtils.isBlank(groupUser.getId())){//添加用户
             Group group = groupService.get(groupUser.getGroup());
             String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             groupUser.preInsert();
-            addChat(groupUser,group);
+            responseBo = addChat(groupUser, group);
+
         }else{
-            updateUser(groupUser);
             responseBo = updateUser(groupUser);
         }
-        if(responseBo.getStatus() == 1){
+        if(responseBo.getStatus()==0){
+            return responseBo;
+        }
+        responseBo = ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
+        if(responseBo.getStatus() == 1) {
             versionTagService.save(new VersionTag(groupUser.getGroup(),1));
         }
         return responseBo;
@@ -74,14 +78,21 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             groupUser.setId(IdGen.uuid());
             String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
-            addChat(groupUser,group);
+            responseBo = addChat(groupUser,group);
+        }
+        if(responseBo.getStatus()==0){
+            return responseBo;
         }
         responseBo.setStatus(groupUserDao.insertGroupUsers(list));
+        if(responseBo.getStatus() > 0){
+            versionTagService.save(new VersionTag(group.getId(),1));
+        }
         return responseBo;
     }
 
 
-    private void addChat(GroupUser groupUser,Group group){
+    private ResponseBo addChat(GroupUser groupUser,Group group){
+        ResponseBo responseBo = new ResponseBo();
         try {
             SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
             SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
@@ -90,13 +101,19 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                         new TypeToken<Map<String, Object>>() {
                         }.getType());
                 groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+                responseBo.setStatus(1);
             } else {
+                responseBo.setStatus(0);
+                responseBo.setMsg("接口调用失败!");
                 logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
                 throw new RuntimeException("接口调用失败!");
             }
         } catch (Exception e) {
+            responseBo.setStatus(0);
+            responseBo.setMsg("用户创建失败!");
             logger.error("用户创建失败", e);
         }
+        return responseBo;
     }
 
     public ResponseBo addGroupUser(GroupUser groupUser){
