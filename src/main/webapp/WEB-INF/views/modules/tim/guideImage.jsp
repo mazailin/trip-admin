@@ -132,7 +132,7 @@
                 <input type="hidden" name="guide" value="${guide.id}" />
                 <select name="type" class="input-mini" required>
                     <c:forEach var="fileType" items="${fns:getDictList('guide_file_type')}">
-                        <option value="${fileType.value}" {%=(file.type == ${fileType.value}) ? 'selected' : (${fileType.value == 2} ? 'selected' :'') %}>${fileType.label}</option>
+                        <option value="${fileType.value}" {%=${fileType.value == 2} ? 'selected' :'' %}>${fileType.label}</option>
                     </c:forEach>
                 </select>
             </td>
