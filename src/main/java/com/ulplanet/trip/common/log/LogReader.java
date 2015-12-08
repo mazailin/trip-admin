@@ -196,19 +196,20 @@ public class LogReader {
         for(Map<String,String> map : list){
             Map<String,String> m = new HashMap<>();
             String date = map.get("date");
-            String sim = map.get("sim");
+            String sim = map.get("userid");
             String[] strs;
-//            if(StringUtils.isNotEmpty(sim) && EhCacheUtils.get("logReader",sim)==null){
-//                strs = (String[]) EhCacheUtils.get("logReader",sim);
-//            }else {
+            if(StringUtils.isNotEmpty(sim) && EhCacheUtils.get("logReader",sim)!=null){
+                strs = (String[]) EhCacheUtils.get("logReader",sim);
+            }else {
                 strs = getCountry(sendGet(String.format(GOOGLE_URL, map.get("latitude"), map.get("longitude"))));
-//            }
-//            EhCacheUtils.put("logReader",sim,strs);
+                EhCacheUtils.put("logReader",sim,strs);
+            }
             if(infos.containsKey(date+strs[0])){//日期已存在
                 m = infos.get(date+strs[0]);
             }else{//日期不存在
                 m = loopEntry(map, m);
                 m.put("country",strs[1]);
+                m.put("_package",strs[0]);
             }
             m = getCount(map,m);
             infos.put(date+strs[0],m);
