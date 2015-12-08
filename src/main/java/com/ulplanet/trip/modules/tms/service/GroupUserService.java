@@ -56,25 +56,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             groupUser.preInsert();
-            try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
-                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
-                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                    return ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
-                } else {
-                    logger.error(sdkHttpResult1.getResult()  + sdkHttpResult2.getResult());
-                    throw new RuntimeException("接口调用失败!");
-                }
-            } catch (Exception e) {
-                logger.error("用户创建失败", e);
-                responseBo.setMsg("用户创建失败");
-                responseBo.setStatus(0);
-                return responseBo;
-            }
+            addChat(groupUser,group);
         }else{
             updateUser(groupUser);
             responseBo = updateUser(groupUser);
@@ -92,29 +74,30 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             groupUser.setId(IdGen.uuid());
             String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
-            try {
-                SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getPassport(), groupUser.getName(), "");
-                SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getPassport(), group.getId(), group.getName());
-                if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
-                    Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                    groupUser.setImToken(Objects.toString(tokenMap.get("token")));
-                } else {
-                    logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
-                    throw new RuntimeException("接口调用失败!");
-                }
-            } catch (Exception e) {
-                logger.error("用户创建失败", e);
-                responseBo.setMsg("用户创建失败");
-                responseBo.setStatus(0);
-                return responseBo;
-            }
+            addChat(groupUser,group);
         }
         responseBo.setStatus(groupUserDao.insertGroupUsers(list));
         return responseBo;
     }
 
+
+    private void addChat(GroupUser groupUser,Group group){
+        try {
+            SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
+            SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
+            if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+                Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
+                        new TypeToken<Map<String, Object>>() {
+                        }.getType());
+                groupUser.setImToken(Objects.toString(tokenMap.get("token")));
+            } else {
+                logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
+                throw new RuntimeException("接口调用失败!");
+            }
+        } catch (Exception e) {
+            logger.error("用户创建失败", e);
+        }
+    }
 
     public ResponseBo addGroupUser(GroupUser groupUser){
         groupUser.preInsert();
