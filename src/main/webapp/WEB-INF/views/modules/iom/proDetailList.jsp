@@ -16,7 +16,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/iom/product/detail/list">产品明细</a></li>
-		<shiro:hasPermission name="iom:product:edit"><li><a href="${ctx}/iom/product/detail/form">明细添加</a></li></shiro:hasPermission>
+		<shiro:hasPermission name="iom:product:detail:edit"><li><a href="${ctx}/iom/product/detail/form">明细添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -30,13 +30,15 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th class="sort-column name">名称</th><th>描述</th><shiro:hasPermission name="iom:product:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>编号</th><th>设备号</th><th>产品</th><th>描述</th><shiro:hasPermission name="iom:product:detail:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productDetail">
 			<tr>
-				<td><a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">${productDetail.name}</a></td>
-				<td>${product.comment}</td>
-				<shiro:hasPermission name="iom:product:edit"><td>
+				<td><a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">${productDetail.code}</a></td>
+				<td>${productDetail.device}</td>
+				<td><a href="${ctx}/iom/product/form?id=${productDetail.product.id}">${productDetail.product.name}</a></td>
+				<td>${productDetail.comment}</td>
+				<shiro:hasPermission name="iom:product:detail:edit"><td>
     				<a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">修改</a>
 					<a href="${ctx}/iom/product/detail/delete?id=${productDetail.id}" onclick="return confirmx('确认要删除该产品明细吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>

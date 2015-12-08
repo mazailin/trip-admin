@@ -1,51 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ulplanet.trip.modules.iom.dao.ProductDetailDao">
+<mapper namespace="com.ulplanet.trip.modules.iom.dao.ProductInDao">
 
-    <sql id="proDetailColumns">
+    <sql id="productInColumns">
         a.`id`,
-        b.`id` AS 'product.id',
-        b.`name` AS 'product.name',
         a.`code`,
-        a.`device`,
-        a.`status`,
+        a.`in_date`,
+        a.`in_type`,
+        a.`operator`,
+        a.`bills`,
+        a.`insure`,
         a.`comment`
     </sql>
-	<select id="findList" resultType="ProductDetail">
+	<select id="findList" resultType="ProductIn">
 		SELECT
-            <include refid="proDetailColumns"/>
-        FROM product_detail a
-        JOIN product b
-        ON a.product_id = b.id
+            <include refid="productInColumns"/>
+        FROM product_in a
         WHERE a.del_flag = #{DEL_FLAG_NORMAL}
-        AND b.del_flag = #{DEL_FLAG_NORMAL}
-        <if test="device != null and device != ''">
-            AND a.device like CONCAT('%', #{device}, '%')
+        <if test="code != null and code != ''">
+            AND a.code like CONCAT('%', #{code}, '%')
         </if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY a.device
+                ORDER BY a.code
             </otherwise>
         </choose>
 	</select>
-    <select id="get" resultType="ProductDetail">
+    <select id="get" resultType="ProductIn">
         SELECT
-          <include refid="proDetailColumns"/>
-        FROM product_detail a
-        JOIN product b
-        ON a.product_id = b.id
+          <include refid="productInColumns"/>
+        FROM product_in a
         WHERE a.id = #{id}
     </select>
 	<insert id="insert">
-        INSERT INTO product_detail(
+        INSERT INTO product_in(
             `id`,
-            `product_id`,
             `code`,
-            `device`,
-            `status`,
+            `in_date`,
+            `in_type`,
+            `operator`,
+            `bills`,
+            `insure`,
             `comment`,
             `create_by`,
             `create_date`,
@@ -55,10 +53,12 @@
             `del_flag`
         ) VALUES (
             #{id},
-            #{product.id},
             #{code},
-            #{device},
-            #{status},
+            #{inDate},
+            #{inType},
+            #{operator},
+            #{bills},
+            #{insure},
             #{comment},
             #{createBy.id},
             #{createDate},
@@ -70,10 +70,12 @@
 	</insert>
 	
 	<update id="update">
-        UPDATE product_detail SET
-            `product_id` = #{product.id},
-            `device` = #{device},
-            `status` = #{status},
+        UPDATE product_in SET
+            `in_date` = #{inDate},
+            `in_type` = #{inType},
+            `operator` = #{operator},
+            `bills` = #{bills},
+            `insure` = #{insure},
             `comment` = #{comment},
             `update_by` = #{updateBy.id},
             `update_date` = #{updateDate},
@@ -81,6 +83,6 @@
         WHERE id = #{id}
 	</update>
 	<delete id="delete">
-		UPDATE product_detail SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
+		UPDATE product_in SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
 	</delete>
 </mapper>

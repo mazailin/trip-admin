@@ -32,7 +32,6 @@ public class ProductDetail extends DataEntity<ProductDetail> {
         this.product = product;
     }
 
-    @NotNull
     public String getCode() {
         return code;
     }
@@ -41,7 +40,7 @@ public class ProductDetail extends DataEntity<ProductDetail> {
         this.code = code;
     }
 
-    @Length(min=1, max=64, message="设备号长度必须介于 1 和 64 之间")
+    @Length(min=0, max=64, message="设备号长度必须介于 1 和 64 之间")
     public String getDevice() {
         return device;
     }

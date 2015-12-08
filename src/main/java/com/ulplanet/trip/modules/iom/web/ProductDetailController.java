@@ -42,7 +42,7 @@ public class ProductDetailController extends BaseController {
         }
     }
 
-    @RequiresPermissions("iom:product:view")
+    @RequiresPermissions("iom:product:detail:view")
     @RequestMapping(value = {"list", ""})
     public String list(ProductDetail productDetail, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<ProductDetail> page = productDetailService.findPage(new Page<>(request, response), productDetail);
@@ -50,16 +50,16 @@ public class ProductDetailController extends BaseController {
         return "modules/iom/proDetailList";
     }
 
-    @RequiresPermissions("iom:product:view")
+    @RequiresPermissions("iom:product:detail:view")
     @RequestMapping(value = "form")
     public String form(ProductDetail productDetail, Model model) {
-        List<Product> productList = productService.findList(new Product(Product.USE_DETAIL_YES));
+        List<Product> productList = productService.findUseDetailList(new Product());
         model.addAttribute("productList", productList);
         model.addAttribute("productDetail", productDetail);
         return "modules/iom/proDetailForm";
     }
 
-    @RequiresPermissions("iom:product:edit")
+    @RequiresPermissions("iom:product:detail:edit")
     @RequestMapping(value = "save")
     public String save(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, productDetail)){
@@ -70,7 +70,7 @@ public class ProductDetailController extends BaseController {
         return "redirect:" + adminPath + "/iom/product/detail/list?repage";
     }
 
-    @RequiresPermissions("iom:product:edit")
+    @RequiresPermissions("iom:product:detail:edit")
     @RequestMapping(value = "delete")
     public String delete(ProductDetail productDetail, RedirectAttributes redirectAttributes) {
         productDetailService.delete(productDetail);

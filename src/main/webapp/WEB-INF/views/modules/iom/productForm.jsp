@@ -8,10 +8,18 @@
 		$(document).ready(function() {
 			$("#inputForm").validate({
 				rules: {
-					name: {remote: "${ctx}/tim/country/checkName?oldName=" + encodeURIComponent('${country.name}')}
-				},
-				messages: {
-                    name: {remote: "国家已存在"}
+                    rentPrice: {
+                        decimal: 2
+                    },
+                    payPrice: {
+                        decimal: 2
+                    },
+                    upperLimit: {
+                        decimal: 2
+                    },
+                    lowLimit: {
+                        decimal: 2
+                    }
 				},
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -56,32 +64,32 @@
         <div class="control-group">
             <label class="control-label">平均价格:</label>
             <div class="controls">
-                <form:input path="avgPrice" htmlEscape="false" maxlength="16" disabled="true" class="input-small"/>
+                <form:input path="avgPrice" htmlEscape="false" disabled="true" class="input-small"/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">出租单价:</label>
             <div class="controls">
-                <form:input path="rentPrice" htmlEscape="false" maxlength="64" class="input-small"/>
+                <form:input path="rentPrice" htmlEscape="false" class="input-small"/>
                 <label>&nbsp;&nbsp;&nbsp;元/天</label>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">赔偿价格:</label>
             <div class="controls">
-                <form:input path="payPrice" htmlEscape="false" maxlength="64" class="input-small"/>
+                <form:input path="payPrice" htmlEscape="false" class="input-small"/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">库存上限:</label>
             <div class="controls">
-                <form:input path="upperLimit" htmlEscape="false" maxlength="64" class="input-small"/>
+                <form:input path="upperLimit" htmlEscape="false" class="input-small"/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">库存下限:</label>
             <div class="controls">
-                <form:input path="lowLimit" htmlEscape="false" maxlength="64" class="input-small"/>
+                <form:input path="lowLimit" htmlEscape="false" class="input-small"/>
             </div>
         </div>
         <div class="control-group">
@@ -95,7 +103,7 @@
 		<div class="control-group">
 			<label class="control-label">备注:</label>
 			<div class="controls">
-				<form:textarea path="comment" htmlEscape="false" rows="3" maxlength="255" class="input-xlarge"/>
+				<form:textarea path="comment" htmlEscape="false" rows="5" maxlength="2000" class="input-xxlarge"/>
 			</div>
 		</div>
 		<div class="form-actions">
