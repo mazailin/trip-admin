@@ -26,7 +26,7 @@ public class Food extends DataEntity<Food> {
     private String worktime;
     private String price;
     private String phone;
-    private String cooper;
+    private String cooper = "0";
     private String published;
 
     public Food() {

@@ -504,7 +504,7 @@ CREATE TABLE `journey_plan` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `day_id` VARCHAR(36) NOT NULL COMMENT '行程天数ID',
   `type` INT(2) NOT NULL COMMENT '行程类别  1 行程  2 集合  3 航班 4 交通 5 住宿  6 餐饮 7 景点 8 购物',
-  `name` VARCHAR(50) NOT NULL COMMENT '行程名称',
+  `name` VARCHAR(255) NOT NULL COMMENT '行程名称',
   `time` TIME COMMENT '时间',
   `time_flag` INT(1) COMMENT '是否有时间',
   `longitude` DECIMAL(10,6) COMMENT '经度',

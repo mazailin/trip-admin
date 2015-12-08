@@ -26,7 +26,7 @@ public class Scenic extends DataEntity<Scenic> {
     private String price;
     private String hours;
     private String tips;
-    private String cooper;
+    private String cooper = "0";
     private String published;
 
     public Scenic() {

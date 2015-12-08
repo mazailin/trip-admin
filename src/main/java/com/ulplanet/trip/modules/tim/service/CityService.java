@@ -7,6 +7,8 @@ import com.ulplanet.trip.modules.tim.entity.City;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 城市Service
  * Created by zhangxd on 15/10/23.
@@ -29,5 +31,9 @@ public class CityService extends CrudService<CityDao, City> {
             city.preUpdate();
             cityDao.update(city);
         }
+    }
+
+    public List<String> getNames(String [] ids){
+        return cityDao.getNames(ids);
     }
 }
