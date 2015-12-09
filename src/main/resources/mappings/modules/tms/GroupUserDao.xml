@@ -196,6 +196,12 @@
         WHERE id = #{id}
     </update>
 
+    <select id="findListByGroup" resultType="java.lang.String">
+        SELECT id
+        FROM group_user
+        WHERE `group` = #{id}
+    </select>
+
 
     <delete id="deleteGroupUser">
         DELETE FROM group_user WHERE id = #{id}

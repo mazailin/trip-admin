@@ -79,13 +79,13 @@
             var _log = _list[k];
             var flag = true;
             if (_log.time == dateArr[i]) {
-              _data[_data.length + 1] = _log.number;
+              _data[i] = _log.number;
               flag = false;
               break;
             }
           }
           if (flag) {
-            _data[_data.length + 1] = 0;
+            _data[i] = 0;
           }
         }
         c.data = _data;
@@ -97,7 +97,7 @@
           x: -20 //center
         },
         subtitle: {
-          text: '日期：'+fromDate+"-"+toDate,
+          text: '日期：'+fromDate+"~"+toDate,
           x: -20
         },
         xAxis: {
@@ -135,9 +135,11 @@
       oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0]);
       iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  86400000);    //把相差的毫秒数转换为天数
       var arr = [];
-      for(var i = 0;i < iDays;i++){
+      for(var i = 0;i <= iDays;i++){
         var n = oDate1.getTime();
-        arr[i] = n + 86400000 * i;
+        n = n + 86400000 * i;
+        n = new Date(n);
+        arr[i] = n.getFullYear() + "-" + (n.getMonth() + 1) + "-" + (n.getDate()<10?('0'+ n.getDate()):n.getDate());
       }
       return  arr;
     }
@@ -155,6 +157,7 @@
         success:function(data){
           json = data;
           closeTip();
+          $("#param_8").click();
         }
       });
     }

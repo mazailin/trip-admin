@@ -53,7 +53,7 @@ public class FlightController extends BaseController {
 
     @RequiresPermissions("tim:flight:edit")
     @RequestMapping(value = "save")
-    public String save(Flight flight, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+    public String save(Flight flight, Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, flight)){
             return form(flight, model);
         }

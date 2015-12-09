@@ -21,6 +21,15 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
     @Resource
     StockOrderDao stockOrderDao;
 
+    public StockOrder saveOrder(StockOrder stockOrder){
+        if(StringUtils.isNotBlank(stockOrder.getId())){
+            stockOrder =  this.updateOrder(stockOrder);
+        }else {
+            stockOrder = this.addOrder(stockOrder);
+        }
+        return stockOrder;
+    }
+
     public StockOrder addOrder(StockOrder stockOrder) {
         stockOrder.preInsert();
         stockOrder.setBuyer(UserUtils.getUser().getName());

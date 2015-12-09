@@ -51,11 +51,7 @@ public class StockOrderController  extends BaseController {
         if (!beanValidator(model, stockOrder)){
             return form(stockOrder, model);
         }
-        if(StringUtils.isNotBlank(stockOrder.getId())){
-            stockOrder =  this.stockOrderService.updateOrder(stockOrder);
-        }else {
-            stockOrder = this.stockOrderService.addOrder(stockOrder);
-        }
+        stockOrder = stockOrderService.saveOrder(stockOrder);
         if(stockOrder!=null){
             addMessage(redirectAttributes,"保存手机订单"+stockOrder.getOrderId()+"成功");
         }

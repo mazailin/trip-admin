@@ -1,6 +1,7 @@
 package com.ulplanet.trip.modules.ims.service;
 
 import com.ulplanet.trip.common.service.CrudService;
+import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.ims.dao.PhoneInfoDao;
 import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.ims.entity.StockOrder;
@@ -18,6 +19,19 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
     private PhoneInfoDao phoneInfoDao;
     @Resource
     private StockOrderService stockOrderService;
+
+
+    public PhoneInfo savePhoneInfo(PhoneInfo phoneInfo){
+        if(StringUtils.isNotBlank(phoneInfo.getId())){
+            if(phoneInfo.getStatus()!=null && phoneInfo.getStatus() == 9999){
+                return null;
+            }
+            phoneInfo = this.updatePhoneInfo(phoneInfo);
+        }else {
+            phoneInfo = this.addPhoneInfo(phoneInfo);
+        }
+        return phoneInfo;
+    }
 
 
     public PhoneInfo addPhoneInfo(PhoneInfo phoneInfo) {
