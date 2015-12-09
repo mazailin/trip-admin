@@ -79,19 +79,24 @@
             <form:textarea path="comment" htmlEscape="false" rows="5" maxlength="2000" class="input-xxlarge"/>
         </div>
     </div>
-    <c:if test="${not empty productIn.id}">
+    <%--<c:if test="${not empty productIn.id}">--%>
         <div class="control-group">
             <label class="control-label">入库明细:</label>
             <div class="controls">
                 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-                    <thead><tr><th>产品</th><th>数量</th><th>采购数量</th><th>单价</th><th>总价</th><shiro:hasPermission name="iom:product:in:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+                    <thead><tr><th>产品</th><th>数量</th><th>采购数量</th><th>单价</th><th>总价</th><th>操作</th></tr></thead>
                     <tbody>
+                    <tr>
+                        <td>&nbsp;</td><td></td><td></td><td></td><td></td>
+                        <td>
+                            <a href="">增加</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
-                <input class="btn btn-primary" type="button" value="增加明细" onclick="history.go(-1)"/>
             </div>
         </div>
-    </c:if>
+    <%--</c:if>--%>
     <div class="form-actions">
         <shiro:hasPermission name="iom:product:in:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
