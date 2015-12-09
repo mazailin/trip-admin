@@ -27,7 +27,7 @@ public class LogReaderService {
             int number = (int)(to - from)/86400000;
             Calendar cal = Calendar.getInstance();
             cal.setTime(fDate);
-            for(int i = 0;i < number;i++) {
+            for(int i = 0;i <= number;i++) {
                 logReader = new LogReader();
                 Map<String, Map<String, String>> map = logReader.statistics(logReader.getMapList(DateUtils.formatDate(cal.getTime(),"yyyy-MM-dd")));
                 for (String key : map.keySet()) {
