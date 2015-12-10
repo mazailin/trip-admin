@@ -312,7 +312,7 @@
                                 "<div class=\"title\">"+
                                 "<p class=\"p-header-top\">"+
                                 obj.title +
-                                "<i class=\"fa fa-times\" style=\"float: right;margin-right: 10px;\"></i>"
+                                "<i class=\"fa fa-times close-day\" style=\"float: right;margin-right: 10px;\"></i>"
                                 +"<a href=\"#\" style=\"float: right;margin-right: 10px;\" id='updateDay'>修改</a>"
                                 +"<a href=\"#\" style=\"float: right;margin-right: 10px;\" id=\"addPlan\">添加</a>"
                                 +"</p>"

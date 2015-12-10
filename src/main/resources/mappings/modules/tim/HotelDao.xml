@@ -20,40 +20,6 @@
             ,hotel.latitude,hotel.description,hotel.remarks
 	</sql>
 
-<sql id="BaseWhere">
-    <where>
-                <if test="id != null and id != ''">
-                    AND id = #{id}
-                </if>
-                <if test="city != null and city.id != null">
-                    AND city = #{city.id}
-                </if>
-                <if test="name != null and name != ''">
-                    AND name = #{name}
-                </if>
-                <if test="address != null and address != ''">
-                    AND address = #{address}
-                </if>
-                <if test="phone != null and phone != ''">
-                    AND phone = #{phone}
-                </if>
-                <if test="longitude != null and longitude != ''">
-                    AND longitude = #{longitude}
-                </if>
-                <if test="latitude != null and latitude != ''">
-                    AND latitude = #{latitude}
-                </if>
-                <if test="description != null and description != ''">
-                    AND description = #{description}
-                </if>
-                <if test="remarks != null and remarks != ''">
-                    AND remarks = #{remarks}
-                </if>
-    </where>
-
- </sql>
-
-
 	<insert id="insert">
             <![CDATA[
                 INSERT INTO hotel (

@@ -189,10 +189,11 @@
             type = #{type},
             update_by = #{updateBy.id},
             update_date = #{updateDate},
-            remarks = #{remarks},
             <if test="cphone!=null">
-                cphone = #{cphone}
+                cphone = #{cphone},
             </if>
+            remarks = #{remarks}
+
         WHERE id = #{id}
     </update>
 
@@ -210,15 +211,6 @@
     <delete id="deleteUser">
         DELETE FROM user WHERE id = #{user}
     </delete>
-
-    <select id="findMaxCode" resultType="java.lang.String">
-        SELECT
-            MAX(CODE)
-        FROM
-            group_user
-        WHERE
-            CODE LIKE CONCAT(#{code}, '___')
-    </select>
 
     <select id="findUserByPassport" resultType="GroupUser">
         SELECT
@@ -245,13 +237,6 @@
         </where>
         group by user.passport
 
-    </select>
-
-
-    <select id="getUserById"  resultType="GroupUser">
-        select `user`.id as user
-        from user
-        where id = #{id}
     </select>
 
 

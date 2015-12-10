@@ -32,10 +32,8 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
 
 
 
-    String findMaxCode(Parameter parameter);
 
     List<GroupUser> findUserByPassport(@Param("id") String id, @Param("group") String group);
 
-    GroupUser getUserById(@Param("id") String id);
 
 }

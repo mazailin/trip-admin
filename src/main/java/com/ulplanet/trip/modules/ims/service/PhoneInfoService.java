@@ -23,9 +23,6 @@ public class PhoneInfoService extends CrudService<PhoneInfoDao,PhoneInfo> {
 
     public PhoneInfo savePhoneInfo(PhoneInfo phoneInfo){
         if(StringUtils.isNotBlank(phoneInfo.getId())){
-            if(phoneInfo.getStatus()!=null && phoneInfo.getStatus() == 9999){
-                return null;
-            }
             phoneInfo = this.updatePhoneInfo(phoneInfo);
         }else {
             phoneInfo = this.addPhoneInfo(phoneInfo);
