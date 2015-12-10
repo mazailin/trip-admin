@@ -52,6 +52,7 @@
   <button id="param_16" name="param_16" onclick="showLog(this)" class="btn btn-default">我的行程</button>
   <button id="param_17" name="param_17" onclick="showLog(this)" class="btn btn-default">个人信息</button>
   <div id="container"></div>
+  <div id="table_data"></div>
   <script type="text/javascript">
     var json = '';
     function showLog(e){
@@ -96,6 +97,14 @@
           text: name + '——使用情况',
           x: -20 //center
         },
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
         subtitle: {
           text: '日期：'+fromDate+"~"+toDate,
           x: -20
@@ -124,6 +133,25 @@
         },
         series: series
       });
+      var table = "<table class='table table-striped'>";
+      for(var i = 0;i < series.length;i++){
+        name = series[i].name;
+        var data = series[i].data;
+        var trs = '';
+        for(var j in data){
+          var tr = "<tr>";
+            var td = "<td>"+dateArr[j]+"</td>";
+            td += "<td>" + name + "</td>";
+            td += "<td>" + data[j] + "</td>";
+          tr += td + "</tr>";
+          trs += tr;
+        }
+
+        table +=trs;
+      }
+      table += "</table>";
+      $("#table_data").html(table);
+
     }
 
     //计算天数差的函数，通用
