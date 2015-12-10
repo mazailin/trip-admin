@@ -51,9 +51,11 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
         if(number < oldNumber){
             PhoneInfo phoneInfo = new PhoneInfo();
             phoneInfo.setStockOrderId(stockOrder.getId());
-            if(phoneInfoDao.queryDeliverPhone(phoneInfo) < number){
+            if(phoneInfoDao.queryDeliverPhone(phoneInfo) > number){
                 return null;
             }
+        }else if(number > oldNumber){
+            stockOrder.setStatus(1);
         }
         if(stockOrderDao.update(stockOrder) > 0){
             return stockOrder;
