@@ -59,14 +59,53 @@ public class ProductDetailController extends BaseController {
         return "modules/iom/proDetailForm";
     }
 
+    @RequiresPermissions("iom:product:detail:view")
+    @RequestMapping(value = "in/form")
+    public String inForm(ProductDetail productDetail, String inId, Model model) {
+
+        model.addAttribute("productDetail", productDetail);
+        model.addAttribute("inId", inId);
+        return "modules/iom/proInDetailForm";
+    }
+
     @RequiresPermissions("iom:product:detail:edit")
     @RequestMapping(value = "save")
     public String save(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
-        if (!beanValidator(model, productDetail)){
+        if (!beanValidator(model, productDetail)) {
             return form(productDetail, model);
         }
         productDetailService.saveProductDetail(productDetail);
         addMessage(redirectAttributes, "保存产品明细'" + productDetail.getDevice() + "'成功");
+        return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "in/save")
+    public String inSave(ProductDetail productDetail, String inId, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        if (!beanValidator(model, productDetail)) {
+            return form(productDetail, model);
+        }
+        productDetailService.saveProductDetailIn(inId, productDetail);
+        addMessage(redirectAttributes, "保存产品明细'" + productDetail.getDevice() + "'成功");
+        redirectAttributes.addAttribute("inId", inId);
+        redirectAttributes.addAttribute("product.id", productDetail.getProduct().getId());
+        redirectAttributes.addAttribute("product.name", productDetail.getProduct().getName());
+        return "redirect:" + adminPath + "/iom/product/detail/in/form";
+    }
+
+    @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "test")
+    public String test(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        productDetailService.saveTestStatus(productDetail);
+        addMessage(redirectAttributes, "产品明细'" + productDetail.getDevice() + "'测试成功");
+        return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "sale")
+    public String sale(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        productDetailService.saveSaleStatus(productDetail);
+        addMessage(redirectAttributes, "产品明细'" + productDetail.getDevice() + "'上架成功");
         return "redirect:" + adminPath + "/iom/product/detail/list?repage";
     }
 

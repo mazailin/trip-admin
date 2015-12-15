@@ -22,6 +22,9 @@
         <if test="device != null and device != ''">
             AND a.device like CONCAT('%', #{device}, '%')
         </if>
+        <if test="product != null and product.id != null and product.id != ''">
+            AND b.id = #{product.id}
+        </if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}

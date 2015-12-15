@@ -16,7 +16,6 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/iom/product/detail/list">产品明细</a></li>
-		<shiro:hasPermission name="iom:product:detail:edit"><li><a href="${ctx}/iom/product/detail/form">明细添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -30,17 +29,28 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>编号</th><th>设备号</th><th>产品</th><th>描述</th><shiro:hasPermission name="iom:product:detail:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>编号</th><th>设备号</th><th>产品</th><th>状态</th><th>描述</th><shiro:hasPermission name="iom:product:detail:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productDetail">
 			<tr>
 				<td><a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">${productDetail.code}</a></td>
 				<td>${productDetail.device}</td>
 				<td><a href="${ctx}/iom/product/form?id=${productDetail.product.id}">${productDetail.product.name}</a></td>
+				<td>${fns:getDictLabel(productDetail.status, 'phone_status', '')}</td>
 				<td>${productDetail.comment}</td>
 				<shiro:hasPermission name="iom:product:detail:edit"><td>
-    				<a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">修改</a>
-					<a href="${ctx}/iom/product/detail/delete?id=${productDetail.id}" onclick="return confirmx('确认要删除该产品明细吗？', this.href)">删除</a>
+                    <c:if test="${'1' eq productDetail.status}">
+    				    <a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">修改</a>
+                    </c:if>
+                    <c:if test="${'1' eq productDetail.status}">
+                        <a href="${ctx}/iom/product/detail/test?id=${productDetail.id}" onclick="return confirmx('确认此产品通过测试了吗？', this.href)">测试</a>
+                    </c:if>
+                    <c:if test="${'2' eq productDetail.status}">
+    				    <a href="${ctx}/iom/product/detail/sale?id=${productDetail.id}" onclick="return confirmx('确认此产品要正式上架了吗？', this.href)">上架</a>
+                    </c:if>
+                    <c:if test="${'4' ne productDetail.status}">
+                        <a href="${ctx}/iom/product/detail/discard?id=${productDetail.id}">报废</a>
+                    </c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

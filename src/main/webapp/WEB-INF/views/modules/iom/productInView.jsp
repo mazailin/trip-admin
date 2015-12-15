@@ -7,14 +7,6 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#inputForm").validate({
-                rules: {
-                    buyAmount: {
-                        decimal: 2
-                    },
-                    price: {
-                        decimal: 2
-                    }
-                },
                 submitHandler: function(form){
                     loading('正在提交，请稍等...');
                     form.submit();
@@ -34,9 +26,8 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li><a href="${ctx}/iom/product/in/list">产品入库</a></li>
-    <li class="active"><a href="${ctx}/iom/product/in/form?id=${productIn.id}">入库<shiro:hasPermission name="iom:product:in:edit">${not empty productIn.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:in:edit">查看</shiro:lacksPermission></a></li>
-    <li ${not empty productIn.id?'':'hidden'}><a href="${ctx}/iom/product/in/detail/form?productIn.id=${productIn.id}">入库明细</a></li>
+    <li><a href="${ctx}/iom/product/in/list">入库明细</a></li>
+    <li class="active"><a href="${ctx}/iom/product/in/view?id=${productIn.id}">入库查看</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="productIn" action="${ctx}/iom/product/in/save" method="post" class="form-horizontal">
     <form:hidden path="id"/>
@@ -97,9 +88,21 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">实际数量:</label>
+        <div class="controls">
+            <form:input path="amount" htmlEscape="false" class="input-small"/>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">单价:</label>
         <div class="controls">
             <form:input path="price" htmlEscape="false" class="input-small"/>&nbsp;元
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">总价:</label>
+        <div class="controls">
+            <form:input path="totalPrice" htmlEscape="false" class="input-small"/>&nbsp;元
         </div>
     </div>
     <div class="control-group">
@@ -108,10 +111,20 @@
             <form:textarea path="comment" htmlEscape="false" rows="5" maxlength="2000" class="input-xxlarge"/>
         </div>
     </div>
-    <div class="form-actions">
-        <shiro:hasPermission name="iom:product:in:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保存"/>&nbsp;</shiro:hasPermission>
-        <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
-    </div>
 </form:form>
+<c:if test="${'1' eq productIn.product.useDetail}">
+    <table id="contentTable" class="table table-striped table-bordered table-condensed">
+        <thead><tr><th>编号</th><th>设备号</th><th>描述</th></thead>
+        <tbody>
+        <c:forEach items="${detail}" var="productDetail">
+            <tr>
+                <td>${productDetail.code}</td>
+                <td>${productDetail.device}</td>
+                <td>${productDetail.comment}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</c:if>
 </body>
 </html>

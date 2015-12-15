@@ -49,7 +49,6 @@ public class ProductDetail extends DataEntity<ProductDetail> {
         this.device = device;
     }
 
-    @NotNull
     public String getStatus() {
         return status;
     }

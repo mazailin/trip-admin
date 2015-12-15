@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ulplanet.trip.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -15,12 +16,17 @@ public class ProductIn extends DataEntity<ProductIn> {
 	private static final long serialVersionUID = 1L;
 
     private String code;
+    private Product product;
     private Date inDate;
-    private Integer inType;
+    private int inType;
     private String operator;
     private String bills;
     private String insure;
     private String comment;
+    private double amount;
+    private double buyAmount;
+    private double price;
+    private double totalPrice;
 
     public ProductIn() {
         super();
@@ -43,11 +49,52 @@ public class ProductIn extends DataEntity<ProductIn> {
         this.inDate = inDate;
     }
 
-    public Integer getInType() {
+    @NotNull
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public double getBuyAmount() {
+        return buyAmount;
+    }
+
+    public void setBuyAmount(double buyAmount) {
+        this.buyAmount = buyAmount;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public int getInType() {
         return inType;
     }
 
-    public void setInType(Integer inType) {
+    public void setInType(int inType) {
         this.inType = inType;
     }
 

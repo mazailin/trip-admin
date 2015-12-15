@@ -11,5 +11,4 @@ import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 @MyBatisDao
 public interface ProductDetailDao extends CrudDao<ProductDetail> {
 
-
 }

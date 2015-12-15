@@ -29,16 +29,15 @@
 		<li><a href="${ctx}/iom/product/detail/list">产品明细</a></li>
 		<li class="active"><a href="${ctx}/iom/product/detail/form?id=${productDetail.id}">明细<shiro:hasPermission name="iom:product:detail:edit">${not empty productDetail.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:detail:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
+		<form:hidden path="product.id"/>
+        <input type="hidden" name="inId" value="${inId}">
 		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">产品:</label>
 			<div class="controls">
-                <form:select id="product" path="product.id" class="input-large">
-                    <form:options items="${productList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
-                </form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
+                <form:input path="product.name" class="input-large" disabled="true"/>
 			</div>
 		</div>
         <div class="control-group">
@@ -60,8 +59,10 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="iom:product:detail:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			<shiro:hasPermission name="iom:product:detail:edit">
+                <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
+            </shiro:hasPermission>
+            <a href="${ctx}/iom/product/store" class="btn">返 回</a>
 		</div>
 	</form:form>
 </body>
