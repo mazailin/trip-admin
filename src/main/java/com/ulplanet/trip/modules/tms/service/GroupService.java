@@ -30,6 +30,8 @@ public class GroupService extends CrudService<GroupDao,Group> {
     @Autowired
     private CustomerDao customerDao;
     @Resource
+    private GroupUserService groupUserService;
+    @Resource
     private VersionTagService versionTagService;
 
     public ResponseBo addGroup(Group group) {
@@ -54,6 +56,7 @@ public class GroupService extends CrudService<GroupDao,Group> {
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.dismissGroup("", group.getId());
             if (sdkHttpResult.getHttpCode() == 200) {
+                groupUserService.deleteByGroup(group.getId());
                 return ResponseBo.getResult(this.groupDao.delete(group));
             } else {
                 logger.error(sdkHttpResult.getResult());

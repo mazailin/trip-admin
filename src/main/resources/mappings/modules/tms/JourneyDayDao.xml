@@ -23,34 +23,6 @@
 	    ]]>
 	</sql>
 
-<sql id="BaseWhere">
-    <where>
-                <if test="id != null and id != ''">
-                    AND id = #{id}
-                </if>
-                <if test="groupId != null and groupId != ''">
-                    AND group_id = #{groupId}
-                </if>
-                <if test="dayNumber != null and dayNumber != ''">
-                    AND day_number = #{dayNumber}
-                </if>
-                <if test="title != null and title != ''">
-                    AND title = #{title}
-                </if>
-                <if test="createDate != null and createDate != ''">
-                    AND create_date = #{createDate}
-                </if>
-                <if test="updateDate != null and updateDate != ''">
-                    AND update_date = #{updateDate}
-                </if>
-                <if test="remarks != null and remarks != ''">
-                    AND remarks = #{remarks}
-                </if>
-    </where>
-
- </sql>
-
-
     <update id="updates"  parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update journey_day
@@ -161,14 +133,10 @@
 
     <select id="findList" resultMap="JourneyDay">
         SELECT <include refid="BaseColumns" />
-        <![CDATA[
 		    FROM journey_day
-	    ]]>
-        <where>
+        WHERE
             group_id = #{groupId}
-        </where>
-
-        order by day_number ASC
+        ORDER BY day_number ASC
     </select>
     
     <select id="get" resultMap="JourneyDay">
@@ -184,19 +152,5 @@
         delete jd.*,p.* from journey_day jd LEFT JOIN journey_plan p ON jd.id = p.day_id
         WHERE jd.group_id = #{groupId}
     </delete>
-
-		
-    <select id="findPageCount" resultType="long">
-        SELECT count(1) FROM journey_day
-		<include refid="BaseWhere"/>
-    </select>
-
-    <select id="findPage" resultMap="JourneyDay">
-    	SELECT <include refid="BaseColumns" />
-	    FROM journey_day 
-		<include refid="BaseWhere"/>
-    </select>
-
-	
 </mapper>
 

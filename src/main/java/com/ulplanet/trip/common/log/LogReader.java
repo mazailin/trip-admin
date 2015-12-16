@@ -506,21 +506,6 @@ public class LogReader {
 
 
     public static void main(String [] args) throws ParseException {
-        LogReader logReader = new LogReader();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(DateUtils.parseDate("2015-12-01","yyyy-MM-dd"));
-        /**获取多天**/
-        Map<String,Map<String,String>> m = new HashMap<>();
-        for(int i = 0;i<3;i++) {
-            List<Map<String, String>> map = logReader.getMapList(DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd"));
-            Map<String,Map<String,String>> infos = logReader.statistics(map);
-            System.out.println(JSON.toJSONString(infos));
-            m.putAll(infos);
-            calendar.add(Calendar.DATE,1);
-        }
-        /**获取指定天**/
-//        List<Map<String, String>> map = logReader.getMapList("2015-11-30");
-//        Map<String,Map<String,String>> m =logReader.statistics(map);
-        logReader.export(m);
+
     }
 }

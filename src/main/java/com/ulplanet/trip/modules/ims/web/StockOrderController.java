@@ -51,13 +51,10 @@ public class StockOrderController  extends BaseController {
         if (!beanValidator(model, stockOrder)){
             return form(stockOrder, model);
         }
-        if(StringUtils.isNotBlank(stockOrder.getId())){
-            stockOrder =  this.stockOrderService.updateOrder(stockOrder);
-        }else {
-            stockOrder = this.stockOrderService.addOrder(stockOrder);
-        }
-        if(stockOrder!=null){
+        if(stockOrderService.saveOrder(stockOrder)!=null){
             addMessage(redirectAttributes,"保存手机订单"+stockOrder.getOrderId()+"成功");
+        }else{
+            addMessage(redirectAttributes,"保存手机订单"+stockOrder.getOrderId()+"失败");
         }
         return "redirect:" + adminPath + "/ims/phoneOrder/list/?repage";
     }

@@ -26,14 +26,14 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
 
     int deleteGroupUser(GroupUser groupUser);
 
+    List<String> findListByGroup(@Param("id") String id);
+
     String hasPassport(@Param("passport")String passport,@Param("groupId")String groupId);
 
 
 
-    String findMaxCode(Parameter parameter);
 
     List<GroupUser> findUserByPassport(@Param("id") String id, @Param("group") String group);
 
-    GroupUser getUserById(@Param("id") String id);
 
 }
