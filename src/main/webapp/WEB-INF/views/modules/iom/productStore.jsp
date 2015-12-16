@@ -48,7 +48,7 @@
                             <a href="${ctx}/iom/product/detail/list?product.id=${product.id}">产品明细</a>
                         </c:when>
                         <c:otherwise>
-                            <a href="">报废</a>
+                            <a href="${ctx}/iom/product/discard/form?product.id=${product.id}&product.name=${product.name}">报废</a>
                         </c:otherwise>
                     </c:choose>
 				</td>

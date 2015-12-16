@@ -48,8 +48,8 @@
                     <c:if test="${'2' eq productDetail.status}">
     				    <a href="${ctx}/iom/product/detail/sale?id=${productDetail.id}" onclick="return confirmx('确认此产品要正式上架了吗？', this.href)">上架</a>
                     </c:if>
-                    <c:if test="${'4' ne productDetail.status}">
-                        <a href="${ctx}/iom/product/detail/discard?id=${productDetail.id}">报废</a>
+                    <c:if test="${'4' ne productDetail.status and '9000' ne productDetail.status}">
+                        <a href="${ctx}/iom/product/discard/form?product.id=${productDetail.product.id}&product.name=${productDetail.product.name}&productDetail.id=${productDetail.id}&productDetail.code=${productDetail.code}">报废</a>
                     </c:if>
 				</td></shiro:hasPermission>
 			</tr>
