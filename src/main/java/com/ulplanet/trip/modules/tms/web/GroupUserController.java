@@ -102,7 +102,7 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/import")
     @Transactional(readOnly = false)
-    public String importExcel(@RequestParam MultipartFile file,@RequestParam String groupId,Model model, RedirectAttributes redirectAttributes){
+    public String importExcel(@RequestParam MultipartFile file,@RequestParam String groupId, RedirectAttributes redirectAttributes){
         ResponseBo responseBo = groupUserService.importExcel(file, groupId);
         addMessage(redirectAttributes, responseBo.getMsg());
         return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupId + "&&repage";

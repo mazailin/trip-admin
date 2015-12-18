@@ -19,7 +19,12 @@ import java.util.Objects;
 @Service
 public class CodeService extends CrudService<CodeDao, Code> {
 
-    public static final String CODE_TYPE_GROUP_USER = "1";
+    public static final String CODE_TYPE_GROUP_USER         = "1";
+    public static final String CODE_TYPE_PRODUCT_DETAIL     = "2";
+    public static final String CODE_TYPE_PRODUCT_IN         = "3";
+    public static final String CODE_TYPE_PRODUCT_DISCARD    = "4";
+    public static final String CODE_TYPE_PRODUCT_RENT       = "5";
+    public static final String CODE_TYPE_PRODUCT_RETURN     = "6";
 
     @Autowired
     private CodeDao codeDao;

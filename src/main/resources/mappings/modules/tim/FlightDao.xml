@@ -32,42 +32,7 @@
             flight.arrival_time,flight.departure_city,flight.arrival_city,flight.common,flight.remarks
 	</sql>
 
-<sql id="BaseWhere">
-    <where>
-                <if test="id != null and id != ''">
-                    AND id = #{id}
-                </if>
-                <if test="flightNo != null and flightNo != ''">
-                    AND flight_no = #{flightNo}
-                </if>
-                <if test="company != null and company != ''">
-                    AND company = #{company}
-                </if>
-                <if test="departureTerminal != null and departureTerminal != ''">
-                    AND departure_terminal = #{departureTerminal}
-                </if>
-                <if test="arrivalTerminal != null and arrivalTerminal != ''">
-                    AND arrival_terminal = #{arrivalTerminal}
-                </if>
-                <if test="departureTime != null and departureTime != ''">
-                    AND departure_time = #{departureTime}
-                </if>
-                <if test="arrivalTime != null and arrivalTime != ''">
-                    AND arrival_time = #{arrivalTime}
-                </if>
-                <if test="departureCity != null and departureCity != ''">
-                    AND departure_city = #{departureCity}
-                </if>
-                <if test="arrivalCity != null and arrivalCity != ''">
-                    AND arrival_city = #{arrivalCity}
-                </if>
-    </where>
-
- </sql>
-
-
 	<insert id="insert">
-            <![CDATA[
                 INSERT INTO flight (
                     id ,
                     flight_no ,
@@ -101,8 +66,6 @@
                     #{updateDate} ,
                     #{remarks}
                 )
-            ]]>
-
 	</insert>
     
 	<update id="update" >
@@ -149,10 +112,8 @@
 	</update>
 
     <delete id="delete">
-        <![CDATA[
             DELETE FROM flight WHERE
             id = #{id} 
-        ]]>
     </delete>
     
     <select id="get" resultMap="Flight">
