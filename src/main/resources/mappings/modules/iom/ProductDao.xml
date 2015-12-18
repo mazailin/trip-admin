@@ -42,6 +42,13 @@
         WHERE del_flag = #{DEL_FLAG_NORMAL}
         AND use_detail = #{USE_DETAIL_YES}
     </select>
+    <select id="findNUseDetailList" resultType="Product">
+        SELECT
+        <include refid="productColumns"/>
+        FROM product
+        WHERE del_flag = #{DEL_FLAG_NORMAL}
+        AND use_detail = #{USE_DETAIL_NO}
+    </select>
     <select id="get" resultType="Product">
         SELECT
         <include refid="productColumns"/>

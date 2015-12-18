@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
 /**
- * 产品Entity
+ * 产品明细Entity
  * Created by zhangxd on 15/12/01.
  */
 public class ProductDetail extends DataEntity<ProductDetail> {

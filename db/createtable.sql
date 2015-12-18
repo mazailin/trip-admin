@@ -612,6 +612,9 @@ DROP TABLE IF EXISTS `product_detail`;
 DROP TABLE IF EXISTS `product_in`;
 DROP TABLE IF EXISTS `in_detail`;
 DROP TABLE IF EXISTS `product_discard`;
+DROP TABLE IF EXISTS `rent`;
+DROP TABLE IF EXISTS `rent_detail`;
+DROP TABLE IF EXISTS `return`;
 CREATE TABLE `product` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(255) NOT NULL COMMENT '名称',
@@ -697,3 +700,53 @@ CREATE TABLE `product_discard` (
   `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品报废';
+
+CREATE TABLE `rent` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) COMMENT '单据编号',
+  `renter` VARCHAR(255) COMMENT '租赁人',
+  `operator` VARCHAR(255) COMMENT '经办人',
+  `status` INT(2) COMMENT '状态',
+  `deposit` DECIMAL(10,2) COMMENT '押金',
+  `rent_date` DATETIME COMMENT '出租日期',
+  `return_date` DATETIME COMMENT '归还日期',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品租赁';
+
+CREATE TABLE `rent_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
+  `pro_detail_id` VARCHAR(36) COMMENT '产品明细编号',
+  `amount` DECIMAL(10,2) COMMENT '数量',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='租赁明细';
+
+CREATE TABLE `return` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) COMMENT '单据编号',
+  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
+  `operator` VARCHAR(255) COMMENT '经办人',
+  `return_date` DATETIME COMMENT '归还日期',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品归还';

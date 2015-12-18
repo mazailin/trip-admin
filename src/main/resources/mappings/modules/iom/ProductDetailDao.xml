@@ -30,10 +30,21 @@
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY a.device
+                ORDER BY a.code
             </otherwise>
         </choose>
 	</select>
+    <select id="findAvlList" resultType="ProductDetail">
+        SELECT
+        <include refid="proDetailColumns"/>
+        FROM product_detail a
+        JOIN product b
+        ON a.product_id = b.id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        AND b.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.status = '3'
+        ORDER BY a.code
+    </select>
     <select id="get" resultType="ProductDetail">
         SELECT
           <include refid="proDetailColumns"/>

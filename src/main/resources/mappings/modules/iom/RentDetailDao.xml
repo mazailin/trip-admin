@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.iom.dao.RentDetailDao">
+
+    <sql id="rentDetailColumns">
+        a.`id`,
+        a.`rent_id` AS 'rent.id',
+        a.`product_id` AS 'product.id',
+        b.`name` AS 'product.name',
+        a.`pro_detail_id` AS 'productDetail.id',
+        c.`code` AS 'productDetail.code',
+        a.`amount`,
+        a.`remarks`
+    </sql>
+	<select id="findList" resultType="RentDetail">
+		SELECT
+            <include refid="rentDetailColumns"/>
+        FROM rent_detail a
+        JOIN product b
+        ON a.product_id = b.id
+        LEFT JOIN product_detail c
+        ON a.pro_detail_id = c.id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.rent_id = #{rent.id}
+	</select>
+    <select id="get" resultType="RentDetail">
+        SELECT
+        <include refid="rentDetailColumns"/>
+        FROM rent_detail a
+        JOIN product b
+        ON a.product_id = b.id
+        LEFT JOIN product_detail c
+        ON a.pro_detail_id = c.id
+        WHERE a.id = #{id}
+    </select>
+	<insert id="insert">
+        INSERT INTO rent_detail(
+            `id`,
+            `rent_id`,
+            `product_id`,
+            `pro_detail_id`,
+            `amount`,
+            `create_by`,
+            `create_date`,
+            `update_by`,
+            `update_date`,
+            `remarks`,
+            `del_flag`
+        ) VALUES (
+            #{id},
+            #{rent.id},
+            #{product.id},
+            #{productDetail.id},
+            #{amount},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+	</insert>
+
+</mapper>

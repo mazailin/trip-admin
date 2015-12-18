@@ -10,6 +10,8 @@ import com.ulplanet.trip.modules.sys.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 产品明细Service
  * Created by zhangxd on 15/12/01.
@@ -78,5 +80,9 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
         productDetailDao.update(productDetail);
         productService.saveProduct(product);
+    }
+
+    public List<ProductDetail> findAvlList(ProductDetail productDetail) {
+        return productDetailDao.findAvlList(productDetail);
     }
 }

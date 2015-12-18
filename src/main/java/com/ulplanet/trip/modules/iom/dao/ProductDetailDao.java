@@ -4,6 +4,8 @@ import com.ulplanet.trip.common.persistence.CrudDao;
 import com.ulplanet.trip.common.persistence.annotation.MyBatisDao;
 import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 
+import java.util.List;
+
 /**
  * 产品明细Dao
  * Created by zhangxd on 15/12/01.
@@ -11,4 +13,5 @@ import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 @MyBatisDao
 public interface ProductDetailDao extends CrudDao<ProductDetail> {
 
+    List<ProductDetail> findAvlList(ProductDetail productDetail);
 }

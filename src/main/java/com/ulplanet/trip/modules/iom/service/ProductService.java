@@ -32,4 +32,8 @@ public class ProductService extends CrudService<ProductDao, Product> {
     public List<Product> findUseDetailList(Product product) {
         return productDao.findUseDetailList(product);
     }
+
+    public List<Product> findNUseDetailList(Product product) {
+        return productDao.findNUseDetailList(product);
+    }
 }
