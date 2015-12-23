@@ -1300,6 +1300,13 @@ jQuery.validator.addMethod("lnglat",function(value, element) {
     return this.optional(element) || (decimal.test(value));
 },"请输入小数位数不超过6位的经纬度");
 
+//小数位数校验
+jQuery.validator.addMethod("decimal",function(value, element, decimalPlaces) {
+    var decimal = eval('/^-?\\d+(\\.\\d{1,' + decimalPlaces + '})?$/');
+    $.validator.messages["decimal"] = "请保留" + decimalPlaces + "位小数位数";
+    return this.optional(element) || (decimal.test(value));
+});
+
 //验证身份证函数
 function checkIdcard(idcard){
 	idcard = idcard.toString();
