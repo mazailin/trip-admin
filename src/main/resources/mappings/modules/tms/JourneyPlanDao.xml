@@ -20,6 +20,7 @@
             <result property="typeValue" column="typeValue"/>
             <result property="longitude" column="longitude"/>
             <result property="latitude" column="latitude"/>
+            <result property="feedbackFlag" column="feedbackFlag"/>
 	</resultMap>
     <resultMap id="InfoBo" type="com.ulplanet.trip.modules.tms.bo.InfoBo">
         <result property="id" column="id"/>
@@ -33,7 +34,7 @@
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
+            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude,feedback_flag
 	    ]]>
 	</sql>
 	<insert id="insert">
@@ -46,6 +47,7 @@
             time,
             time_flag,
             description,
+            feedback_flag,
             message,
             sort,
             latitude,
@@ -64,8 +66,8 @@
             #{time},
             #{timeFlag},
             #{description},
+            #{feedbackFlag},
             #{message},
-            #{messageFlag},
             #{sort},
             #{latitude},
             #{longitude},
@@ -88,6 +90,7 @@
                 time,
                 time_flag,
                 description,
+                feedback_flag,
                 message,
                 sort,
                 latitude,
@@ -108,6 +111,7 @@
                     #{item.time},
                     #{item.timeFlag},
                     #{item.description},
+                    #{item.feedbackFlag},
                     #{item.message},
                     #{item.sort},
                     #{item.latitude},
@@ -148,6 +152,9 @@
                  <if test="description != null">
                       description = #{description},
                   </if>
+                 <if test="feedbackFlag != null">
+                     feedback_flag = #{feedbackFlag},
+                 </if>
                  <if test="message != null">
                       message = #{message},
                   </if>
@@ -197,7 +204,7 @@
     <select id="findList" resultMap="JourneyPlan">
         SELECT <![CDATA[
             jp.id,jp.info_id,jp.day_id,jp.type,jp.name as name,jp.time,jp.time_flag,jp.description,
-            jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude
+            jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude,jp.feedback_flag
 	    ]]>
         <![CDATA[
 		    FROM journey_plan jp

@@ -29,6 +29,7 @@ public class JourneyPlanBo {
     private String minute;
     private String longitude;
     private String latitude;
+    private Integer feedbackFlag;
     private List<InfoBo> infos = new ArrayList<>();
 
     public JourneyPlanBo(){}
@@ -42,7 +43,7 @@ public class JourneyPlanBo {
         this.infoId = journeyPlan.getInfoId();
         this.typeValue = journeyPlan.getTypeValue();
         this.name = journeyPlan.getName();
-        setTime(journeyPlan.getTime());
+//        setTime(journeyPlan.getTime());
         this.timeFlag = journeyPlan.getTimeFlag();
         this.description = journeyPlan.getDescription();
         this.message = journeyPlan.getMessage();
@@ -51,8 +52,16 @@ public class JourneyPlanBo {
         this.longitude = journeyPlan.getLongitude();
         this.latitude = journeyPlan.getLatitude();
         this.cityIds = journeyPlan.getCityIds();
+        this.feedbackFlag = journeyPlan.getFeedbackFlag();
     }
 
+    public Integer getFeedbackFlag() {
+        return feedbackFlag;
+    }
+
+    public void setFeedbackFlag(Integer feedbackFlag) {
+        this.feedbackFlag = feedbackFlag;
+    }
 
     public String getInfoId() {
         return infoId;

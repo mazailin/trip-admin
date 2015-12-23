@@ -233,6 +233,14 @@
             <input type="text" class="form-control" id="plan-latitude" placeholder="请输入经度"/>
         </div>
         <div class="form-group">
+            <label for="feedbackFlag">是否评价</label>
+            <select id="feedbackFlag" class="form-control" tabindex="20000">
+                <c:forEach items="${fns:getDictList('yes_no')}" var="item">
+                    <option value="${item.value}">${item.label}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="plan-message">备注</label>
             <textarea class="form-control" rows="5" id="plan-message"></textarea>
         </div>
@@ -430,7 +438,7 @@
                     $("#plan-message").val(data.message);
                     $("#hasTime").val(data.timeFlag).trigger('change');
                     $("#plan-type").val(data.type).trigger("change");
-
+                    $("#feedbackFlag").val(data.feedbackFlag).trigger('change');
                     $("#plan-name").val(data.name);
 
                     $("#plan-description").val(data.description);
@@ -481,6 +489,7 @@
                 l.parent().find('.msg').remove();
             }
             var hasTime = $("#hasTime").val();
+            var feedbackFlag = $("#feedbackFlag").val();
             var data = {
                 "dayId":dayId,
                 "id":id,
@@ -492,7 +501,8 @@
                 "message":message,
                 "timeFlag":hasTime,
                 "longitude":longitude,
-                "latitude":latitude
+                "latitude":latitude,
+                "feedbackFlag":feedbackFlag
             }
             $.ajax({
                 url:"${ctx}/tms/journeyPlan/saveTemp",
@@ -524,16 +534,8 @@
             $("#plan-list").val('').trigger("change");
             $("#plan-list").empty();
             if(type==1||type==2||type==4){
-                $("#plan-description").removeAttr("readonly");
-                $("#plan-name").removeAttr("readonly");
-                $("#plan-longitude").removeAttr("readonly");
-                $("#plan-latitude").removeAttr("readonly");
                 return false;
             }
-            $("#plan-description").attr("readonly","true");
-            $("#plan-name").attr("readonly","true");
-            $("#plan-longitude").attr("readonly","true");
-            $("#plan-latitude").attr("readonly","true");
             $.ajax({
                 url:"${ctx}/tms/journeyPlan/findTypeList",
                 dataType:"json",
@@ -572,19 +574,11 @@
                             $("#plan-longitude").val(data.longitude);
                             $("#plan-latitude").val(data.latitude);
                             $("#infoId").val(id);
-                            $("#plan-description").attr("readonly","true");
-                            $("#plan-name").attr("readonly","true");
-                            $("#plan-longitude").attr("readonly","true");
-                            $("#plan-latitude").attr("readonly","true");
                         }else{
                             $("#plan-description").val('');
                             $("#plan-name").val('');
                             $("#plan-longitude").val('');
                             $("#plan-latitude").val('');
-                            $("#plan-description").removeAttr("readonly");
-                            $("#plan-name").removeAttr("readonly");
-                            $("#plan-longitude").removeAttr("readonly");
-                            $("#plan-latitude").removeAttr("readonly");
                         }
                     }
                 })
