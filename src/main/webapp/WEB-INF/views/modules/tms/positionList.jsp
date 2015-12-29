@@ -142,9 +142,9 @@
             url: '${ctx}/tms/position/refresh',
             data: {
                 "userId": "${position.userId}",
-                "timing": timing,
                 "lat": lat,
-                "lng": lng
+                "lng": lng,
+                "timing": timing
             },
             dataType: 'json'
         }).done(function (result) {
