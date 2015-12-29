@@ -47,12 +47,22 @@
             center: route[0] || {lat:39.9166961,lng:116.3796754}
         });
 
+        var lineSymbol = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            strokeColor: '#393'
+        };
+
         if (route && route.length > 0) {
             poly = new google.maps.Polyline({
                 path: route,
                 strokeColor: '#FF00FF',
                 strokeOpacity: 1.0,
-                strokeWeight: 3
+                strokeWeight: 3,
+                icons: [{
+                    icon: lineSymbol,
+                    offset: '100%'
+                }]
             });
             poly.setMap(map);
         }
@@ -84,6 +94,7 @@
 
         });
 
+        animateCircle(poly);
     }
 
     function attachSecretMessage(marker, secretMessage) {
@@ -124,6 +135,17 @@
                 '<br/>' + '经度:' + position.lng +
                 '<br/>' + '时间:' + position.timing
         );
+    }
+
+    function animateCircle(line) {
+        var count = 0;
+        window.setInterval(function() {
+            count = (count + 1) % 200;
+
+            var icons = line.get('icons');
+            icons[0].offset = (count / 2) + '%';
+            line.set('icons', icons);
+        }, 100);
     }
 
     window.setInterval(function() {
