@@ -750,3 +750,14 @@ CREATE TABLE `return` (
   `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='产品归还';
+
+-- 位置轨迹
+DROP TABLE IF EXISTS `position`;
+CREATE TABLE `position` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '用户编号',
+  `lng` DECIMAL(10,6) NOT NULL COMMENT '经度',
+  `lat` DECIMAL(10,6) NOT NULL COMMENT '纬度',
+  `timing` TIMESTAMP NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) COMMENT='位置轨迹';

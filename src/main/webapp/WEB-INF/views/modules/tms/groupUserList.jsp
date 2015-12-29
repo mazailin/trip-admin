@@ -66,6 +66,7 @@
       <td>
         <a href="#" onclick="getBarcode('${groupUser.name}','${groupUser.code}','${groupUser.phone}');">生成二维码</a>
         <a href="${ctx}/tms/groupUser/form?id=${groupUser.id}&&group=${groupUser.group}">修改</a>
+        <a href="${ctx}/tms/position?userId=${groupUser.id}">轨迹</a>
         <a href="${ctx}/tms/groupUser/delete?id=${groupUser.id}&&group=${groupUser.group}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
       </td>
     </tr>
