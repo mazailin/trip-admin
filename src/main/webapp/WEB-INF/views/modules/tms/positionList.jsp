@@ -26,7 +26,6 @@
         <c:forEach items="${route}" var="map" varStatus="s">
             <c:if test="${!s.last}">
             {
-                userId: '${map.userId}',
                 lng: ${map.lng},
                 lat: ${map.lat},
                 timing: '<fmt:formatDate value="${map.timing}" pattern="yyyy-MM-dd HH:mm:ss"/>'
@@ -34,7 +33,6 @@
             </c:if>
             <c:if test="${s.last}">
             {
-                userId: '${map.userId}',
                 lng: ${map.lng},
                 lat: ${map.lat},
                 timing: '<fmt:formatDate value="${map.timing}" pattern="yyyy-MM-dd HH:mm:ss"/>'
@@ -150,7 +148,7 @@
         }).done(function (result) {
             result.forEach(function(position){
                 addLatLng(position);
-                route.push(result);
+                route.push(position);
             });
         });
     }, 30000);
