@@ -190,6 +190,13 @@
       });
     }
 
+    $(function(){
+      $("g").live('click',function(){
+        var $this = $(this);
+        var name = $this.children('text').html();
+      });
+    })
+
   </script>
 </body>
 
