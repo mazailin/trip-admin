@@ -29,14 +29,14 @@
             {
                 lng: ${map.lng},
                 lat: ${map.lat},
-                user: '${map.name}'
+                name: '${map.name}'
             },
             </c:if>
             <c:if test="${s.last}">
             {
                 lng: ${map.lng},
                 lat: ${map.lat},
-                user: '${map.name}'
+                name: '${map.name}'
             }
             </c:if>
         </c:forEach>
@@ -72,9 +72,9 @@
 
             markers.push(marker);
 
-            attachSecretMessage(marker, '纬度:' + position.lat +
-                    '<br/>' + '经度:' + position.lng +
-                    '<br/>' + '用户:' + position.name
+            attachSecretMessage(marker, '纬度:' + position['lat'] +
+                    '<br/>' + '经度:' + position['lng'] +
+                    '<br/>' + '用户:' + position['name']
             );
 
         });

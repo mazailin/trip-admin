@@ -102,8 +102,8 @@ public class PositionService extends CrudService<PositionDao, Position> {
                     Position position = new Position();
                     position.setUserId(userid);
                     position.setName(user.getName());
-                    position.setLat(NumberHelper.toDouble(pointMap.get("longitude"), 0d));
-                    position.setLng(NumberHelper.toDouble(pointMap.get("latitude"), 0d));
+                    position.setLat(NumberHelper.toDouble(pointMap.get("latitude"), 0d));
+                    position.setLng(NumberHelper.toDouble(pointMap.get("longitude"), 0d));
                     datas.add(position);
                 }
             }
