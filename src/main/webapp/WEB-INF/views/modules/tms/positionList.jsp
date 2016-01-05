@@ -44,7 +44,7 @@
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 20,
-            center: route[0] || {lat:39.9166961,lng:116.3796754}
+            center: route[0] || {lat:39.916304,lng:116.397112}
         });
 
         var lineSymbol = {
@@ -138,6 +138,7 @@
     }
 
     function animateCircle(line) {
+        if (!line) return;
         var count = 0;
         window.setInterval(function() {
             count = (count + 1) % 200;
