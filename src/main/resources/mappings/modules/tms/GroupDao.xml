@@ -7,6 +7,7 @@
         id,
         name,
         description,
+        tel_function,
         customer,
         from_date,
         to_date
@@ -23,6 +24,7 @@
         `group`.customer,
         `group`.from_date,
         `group`.to_date,
+        `group`.tel_function,
         `customer`.name as customerName
         FROM
             `group`
@@ -35,7 +37,7 @@
                 AND `group`.customer = #{customer}
             </if>
         </where>
-        ORDER BY `group`.from_date DESC
+        ORDER BY `group`.update_date DESC
     </select>
 
     <insert id="insert">
@@ -46,6 +48,7 @@
             from_date,
             to_date,
             description,
+            tel_function,
             create_by,
             create_date,
             update_by ,
@@ -58,6 +61,7 @@
             #{fromDate},
             #{toDate},
             #{description},
+            #{telFunction},
             #{createBy.id},
             #{createDate},
             #{updateBy.id} ,
@@ -73,6 +77,7 @@
             from_date = #{fromDate},
             to_date = #{toDate},
             description = #{description},
+            tel_function = #{telFunction},
             update_by = #{updateBy.id},
             update_date = #{updateDate},
             remarks = #{remarks}
