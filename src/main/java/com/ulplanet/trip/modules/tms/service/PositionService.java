@@ -1,14 +1,19 @@
 package com.ulplanet.trip.modules.tms.service;
 
 import com.ulplanet.trip.common.service.CrudService;
+import com.ulplanet.trip.common.utils.JedisUtils;
+import com.ulplanet.trip.common.utils.NumberHelper;
 import com.ulplanet.trip.modules.tms.dao.PositionDao;
+import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.entity.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 位置Service
@@ -25,6 +30,8 @@ public class PositionService extends CrudService<PositionDao, Position> {
 
     @Autowired
     private PositionDao positionDao;
+    @Autowired
+    private GroupUserService groupUserService;
 
     public List<Position> getRoute(Position position) {
         List<Position> route = new ArrayList<>();
@@ -70,5 +77,38 @@ public class PositionService extends CrudService<PositionDao, Position> {
             lastPosition = ps;
         }
         return route;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Position> getGroupPosition(String group) {
+
+        Map<String, Object> userMap = JedisUtils.getObjectMap(group);
+        List<Position> datas = new ArrayList<>();
+
+        List<GroupUser> userList = groupUserService.findList(new GroupUser(group));
+        Map<String, GroupUser> userKeyMap = new HashMap<>();
+        for (GroupUser user : userList) {
+            String userid = user.getId();
+            userKeyMap.put(userid, user);
+        }
+
+        if (userMap != null) {
+            for (Map.Entry<String, Object> userMapEntry : userMap.entrySet()) {
+                String userid = userMapEntry.getKey();
+
+                GroupUser user = userKeyMap.get(userid);
+                if (user != null) {
+                    Map<String, Object> pointMap = (Map<String, Object>) userMapEntry.getValue();
+                    Position position = new Position();
+                    position.setUserId(userid);
+                    position.setName(user.getName());
+                    position.setLat(NumberHelper.toDouble(pointMap.get("latitude"), 0d));
+                    position.setLng(NumberHelper.toDouble(pointMap.get("longitude"), 0d));
+                    datas.add(position);
+                }
+            }
+        }
+
+        return datas;
     }
 }

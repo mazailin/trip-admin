@@ -17,6 +17,8 @@ public class Position extends DataEntity<Position> {
 	private double lat;
 	private Date timing;
 
+    private String name;
+
 	public Position() {
 		super();
 	}
@@ -27,6 +29,14 @@ public class Position extends DataEntity<Position> {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getLng() {

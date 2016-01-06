@@ -36,7 +36,6 @@ public class PositionController extends BaseController {
 		}
 	}
 	
-//	@RequiresPermissions("sys:dict:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Position position, HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("route", positionService.getRoute(position));
@@ -46,8 +45,20 @@ public class PositionController extends BaseController {
     @RequestMapping(value = "refresh")
     @ResponseBody
     public List<Position> refresh(Position position, HttpServletRequest request, HttpServletResponse response, Model model) {
-        model.addAttribute("route", positionService.getRoute(position));
         return positionService.getRefreshRoute(position);
+    }
+
+    @RequestMapping(value = "group")
+    public String group(String group, HttpServletRequest request, HttpServletResponse response, Model model) {
+        model.addAttribute("group", group);
+        model.addAttribute("points", positionService.getGroupPosition(group));
+        return "modules/tms/positionGroup";
+    }
+
+    @RequestMapping(value = "group/refresh")
+    @ResponseBody
+    public List<Position> refreshGroup(String group, HttpServletRequest request, HttpServletResponse response, Model model) {
+        return positionService.getGroupPosition(group);
     }
 
 }

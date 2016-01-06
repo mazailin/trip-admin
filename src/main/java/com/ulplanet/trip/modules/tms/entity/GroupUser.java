@@ -1,7 +1,6 @@
 package com.ulplanet.trip.modules.tms.entity;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.persistence.DataEntity;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.utils.excel.annotation.ExcelField;
@@ -38,6 +37,12 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String cphone;
     private List<AppUser> list;
 
+    public GroupUser() {
+    }
+
+    public GroupUser(String group) {
+        this.group = group;
+    }
 
     public String getCphone() {
         return cphone;
