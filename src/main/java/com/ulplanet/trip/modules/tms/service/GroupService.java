@@ -125,7 +125,7 @@ public class GroupService extends CrudService<GroupDao,Group> {
             String[] ids = StringUtils.split(menuIds, ",");
             List<String> toUserIds = Lists.newArrayList(ids);
             try {
-                SdkHttpResult result = ApiHttpClient.publishSystemMessage("",
+                SdkHttpResult result = ApiHttpClient.publishSystemMessage("www.ulplanet.com",
                         toUserIds, new TxtMessage(comment), "", "");
                 if (result.getHttpCode() == 200) {
                     msg = "发送成功！";
