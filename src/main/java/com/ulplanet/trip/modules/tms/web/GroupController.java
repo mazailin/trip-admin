@@ -106,5 +106,20 @@ public class GroupController  extends BaseController {
         return "modules/tms/groupForm";
     }
 
+    @RequiresPermissions("tms:group:edit")
+     @RequestMapping(value = "notice")
+     public String notice(HttpServletRequest request, HttpServletResponse response, Model model){
+        model.addAttribute("userTree", groupService.getGroupUserTree());
+        return "modules/tms/sysNotific";
+    }
+
+    @RequiresPermissions("tms:group:edit")
+    @RequestMapping(value = "notice/send")
+    public String sendNotice(String menuIds, String comment, Model model, RedirectAttributes redirectAttributes){
+        String msg = groupService.sendNotice(menuIds, comment);
+        model.addAttribute("userTree", groupService.getGroupUserTree());
+        addMessage(model, msg);
+        return "modules/tms/sysNotific";
+    }
 
 }
