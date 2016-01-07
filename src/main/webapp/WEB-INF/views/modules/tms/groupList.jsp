@@ -37,7 +37,7 @@
   <tbody>
   <c:forEach items="${page.list}" var="group">
     <tr>
-      <td>${group.name}</td>
+      <td><a href="${ctx}/tms/group/form?id=${group.id}">${group.name}</a></td>
       <td><fmt:formatDate value="${group.fromDate}" pattern="yyyy-MM-dd"/></td>
       <td><fmt:formatDate value="${group.toDate}" pattern="yyyy-MM-dd"/></td>
       <td>${group.customerName}</td>

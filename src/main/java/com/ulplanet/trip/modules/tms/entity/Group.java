@@ -22,6 +22,16 @@ public class Group extends DataEntity<Group> {
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private Date toDate;
     private String chatId;
+    private String telFunction;
+
+
+    public String getTelFunction() {
+        return telFunction;
+    }
+
+    public void setTelFunction(String telFunction) {
+        this.telFunction = telFunction;
+    }
 
     private List<Customer> customers;
 

@@ -110,7 +110,7 @@
                 <select id="template" name="template" style="width:200px">
                     <option value="" selected>清除行程模板</option>
                     <c:forEach items="${groupList}" var="t">
-                        <option value="${t.id}">${t.name}</option>iug
+                        <option value="${t.id}">${t.name}</option>
                     </c:forEach>
                 </select>
             </label>
