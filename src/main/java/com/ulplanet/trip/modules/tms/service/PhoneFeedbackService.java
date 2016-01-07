@@ -5,6 +5,7 @@ import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.tms.bo.AppFeedbackBo;
 import com.ulplanet.trip.modules.tms.dao.PhoneFeedbackDao;
+import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.entity.PhoneFeedback;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,8 @@ public class PhoneFeedbackService extends CrudService<PhoneFeedbackDao,PhoneFeed
 
     @Resource
     private PhoneFeedbackDao phoneFeedbackDao;
+    @Resource
+    private GroupUserService groupUserService;
 
     public String findList(){
         List<PhoneFeedback> list = phoneFeedbackDao.findList(new PhoneFeedback());
@@ -47,8 +50,9 @@ public class PhoneFeedbackService extends CrudService<PhoneFeedbackDao,PhoneFeed
         List<AppFeedbackBo> apps = new ArrayList<>();
         for(int i = 0; i < phoneFeedbacks.size();i++){
             AppFeedbackBo app = new AppFeedbackBo();
-            app.setId(phoneFeedbacks.get(i).getId());
-            app.setName(phoneFeedbacks.get(i).getName());
+            PhoneFeedback p = phoneFeedbacks.get(i);
+            app.setId(p.getId());
+            app.setName(p.getName());
             List<AppFeedbackBo> s = new ArrayList<>();
             for(int j = 1;j <= 3;j++){
                 String key = app.getId()+"_"+j;
@@ -64,9 +68,22 @@ public class PhoneFeedbackService extends CrudService<PhoneFeedbackDao,PhoneFeed
             app.setList(s);
             apps.add(app);
         }
-        map.put("score",apps);
-        map.put("feedback",feedbackList);
+        map.put("score", apps);
+        map.put("feedback", feedbackList);
         return JSON.toJSONString(map);
+    }
+
+    public String getUser(String code){
+        GroupUser groupUser = groupUserService.getByUserCode(code);
+        AppFeedbackBo appFeedbackBo = new AppFeedbackBo();
+        if(groupUser == null){
+            appFeedbackBo.setId("用户不存在！！");
+            appFeedbackBo.setName("请联系管理员核实用户信息");
+            return JSON.toJSONString(appFeedbackBo);
+        }
+        appFeedbackBo.setId(groupUser.getName());
+        appFeedbackBo.setName(groupUser.getPhone());
+        return JSON.toJSONString(appFeedbackBo);
     }
 
     public String getJourney(String groupId){

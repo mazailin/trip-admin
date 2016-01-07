@@ -67,6 +67,7 @@
     $(function(){
       $('#template').change(function(){
         var groupId = $(this).val();
+        $("#feedback").html('');
         $.ajax({
           url:"${ctx}/tms/feedback/journey/getList",
           dataType:"json",

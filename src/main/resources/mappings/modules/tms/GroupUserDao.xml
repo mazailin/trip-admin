@@ -153,6 +153,35 @@
         </where>
     </select>
 
+    <select id="getByUserCode" resultType="GroupUser">
+        SELECT
+        group_user.id,
+        group_user.`group`,
+        group_user.user,
+        group_user.code,
+        group_user.type,
+        group_user.cphone,
+        user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.email
+        FROM
+        user
+        JOIN group_user ON user.id = group_user.user
+        <where>
+            group_user.`code` = #{code}
+        </where>
+    </select>
+
     <insert id="insertGroupUser">
         INSERT INTO group_user(
             id,

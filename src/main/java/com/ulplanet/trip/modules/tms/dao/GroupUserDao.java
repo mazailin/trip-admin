@@ -31,7 +31,7 @@ public interface GroupUserDao extends CrudDao<GroupUser> {
     String hasPassport(@Param("passport")String passport,@Param("groupId")String groupId);
 
 
-
+    GroupUser getByUserCode(@Param("code")String userCode);
 
     List<GroupUser> findUserByPassport(@Param("id") String id, @Param("group") String group);
 
