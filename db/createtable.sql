@@ -784,3 +784,19 @@ CREATE TABLE `team_user` (
   `user_id` VARCHAR(36) NOT NULL COMMENT '名称',
   PRIMARY KEY (`team_id`, `user_id`)
 ) COMMENT='小组成员';
+
+-- 当地电话
+DROP TABLE IF EXISTS `local_phone`;
+CREATE TABLE `local_phone` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `country` VARCHAR(36) NOT NULL COMMENT '国家',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `phone` VARCHAR(255) COMMENT '电话',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='当地电话';

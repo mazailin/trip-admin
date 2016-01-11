@@ -6,24 +6,19 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
 /**
- * 租车Entity
- * Created by zhangxd on 15/10/22.
+ * 当地电话Entity
+ * Created by zhangxd on 16/01/11.
  */
-public class CarRental extends DataEntity<CarRental> {
+public class LocalPhone extends DataEntity<LocalPhone> {
 
 	private static final long serialVersionUID = 1L;
 
     private Country country;
-    private String type;
+    private String name;
     private String phone;
 
-    public CarRental() {
+    public LocalPhone() {
         super();
-    }
-
-    public CarRental(String id, String type) {
-        super(id);
-        this.type = type;
     }
 
     @NotNull(message="国家不能为空")
@@ -35,16 +30,16 @@ public class CarRental extends DataEntity<CarRental> {
         this.country = country;
     }
 
-    @NotNull(message="类型不能为空")
-    public String getType() {
-        return type;
+    @Length(min=1, max=255, message="名称长度必须介于 1 和 255 之间")
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Length(min=0, max=255, message="描述长度必须介于 1 和 255 之间")
+    @Length(min=1, max=255, message="电话长度必须介于 1 和 255 之间")
     public String getPhone() {
         return phone;
     }
