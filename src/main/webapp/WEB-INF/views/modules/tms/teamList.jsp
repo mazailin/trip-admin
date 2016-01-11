@@ -18,7 +18,7 @@
 		<li class="active"><a href="${ctx}/tms/team/list?group.id=${team.group.id}">小组列表</a></li>
 		<li><a href="${ctx}/tms/team/form?group.id=${team.group.id}">小组添加</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="team" action="${ctx}/tms/team/list" method="post" class="breadcrumb form-search ">
+	<form:form id="searchForm" modelAttribute="team" action="${ctx}/tms/team/list?group.id=${team.group.id}" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
