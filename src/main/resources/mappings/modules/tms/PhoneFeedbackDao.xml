@@ -3,7 +3,7 @@
 <mapper namespace="com.ulplanet.trip.modules.tms.dao.PhoneFeedbackDao">
 
     <select id="findList" resultType="PhoneFeedback">
-        SELECT pf.score,pf.feedback,p.type,p.name,p.id,pf.create_date
+        SELECT pf.score,pf.feedback,p.type,p.name,p.id,pf.create_date,pf.user_code
         FROM phone_feedback pf
         LEFT JOIN phone_function p on pf.function_id = p.id
         ORDER BY pf.create_date DESC

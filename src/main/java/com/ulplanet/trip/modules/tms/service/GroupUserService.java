@@ -229,6 +229,10 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         }
     }
 
+    public GroupUser getByUserCode(String usercode){
+        return groupUserDao.getByUserCode(usercode);
+    }
+
     private static List<String> title(){
         if(title!=null)return title;
         title = new ArrayList<>();

@@ -10,6 +10,7 @@ public class AppFeedbackBo {
     private String name;
     private List<AppFeedbackBo> list;
 
+
     public String getId() {
         return id;
     }

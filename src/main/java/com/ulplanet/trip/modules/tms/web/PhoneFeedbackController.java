@@ -42,6 +42,12 @@ public class PhoneFeedbackController extends BaseController {
         return phoneFeedbackService.findList();
     }
 
+    @RequestMapping(value = "/app/getUser",method = RequestMethod.POST)
+    @ResponseBody
+    public String getUser(@RequestParam String code){
+        return phoneFeedbackService.getUser(code);
+    }
+
     @RequestMapping(value = "/journey/getList",method = RequestMethod.POST)
     @ResponseBody
     public String getList(@RequestParam String groupId){
