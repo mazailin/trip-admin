@@ -8,6 +8,7 @@ import com.ulplanet.trip.modules.tms.dao.TeamDao;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
 import com.ulplanet.trip.modules.tms.entity.Team;
 import io.rong.ApiHttpClient;
+import io.rong.models.InfoNtfMessage;
 import io.rong.models.SdkHttpResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,11 @@ public class TeamService extends CrudService<TeamDao, Team> {
             List<String> users = Lists.newArrayList(ids);
             try {
                 SdkHttpResult result = ApiHttpClient.joinGroupBatch(users, team.getId(), team.getName());
+
+                List<String> groupList = new ArrayList<>();
+                groupList.add(team.getId());
+                ApiHttpClient.publishGroupMessage("www.ulplanet.com", groupList, new InfoNtfMessage("有新成员加入"), "", "");
+
                 if (result.getHttpCode() == 200) {
                     teamDao.insertUsers(new Parameter(new Object[][]{{"teamId", team.getId()}, {"users", users}}));
                 } else {
