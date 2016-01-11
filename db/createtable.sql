@@ -761,3 +761,26 @@ CREATE TABLE `position` (
   `timing` TIMESTAMP NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) COMMENT='位置轨迹';
+
+-- 团队分组
+DROP TABLE IF EXISTS `team`;
+DROP TABLE IF EXISTS `team_user`;
+CREATE TABLE `team` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `group_id` VARCHAR(36) NOT NULL COMMENT '旅行团编号',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='团队分组';
+
+CREATE TABLE `team_user` (
+  `team_id` VARCHAR(36) NOT NULL COMMENT '小组编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '名称',
+  PRIMARY KEY (`team_id`, `user_id`)
+) COMMENT='小组成员';
