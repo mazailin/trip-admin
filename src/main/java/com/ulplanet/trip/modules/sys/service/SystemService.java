@@ -9,6 +9,7 @@ import com.ulplanet.trip.common.service.ServiceException;
 import com.ulplanet.trip.common.utils.CacheUtils;
 import com.ulplanet.trip.common.utils.Encodes;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.web.Servlets;
 import com.ulplanet.trip.modules.sys.dao.MenuDao;
 import com.ulplanet.trip.modules.sys.dao.RoleDao;
 import com.ulplanet.trip.modules.sys.dao.UserDao;
@@ -153,7 +154,8 @@ public class SystemService extends BaseService {
 		user.setOldLoginIp(user.getLoginIp());
 		user.setOldLoginDate(user.getLoginDate());
 		// 更新本次登录信息
-		user.setLoginIp(UserUtils.getSession().getHost());
+//		user.setLoginIp(UserUtils.getSession().getHost());
+		user.setLoginIp(StringUtils.getRemoteAddr(Servlets.getRequest()));
 		user.setLoginDate(new Date());
 		userDao.updateLoginInfo(user);
 	}
