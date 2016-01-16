@@ -43,13 +43,11 @@ public class GroupService extends CrudService<GroupDao,Group> {
     private GroupUserService groupUserService;
     @Resource
     private VersionTagService versionTagService;
-    @Resource
-    private QingmaDao qingmaDao;
 
     public ResponseBo addGroup(Group group) {
         group.preInsert();
         group.setChatId(IdGen.uuid());
-        group.setChatName("系统通知");
+        group.setChatName("导游通知");
         return ResponseBo.getResult(this.groupDao.insert(group));
     }
 
