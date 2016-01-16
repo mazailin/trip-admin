@@ -44,6 +44,7 @@
       <td>${group.description}</td>
       <td>
         <shiro:hasPermission name="tms:group:edit"><a href="${ctx}/tms/group/form?id=${group.id}">修改</a>
+        <a href="${ctx}/tms/team/list?group.id=${group.id}">分组</a>
         <a href="${ctx}/tms/groupUser/list?group=${group.id}">团队管理</a>
         <a href="${ctx}/tms/group/delete?id=${group.id}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a></shiro:hasPermission>
         <a href="${ctx}/tms/position/group?group=${group.id}">实时位置</a>
