@@ -68,7 +68,7 @@
   <li><a href="${ctx}/tms/group/">旅游团列表</a></li>
   <li class="active"><a href="${ctx}/tms/group/form?id=${group.id}">旅游团${not empty group.id?'修改':'添加'}</a></li>
 </ul><br/>
-<form:form id="inputForm" modelAttribute="group" action="${ctx}/tms/group/save" method="post" class="form-horizontal">
+<form:form id="inputForm" modelAttribute="group" action="${ctx}/tms/group/save" method="post" onsubmit="checkClean();" class="form-horizontal">
   <form:hidden path="id"/>
   <sys:message content="${message}"/>
   <div class="control-group">
@@ -122,8 +122,16 @@
 </form:form>
 <script type="text/javascript">
   var tel = "${group.telFunction}";
-  tel = tel.split(',');
-  $("#telFunction").val(tel).trigger("change");
+  if(tel!=null && tel.length>0){
+    tel = tel.split(',');
+    $("#telFunction").val(tel).trigger("change");
+  }
+  function checkClean(){
+    var li = $(".select2-choices").find('li');
+    if(li.length < 2){
+      $("#telFunction").val([]).trigger("change");
+    }
+  }
 </script>
 </body>
 </html>
