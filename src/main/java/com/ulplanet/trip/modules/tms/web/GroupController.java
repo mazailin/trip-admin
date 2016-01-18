@@ -91,7 +91,7 @@ public class GroupController  extends BaseController {
 
     @RequestMapping(value = "/delete")
     @RequiresPermissions("tms:group:edit")
-    public String delete(Group group,Model model, RedirectAttributes redirectAttributes) {
+    public String delete(Group group, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupService.deleteGroup(group);
         addMessage(redirectAttributes,responseBo.getMsg());
         return "redirect:" + adminPath + "/tms/group/list/?repage";
@@ -108,14 +108,14 @@ public class GroupController  extends BaseController {
 
     @RequiresPermissions("tms:group:edit")
      @RequestMapping(value = "notice")
-     public String notice(HttpServletRequest request, HttpServletResponse response, Model model){
+     public String notice( Model model){
         model.addAttribute("userTree", groupService.getGroupUserTree());
         return "modules/tms/sysNotific";
     }
 
     @RequiresPermissions("tms:group:edit")
     @RequestMapping(value = "notice/send")
-    public String sendNotice(String menuIds, String comment, Model model, RedirectAttributes redirectAttributes){
+    public String sendNotice(String menuIds, String comment, Model model){
         String msg = groupService.sendNotice(menuIds, comment);
         model.addAttribute("userTree", groupService.getGroupUserTree());
         addMessage(model, msg);

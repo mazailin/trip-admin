@@ -15,9 +15,13 @@ import com.ulplanet.trip.modules.sys.service.CodeService;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.dao.GroupDao;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
+import com.ulplanet.trip.modules.tms.dao.QingmaDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
+import com.ulplanet.trip.modules.tms.entity.Qingma;
 import com.ulplanet.trip.modules.tms.utils.ExcelReader;
+import io.qingmayun.QingHttpClient;
+import io.qingmayun.modules.QingResultInfo;
 import io.rong.ApiHttpClient;
 import io.rong.models.SdkHttpResult;
 import org.slf4j.Logger;
@@ -45,6 +49,8 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private CodeService codeService;
     @Resource
     private VersionTagService versionTagService;
+    @Resource
+    private QingmaDao qingmaDao;
 
     private static List<String> title;
 
@@ -57,6 +63,17 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
             groupUser.preInsert();
+
+            /**判断该团是否有轻码云通话**/
+            if(StringUtils.isNotEmpty(group.getTelFunction())) {
+                String[] arr = group.getTelFunction().split(",");
+                for(String s : arr){
+                    if(s.equals("2")){
+                        addQingmayun(groupUser);
+                        break;
+                    }
+                }
+            }
             addChat(groupUser, group);
             responseBo = ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
         }else{
@@ -90,18 +107,40 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         }
         responseBo.setStatus(groupUserDao.insertGroupUsers(list));
         if(responseBo.getStatus() > 0){
-            versionTagService.save(new VersionTag(group.getId(),1));
+            versionTagService.save(new VersionTag(group.getId(), 1));
         }
         return responseBo;
     }
 
+
+    public void addQingmayun(GroupUser groupUser){
+        Qingma qingma = qingmaDao.get(groupUser.getUser());
+        if(qingma!=null){
+            return;
+        }
+        QingHttpClient qingHttpClient = new QingHttpClient();
+        QingResultInfo q = qingHttpClient.create(groupUser.getPhone());
+        if(q != null && "00000".equals(q.getRespCode())){
+            qingma = new Qingma();
+            qingma.setClientNumber(q.getClientNumber());
+            qingma.setClientPwd(q.getClientPwd());
+            qingma.setId(groupUser.getUser());
+            qingma.setCreateTime(q.getCreateTime());
+            qingmaDao.insert(qingma);
+        }
+    }
 
     private ResponseBo addChat(GroupUser groupUser,Group group){
         ResponseBo responseBo = new ResponseBo();
         try {
             SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
             SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
-            if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200) {
+            SdkHttpResult sdkHttpResult3 = null;
+            if (StringUtils.isNotEmpty(group.getChatId())) {
+                sdkHttpResult3  = ApiHttpClient.joinGroup(groupUser.getId(), group.getChatId(), group.getChatName());
+            }
+
+            if (sdkHttpResult1.getHttpCode() == 200 && sdkHttpResult2.getHttpCode() == 200 && (sdkHttpResult3 == null || sdkHttpResult3.getHttpCode() == 200) ) {
                 Map<String, Object> tokenMap = new Gson().fromJson(sdkHttpResult1.getResult(),
                         new TypeToken<Map<String, Object>>() {
                         }.getType());
@@ -110,7 +149,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             } else {
                 responseBo.setStatus(0);
                 responseBo.setMsg("接口调用失败!");
-                logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult());
+                logger.error(sdkHttpResult1.getResult() + sdkHttpResult2.getResult() + sdkHttpResult3.getResult());
                 throw new RuntimeException("接口调用失败!");
             }
         } catch (Exception e) {
@@ -126,10 +165,14 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         return ResponseBo.getResult(groupUserDao.updateGroupUser(groupUser));
     }
 
+
+
     public ResponseBo deleteUser(GroupUser groupUser){
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.quitGroup(groupUser.getId(), groupUser.getGroup());
-            if (sdkHttpResult.getHttpCode() == 200) {
+            Group group = groupDao.get(groupUser.getGroup());
+            SdkHttpResult sdkHttpResult1 = ApiHttpClient.quitGroup(groupUser.getId(), group.getChatId());
+            if (sdkHttpResult.getHttpCode() == 200 && sdkHttpResult1.getHttpCode() == 200) {
                 versionTagService.save(new VersionTag(groupUser.getGroup(),1));
                 return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
             }

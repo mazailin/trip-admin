@@ -2,6 +2,7 @@ package com.ulplanet.trip.modules.tms.service;
 
 import com.google.common.collect.Lists;
 import com.ulplanet.trip.common.service.CrudService;
+import com.ulplanet.trip.common.utils.IdGen;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.crm.dao.CustomerDao;
 import com.ulplanet.trip.modules.crm.entity.Customer;
@@ -10,8 +11,10 @@ import com.ulplanet.trip.modules.sys.entity.VersionTag;
 import com.ulplanet.trip.modules.sys.service.VersionTagService;
 import com.ulplanet.trip.modules.tms.dao.GroupDao;
 import com.ulplanet.trip.modules.tms.dao.GroupUserDao;
+import com.ulplanet.trip.modules.tms.dao.QingmaDao;
 import com.ulplanet.trip.modules.tms.entity.Group;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
+import com.ulplanet.trip.modules.tms.entity.Qingma;
 import io.rong.ApiHttpClient;
 import io.rong.models.SdkHttpResult;
 import io.rong.models.TxtMessage;
@@ -21,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangxd on 15/8/11.
@@ -46,6 +46,8 @@ public class GroupService extends CrudService<GroupDao,Group> {
 
     public ResponseBo addGroup(Group group) {
         group.preInsert();
+        group.setChatId(IdGen.uuid());
+        group.setChatName("导游通知");
         return ResponseBo.getResult(this.groupDao.insert(group));
     }
 
@@ -53,6 +55,7 @@ public class GroupService extends CrudService<GroupDao,Group> {
         group.preUpdate();
         try {
             ApiHttpClient.refreshGroupInfo(group.getId(), group.getName());
+            updateTel(group);
             versionTagService.save(new VersionTag(group.getId(),1));
             return ResponseBo.getResult(this.groupDao.update(group));
         } catch (Exception e) {
@@ -62,14 +65,40 @@ public class GroupService extends CrudService<GroupDao,Group> {
 
     }
 
+    private void updateTel(Group group){
+        if(group.getTelFunction()==null)return;
+        String [] arr = group.getTelFunction().split(",");
+        Group old = groupDao.get(group.getId());
+        List<String> newList = new ArrayList<>();
+        Collections.addAll(newList, arr);
+        if(old.getTelFunction()!=null) {
+            String[] oldArr = old.getTelFunction().split(",");
+            List<String> oldList = new ArrayList<>();
+            Collections.addAll(oldList, oldArr);
+            newList.removeAll(oldList);
+        }
+        GroupUser groupUser = new GroupUser();
+        groupUser.setGroup(group.getId());
+        List<GroupUser> list = groupUserService.findList(groupUser);
+        for (String s : newList){
+            if ("2".equals(s)){//轻码云
+                for(GroupUser g : list){
+                    groupUserService.addQingmayun(g);
+                }
+            }
+        }
+    }
+
+
     public ResponseBo deleteGroup(Group group) {
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.dismissGroup("", group.getId());
-            if (sdkHttpResult.getHttpCode() == 200) {
+            SdkHttpResult sdkHttpResult1 = ApiHttpClient.dismissGroup("", group.getChatId());
+            if (sdkHttpResult.getHttpCode() == 200 && sdkHttpResult1.getHttpCode() == 200) {
                 groupUserService.deleteByGroup(group.getId());
                 return ResponseBo.getResult(this.groupDao.delete(group));
             } else {
-                logger.error(sdkHttpResult.getResult());
+                logger.error(sdkHttpResult.getResult() + sdkHttpResult1.getResult());
                 throw new RuntimeException("接口调用失败!");
             }
         } catch (Exception e) {

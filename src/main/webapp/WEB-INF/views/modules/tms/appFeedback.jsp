@@ -123,11 +123,11 @@
           var list = obj.list;
           var sum = list[0].name*1 + list[1].name*1 + list[2].name*1;
           var avg = list[2].name/sum*100;
-          tr += "<td>" + avg.toFixed(2) + "</td>";
+          tr += "<td>" + avg.toFixed(2) + "%</td>";
           avg = list[1].name/sum*100;
-          tr += "<td>" + avg.toFixed(2) + "</td>";
+          tr += "<td>" + avg.toFixed(2) + "%</td>";
           avg = list[0].name/sum*100;
-          tr += "<td>" + avg.toFixed(2) + "</td>";
+          tr += "<td>" + avg.toFixed(2) + "%</td>";
           tr += "</tr>";
           tbody.append(tr);
         }

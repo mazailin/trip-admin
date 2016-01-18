@@ -510,6 +510,13 @@
             <artifactId>apk-parser</artifactId>
             <version>1.1</version>
         </dependency>
+        <!--http client-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
 
     </dependencies>
 
