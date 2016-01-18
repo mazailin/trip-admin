@@ -1,0 +1,123 @@
+-- 位置轨迹
+DROP TABLE IF EXISTS `position`;
+CREATE TABLE `position` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '用户编号',
+  `lng` DECIMAL(10,6) NOT NULL COMMENT '经度',
+  `lat` DECIMAL(10,6) NOT NULL COMMENT '纬度',
+  `timing` TIMESTAMP NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) COMMENT='位置轨迹';
+
+-- 团队分组
+DROP TABLE IF EXISTS `team`;
+DROP TABLE IF EXISTS `team_user`;
+CREATE TABLE `team` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `group_id` VARCHAR(36) NOT NULL COMMENT '旅行团编号',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='团队分组';
+
+CREATE TABLE `team_user` (
+  `team_id` VARCHAR(36) NOT NULL COMMENT '小组编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '名称',
+  PRIMARY KEY (`team_id`, `user_id`)
+) COMMENT='小组成员';
+
+-- 当地电话
+DROP TABLE IF EXISTS `local_phone`;
+CREATE TABLE `local_phone` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `country` VARCHAR(36) NOT NULL COMMENT '国家',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `phone` VARCHAR(255) COMMENT '电话',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='当地电话';
+
+-- 通话记录
+DROP TABLE IF EXISTS `call_records`;
+CREATE TABLE `call_records` (
+  `id` varchar(36) NOT NULL,
+  `code` varchar(36) COMMENT '使用的usercode',
+  `tel_function` int(2) COMMENT '通话类型',
+  `call_type` int(2) COMMENT '呼叫方式 1.被叫 2.主叫',
+  `phone_number` varchar(20) COMMENT '电话号码',
+  `answer_status` int(2) COMMENT '应答状态1.挂断 2.响铃 3.应答',
+  `start_date` varchar(50) COMMENT '开始时间',
+  `end_date` varchar(50) COMMENT '结束时间',
+  `answer_date` varchar(50) COMMENT '接听时间',
+  `create_user` varchar(36) COMMENT '发送的usercode',
+  `create_date` timestamp ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) COMMENT='通话记录';
+
+DROP TABLE IF EXISTS `evaluate`;
+CREATE TABLE `evaluate` (
+  `user_code` varchar(36) NOT NULL COMMENT '用户编码',
+  `score` int(1),
+  `plan_id` varchar(36) NOT NULL,
+  `info_id` varchar(36) COMMENT '信息表Id',
+  `type` int(2) COMMENT '类型 3 航班 5 酒店 6 美食 7 景点 8 购物',
+  `name` varchar(255) COMMENT '名称',
+  `latitude` decimal(10,6) COMMENT '维度',
+  `longitude` decimal(10,6) COMMENT '经度',
+  `feedback` varchar(255) COMMENT '反馈',
+  `comment` varchar(255) COMMENT '备注',
+  `create_date` date COMMENT '创建时间',
+  PRIMARY KEY (`user_code`,`plan_id`),
+  KEY `user_id` (`user_code`) USING BTREE,
+  KEY `info_id` (`user_code`) USING BTREE
+) COMMENT='评价';
+
+DROP TABLE IF EXISTS `phone_feedback`;
+CREATE TABLE `phone_feedback` (
+  `function_id` int(5) NOT NULL COMMENT '功能ID',
+  `user_code` varchar(50) NOT NULL COMMENT '用户code',
+  `score` int(2) COMMENT '评分1-3 1不喜欢 2一般 3喜欢',
+  `feedback` varchar(255) COMMENT '反馈',
+  `create_date` date,
+  PRIMARY KEY (`function_id`,`user_code`)
+) COMMENT='反馈';
+
+DROP TABLE IF EXISTS `phone_function`;
+CREATE TABLE `phone_function` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `type` int(2) COMMENT '类型 1:radio 2:checkbox 3:textarea',
+  PRIMARY KEY (`id`)
+) COMMENT='反馈类型';
+
+INSERT INTO `phone_function` VALUES ('1', 'WIFI共享', '1');
+INSERT INTO `phone_function` VALUES ('2', '电话', '1');
+INSERT INTO `phone_function` VALUES ('3', '聊天', '1');
+INSERT INTO `phone_function` VALUES ('4', '我的行程', '1');
+INSERT INTO `phone_function` VALUES ('5', '地图导航', '1');
+INSERT INTO `phone_function` VALUES ('6', '当地玩乐', '1');
+INSERT INTO `phone_function` VALUES ('7', '请告诉我们您遇到的问题或想反馈的意见', '3');
+
+ALTER TABLE `journey_plan` ADD COLUMN `feedback_flag`  int(1) DEFAULT 0 COMMENT '是否评价 1评价 0不评价' AFTER `latitude`;
+
+ALTER TABLE `group` ADD COLUMN `chat_id` varchar(20) COMMENT '系统通知聊天编号' AFTER `to_date` ;
+ALTER TABLE `group` ADD COLUMN `chat_name` varchar(20) COMMENT '系统通知聊天名称' AFTER `to_date` ;
+ALTER TABLE `group` ADD COLUMN `tel_function` varchar(20) COMMENT '通话功能 1原生 2网络 3融云 '  AFTER `to_date` ;
+update `group` set chat_id = '',chat_name = '',tel_function = '';
+
+INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `parent_id`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`) VALUES ('6d2a851946bf4abeb7e0258c52ac58a2', '3', '融云电话', 'tel', '手机通话状态', '30', '0', '1', '2016-01-05 10:04:36', '1', '2016-01-05 10:04:36', '');
+INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `parent_id`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`) VALUES ('bc1566430cdc40e58cf0f8bd2711d982', '2', '网络电话', 'tel', '手机通话状态', '20', '0', '1', '2016-01-05 10:04:19', '1', '2016-01-05 10:04:19', '');
+INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `parent_id`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`) VALUES ('445b0479d6484dc0928a9bafd1535e54', '1', 'sim卡', 'tel', '手机通话状态', '10', '0', '1', '2016-01-05 10:03:57', '1', '2016-01-05 10:03:57', '');
+
+INSERT INTO `sys_menu` (id,parent_id,parent_ids,name,sort,href,target,icon,is_show,permission,create_by,create_date,update_by,update_date,remarks) VALUES ('1518382c210246bfb2b973ce12ef2947', '41', '0,1,4,41,', '系统通知', '60', '/tms/group/notice', '', 'comment', '1', '', '1', '2016-01-07 17:14:33', '1', '2016-01-07 17:14:33', ''), ('5ae660bd2475422dbbbaeff318a301ad', '7e18187519c54f71a79c703d8e7f36a0', '0,1,3,32,7e18187519c54f71a79c703d8e7f36a0,', '修改', '60', '', '', '', '0', 'tim:phone:edit', '1', '2016-01-11 18:42:24', '1', '2016-01-11 18:42:24', ''), ('7a1bf5b0ffb34b6a949260680494fb86', 'c4cb04cdf7d04b15b9def41c620b231d', '0,1,4,c4cb04cdf7d04b15b9def41c620b231d,', '行程评价', '60', '/tms/feedback/journey', '', 'road', '1', '', '1', '2016-01-06 17:16:08', '1', '2016-01-06 17:16:08', ''), ('7e18187519c54f71a79c703d8e7f36a0', '32', '0,1,3,32,', '当地电话', '180', '/tim/phone', '', 'bullhorn', '1', '', '1', '2016-01-11 18:41:24', '1', '2016-01-11 18:41:24', ''), ('908218a36811483a902e6bb916042694', '7e18187519c54f71a79c703d8e7f36a0', '0,1,3,32,7e18187519c54f71a79c703d8e7f36a0,', '查看', '30', '', '', '', '0', 'tim:phone:view', '1', '2016-01-11 18:41:59', '1', '2016-01-11 18:41:59', ''), ('a9d618b74c1a4d2ba95bb1f3de10eec5', 'c4cb04cdf7d04b15b9def41c620b231d', '0,1,4,c4cb04cdf7d04b15b9def41c620b231d,', 'App功能评价', '30', '/tms/feedback/app', '', 'inbox', '1', '', '1', '2016-01-06 17:15:49', '1', '2016-01-06 17:15:49', ''), ('c4cb04cdf7d04b15b9def41c620b231d', '4', '0,1,4,', '评价信息', '60', '', '', '', '1', '', '1', '2016-01-06 17:15:08', '1', '2016-01-06 17:15:08', '');
