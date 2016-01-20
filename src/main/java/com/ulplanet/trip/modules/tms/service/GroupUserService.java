@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.tms.service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ulplanet.trip.common.service.CrudService;
@@ -55,6 +56,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     private static List<String> title;
 
 
+
     public ResponseBo saveGroupUser(GroupUser groupUser){
         ResponseBo  responseBo;
 
@@ -69,12 +71,18 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                 String[] arr = group.getTelFunction().split(",");
                 for(String s : arr){
                     if(s.equals("2")){
-                        addQingmayun(groupUser);
+                        responseBo = addQingmayun(groupUser);
+                        if(responseBo.getStatus() == 0){
+                            return responseBo;
+                        }
                         break;
                     }
                 }
             }
-            addChat(groupUser, group);
+            /**判断融云创建是否成功**/
+            if(addChat(groupUser, group).getStatus() == 0){
+                return new ResponseBo(0,"创建用户组失败");
+            }
             responseBo = ResponseBo.getResult(groupUserDao.insertGroupUser(groupUser));
         }else{
             responseBo = updateUser(groupUser);
@@ -100,11 +108,26 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             groupUser.setId(IdGen.uuid());
             String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
             groupUser.setCode(code);
+            /**判断该团是否有轻码云通话**/
+            if(StringUtils.isNotEmpty(group.getTelFunction())) {
+                String[] arr = group.getTelFunction().split(",");
+                for(String s : arr){
+                    if(s.equals("2")){
+                        responseBo = addQingmayun(groupUser);
+                        if(responseBo.getStatus() == 0){
+                            return responseBo;
+                        }
+                        break;
+                    }
+                }
+            }
+
             responseBo = addChat(groupUser,group);
+            if(responseBo.getStatus()==0){
+                return responseBo;
+            }
         }
-        if(responseBo.getStatus()==0){
-            return responseBo;
-        }
+
         responseBo.setStatus(groupUserDao.insertGroupUsers(list));
         if(responseBo.getStatus() > 0){
             versionTagService.save(new VersionTag(group.getId(), 1));
@@ -113,10 +136,15 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     }
 
 
-    public void addQingmayun(GroupUser groupUser){
+    /**
+     * 轻码云添加用户
+     * @param groupUser
+     */
+    public ResponseBo addQingmayun(GroupUser groupUser){
+        ResponseBo responseBo;
         Qingma qingma = qingmaDao.get(groupUser.getUser());
         if(qingma!=null){
-            return;
+            return new ResponseBo(0,"创建轻码云失败");
         }
         QingHttpClient qingHttpClient = new QingHttpClient();
         QingResultInfo q = qingHttpClient.create(groupUser.getPhone());
@@ -127,14 +155,27 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             qingma.setId(groupUser.getUser());
             qingma.setCreateTime(q.getCreateTime());
             qingmaDao.insert(qingma);
+            return ResponseBo.getResult(1);
+        }else{
+            logger.error("创建用户："+groupUser.getUser()+" 失败，"+ JSON.toJSONString(q));
+            return new ResponseBo(0,"创建轻码云失败");
         }
     }
 
+    /**
+     * 添加融云用户
+     * @param groupUser
+     * @param group
+     * @return
+     */
     private ResponseBo addChat(GroupUser groupUser,Group group){
         ResponseBo responseBo = new ResponseBo();
         try {
+            //获取用户token
             SdkHttpResult sdkHttpResult1 = ApiHttpClient.getToken(groupUser.getId(), groupUser.getName(), "");
+            //添加用户到组
             SdkHttpResult sdkHttpResult2 = ApiHttpClient.joinGroup(groupUser.getId(), group.getId(), group.getName());
+            //添加导游通知用户组
             SdkHttpResult sdkHttpResult3 = null;
             if (StringUtils.isNotEmpty(group.getChatId())) {
                 sdkHttpResult3  = ApiHttpClient.joinGroup(groupUser.getId(), group.getChatId(), group.getChatName());
@@ -219,9 +260,16 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
     }
 
+    /**
+     * 批量导入用户
+     * @param multipartFile
+     * @param groupId
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public ResponseBo importExcel(MultipartFile multipartFile,String groupId){
         ExcelReader excelReader = new ExcelReader();
+        ResponseBo responseBo = new ResponseBo();
         String error;
         try {
             InputStream in = multipartFile.getInputStream();
@@ -262,7 +310,10 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
             Group group = groupDao.get(groupId);
             if(addGroupList.size()>0) {
-                saveGroupUsers(addGroupList, group);
+                responseBo = saveGroupUsers(addGroupList, group);
+                if(responseBo.getStatus() == 0){
+                    return responseBo;
+                }
                 versionTagService.save(new VersionTag(groupId, 1));
             }
             return new ResponseBo(1,"导入成功,共导入"+i+"条数据");
