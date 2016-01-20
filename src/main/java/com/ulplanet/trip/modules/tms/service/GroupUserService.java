@@ -141,10 +141,9 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
      * @param groupUser
      */
     public ResponseBo addQingmayun(GroupUser groupUser){
-        ResponseBo responseBo;
         Qingma qingma = qingmaDao.get(groupUser.getUser());
         if(qingma!=null){
-            return new ResponseBo(0,"创建轻码云失败");
+            return ResponseBo.getResult(1);
         }
         QingHttpClient qingHttpClient = new QingHttpClient();
         QingResultInfo q = qingHttpClient.create(groupUser.getPhone());
