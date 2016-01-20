@@ -54,10 +54,7 @@ public class GroupUserController  extends BaseController {
 
 
         addMessage(redirectAttributes,responseBo.getMsg());
-        if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
-        }
-        return form(groupUser, model);
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
     }
 
     @RequestMapping(value = "/delete")
