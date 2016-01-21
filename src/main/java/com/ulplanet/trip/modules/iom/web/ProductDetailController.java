@@ -62,7 +62,7 @@ public class ProductDetailController extends BaseController {
     @RequiresPermissions("iom:product:detail:view")
     @RequestMapping(value = "in/list")
     public String inList(ProductDetail productDetail, HttpServletRequest request, HttpServletResponse response, String inId, Model model) {
-        Page<ProductDetail> page = productDetailService.findPage(new Page<>(request, response), productDetail);
+        Page<ProductDetail> page = productDetailService.findInDetail(new Page<>(request, response), productDetail, inId);
         model.addAttribute("page", page);
         model.addAttribute("inId", inId);
         return "modules/iom/proInDetailList";
@@ -71,7 +71,6 @@ public class ProductDetailController extends BaseController {
     @RequiresPermissions("iom:product:detail:view")
     @RequestMapping(value = "in/form")
     public String inForm(ProductDetail productDetail, String inId, Model model) {
-
         model.addAttribute("productDetail", productDetail);
         model.addAttribute("inId", inId);
         return "modules/iom/proInDetailForm";

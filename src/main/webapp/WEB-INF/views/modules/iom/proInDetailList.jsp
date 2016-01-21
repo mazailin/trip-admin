@@ -15,8 +15,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/iom/product/detail/in/list">产品明细</a></li>
-		<li><a href="${ctx}/iom/product/detail/in/form">明细添加</a></li>
+		<li class="active"><a href="${ctx}/iom/product/detail/in/list?inId=${inId}">产品明细</a></li>
+		<li><a href="${ctx}/iom/product/detail/in/form?inId=${inId}">明细添加</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

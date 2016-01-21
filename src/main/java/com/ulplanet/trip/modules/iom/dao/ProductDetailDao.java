@@ -14,4 +14,6 @@ import java.util.List;
 public interface ProductDetailDao extends CrudDao<ProductDetail> {
 
     List<ProductDetail> findAvlList(ProductDetail productDetail);
+
+    List<ProductDetail> findInDetailList(ProductDetail productDetail);
 }

@@ -35,6 +35,30 @@
             </otherwise>
         </choose>
 	</select>
+    <select id="findInDetailList" resultType="ProductDetail">
+        SELECT
+        <include refid="proDetailColumns"/>
+        FROM product_detail a
+        JOIN product b
+        ON a.product_id = b.id
+        JOIN in_detail c
+        ON a.id = c.pro_detail_id
+        WHERE c.in_id = #{inId}
+        <if test="device != null and device != ''">
+            AND a.device like CONCAT('%', #{device}, '%')
+        </if>
+        <if test="product != null and product.id != null and product.id != ''">
+            AND b.id = #{product.id}
+        </if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.code
+            </otherwise>
+        </choose>
+    </select>
     <select id="findAvlList" resultType="ProductDetail">
         SELECT
         <include refid="proDetailColumns"/>

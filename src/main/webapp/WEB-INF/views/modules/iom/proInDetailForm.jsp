@@ -26,8 +26,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/iom/product/detail/in/list">产品明细</a></li>
-		<li class="active"><a href="${ctx}/iom/product/detail/in/form?id=${productDetail.id}">明细<shiro:hasPermission name="iom:product:detail:edit">${not empty productDetail.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:detail:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/iom/product/detail/in/list?inId=${inId}">产品明细</a></li>
+		<li class="active"><a href="${ctx}/iom/product/detail/in/form?inId=${inId}&id=${productDetail.id}">明细<shiro:hasPermission name="iom:product:detail:edit">${not empty productDetail.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:detail:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

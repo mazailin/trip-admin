@@ -1,5 +1,6 @@
 package com.ulplanet.trip.modules.iom.service;
 
+import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.iom.dao.ProductDetailDao;
@@ -10,7 +11,9 @@ import com.ulplanet.trip.modules.sys.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 产品明细Service
@@ -84,5 +87,14 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
     public List<ProductDetail> findAvlList(ProductDetail productDetail) {
         return productDetailDao.findAvlList(productDetail);
+    }
+
+    public Page<ProductDetail> findInDetail(Page<ProductDetail> page, ProductDetail productDetail, String inId) {
+        productDetail.setPage(page);
+        Map<String, String> sqlMap = new HashMap<>();
+        sqlMap.put("inId", inId);
+        productDetail.setSqlMap(sqlMap);
+        page.setList(dao.findInDetailList(productDetail));
+        return page;
     }
 }
