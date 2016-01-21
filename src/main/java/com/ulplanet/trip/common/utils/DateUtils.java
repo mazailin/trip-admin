@@ -3,7 +3,10 @@ package com.ulplanet.trip.common.utils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 日期工具类, 继承org.apache.commons.lang.time.DateUtils类
@@ -163,6 +166,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		long beforeTime = before.getTime();
 		long afterTime = after.getTime();
 		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
+	}
+
+	/**
+	 * 获取北京当前时间
+	 * @return
+	 */
+	public static Date getBjDate() {
+		TimeZone tz = TimeZone.getTimeZone("GMT+8:00");
+		Calendar calendar = Calendar.getInstance();
+		Date date = calendar.getTime();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setTimeZone(tz);
+		return parseDate(dateFormat.format(date));
 	}
 	
 	/**
