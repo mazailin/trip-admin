@@ -52,6 +52,9 @@ public class GroupService extends CrudService<GroupDao,Group> {
     }
 
     public ResponseBo updateGroup(Group group) {
+        if(StringUtils.isNotEmpty(group.getTelClean())){
+            group.setTelFunction("");
+        }
         group.preUpdate();
         try {
             ApiHttpClient.refreshGroupInfo(group.getId(), group.getName());

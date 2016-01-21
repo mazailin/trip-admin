@@ -24,6 +24,15 @@ public class Group extends DataEntity<Group> {
     private String chatId;
     private String chatName;
     private String telFunction;
+    private String telClean;
+
+    public String getTelClean() {
+        return telClean;
+    }
+
+    public void setTelClean(String telClean) {
+        this.telClean = telClean;
+    }
 
     public String getChatName() {
         return chatName;

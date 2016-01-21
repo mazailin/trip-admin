@@ -3,11 +3,10 @@ package io.qingmayun;
 import com.alibaba.fastjson.JSON;
 import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.HttpClientUtils;
-import com.ulplanet.trip.common.utils.SecurityUtils;
 import io.qingmayun.modules.QingResultInfo;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.provider.MD5;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -39,10 +38,10 @@ public class QingHttpClient {
         map.put("appId",APP_ID);
         map.put("mobile",phone);
         map.put("timestamp",timestamp);
-        map.put("sig", SecurityUtils.MD5(ACCOUNT_SID+AUTH_TOKEN+timestamp));
+        map.put("sig", DigestUtils.md5Hex(ACCOUNT_SID + AUTH_TOKEN + timestamp));
         HttpClientUtils httpClientUtils = new HttpClientUtils();
         String response = httpClientUtils.post(url,map);
-        log.warn("轻码云创建接口：" + response);
+        log.info("轻码云创建接口：" + response);
         if(response!=null){
             QingResultInfo qingResultInfo = JSON.parseObject(response,QingResultInfo.class);
             return qingResultInfo;
@@ -63,10 +62,10 @@ public class QingHttpClient {
         map.put("appId",APP_ID);
         map.put("clientNumber",clientNumber);
         map.put("timestamp",timestamp);
-        map.put("sig", SecurityUtils.MD5(ACCOUNT_SID+AUTH_TOKEN+timestamp));
+        map.put("sig", DigestUtils.md5Hex(ACCOUNT_SID + AUTH_TOKEN + timestamp));
         HttpClientUtils httpClientUtils = new HttpClientUtils();
         String response = httpClientUtils.post(url,map);
-        log.warn("轻码云删除接口：" + response);
+        log.info("轻码云删除接口：" + response);
         if(response!=null){
             QingResultInfo qingResultInfo = JSON.parseObject(response,QingResultInfo.class);
             return qingResultInfo;

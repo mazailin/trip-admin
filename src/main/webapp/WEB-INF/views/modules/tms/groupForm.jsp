@@ -68,8 +68,9 @@
   <li><a href="${ctx}/tms/group/">旅游团列表</a></li>
   <li class="active"><a href="${ctx}/tms/group/form?id=${group.id}">旅游团${not empty group.id?'修改':'添加'}</a></li>
 </ul><br/>
-<form:form id="inputForm" modelAttribute="group" action="${ctx}/tms/group/save" method="post" onsubmit="checkClean();" class="form-horizontal">
+<form:form id="inputForm" modelAttribute="group" action="${ctx}/tms/group/save" method="post" class="form-horizontal">
   <form:hidden path="id"/>
+  <form:hidden path="telClean"/>
   <sys:message content="${message}"/>
   <div class="control-group">
     <label class="control-label">名称:</label>
@@ -102,7 +103,7 @@
   <div class="control-group">
     <label class="control-label">通话方式选择:</label>
     <div class="controls">
-      <select multiple="multiple" name="telFunction" id="telFunction" class="js-example-basic-multiple" style="width: 500px">
+      <select multiple="multiple" name="telFunction" id="telFunction" onclick="checkClean()" style="width: 500px">
         <c:forEach items="${fns:getDictList('tel')}" var="tel">
           <option value="${tel.value}">${tel.label}</option>
         </c:forEach>
@@ -127,9 +128,10 @@
     $("#telFunction").val(tel).trigger("change");
   }
   function checkClean(){
-    var li = $(".select2-choices").find('li');
-    if(li.length < 2){
-      $("#telFunction").val([]).trigger("change");
+    if($("#telFunction").val() == null){
+      $("#telClean").val("1");
+    }else{
+      $("#telClean").val("");
     }
   }
 </script>
