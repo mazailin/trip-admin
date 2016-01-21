@@ -58,13 +58,10 @@ public class GroupUserController  extends BaseController {
     }
 
     @RequestMapping(value = "/delete")
-    public String delete(GroupUser groupUser,Model model, RedirectAttributes redirectAttributes) {
+    public String delete(GroupUser groupUser, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupUserService.deleteUser(groupUser);
         addMessage(redirectAttributes, responseBo.getMsg());
-        if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
-        }
-        return form(groupUser, model);
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
     }
 
     @RequestMapping(value = {"/list",""})
@@ -78,10 +75,10 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/getPassport")
     @ResponseBody
-    public Object getPassport(
+    public Object getByPassport(
             @RequestParam(value = "query", required = false) String searchValue,
             @RequestParam(value = "group", required = false) String group) {
-        return this.groupUserService.getPassport(searchValue,group);
+        return this.groupUserService.getByPassport(searchValue, group);
     }
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)
@@ -91,6 +88,12 @@ public class GroupUserController  extends BaseController {
         return "modules/tms/groupUserForm";
     }
 
+    /**
+     * 获取用户列表，生成二维码
+     * @param groupId
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/groupQRCode")
     public String groupQRCode(@RequestParam String groupId,Model model){
         GroupUser groupUser = new GroupUser();

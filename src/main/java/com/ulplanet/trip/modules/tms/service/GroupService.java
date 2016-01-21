@@ -58,8 +58,10 @@ public class GroupService extends CrudService<GroupDao,Group> {
         group.preUpdate();
         try {
             ApiHttpClient.refreshGroupInfo(group.getId(), group.getName());
-            updateTel(group);
-            versionTagService.save(new VersionTag(group.getId(),1));
+            ResponseBo responseBo = updateTel(group);
+            if(responseBo.getStatus() == 0){
+                return responseBo;
+            }
             return ResponseBo.getResult(this.groupDao.update(group));
         } catch (Exception e) {
             logger.error("更新群组 " + group.getName() + " 失败，", e);
@@ -68,8 +70,13 @@ public class GroupService extends CrudService<GroupDao,Group> {
 
     }
 
-    private void updateTel(Group group){
-        if(group.getTelFunction()==null)return;
+    /**
+     * 更新用户通话方式信息
+     * @param group
+     */
+    private ResponseBo updateTel(Group group){
+        ResponseBo responseBo;
+        if(group.getTelFunction()==null)return ResponseBo.getResult(1);
         String [] arr = group.getTelFunction().split(",");
         Group old = groupDao.get(group.getId());
         List<String> newList = new ArrayList<>();
@@ -86,10 +93,14 @@ public class GroupService extends CrudService<GroupDao,Group> {
         for (String s : newList){
             if ("2".equals(s)){//轻码云
                 for(GroupUser g : list){
-                    groupUserService.addQingmayun(g);
+                    responseBo = groupUserService.addQingmayun(g);
+                    if(responseBo.getStatus() == 0){
+                        return responseBo;
+                    }
                 }
             }
         }
+        return ResponseBo.getResult(1);
     }
 
 
@@ -111,6 +122,10 @@ public class GroupService extends CrudService<GroupDao,Group> {
     }
 
 
+    /**
+     * 获取旅行团列表
+     * @return
+     */
     public List<Customer> getCustomer(){
         Customer customer = new Customer();
         customer.setActive("1");

@@ -73,6 +73,11 @@ public class PhoneFeedbackService extends CrudService<PhoneFeedbackDao,PhoneFeed
         return JSON.toJSONString(map);
     }
 
+    /**
+     * 获取具体用户的反馈信息
+     * @param code
+     * @return
+     */
     public String getUser(String code){
         GroupUser groupUser = groupUserService.getByUserCode(code);
         AppFeedbackBo appFeedbackBo = new AppFeedbackBo();
@@ -86,6 +91,11 @@ public class PhoneFeedbackService extends CrudService<PhoneFeedbackDao,PhoneFeed
         return JSON.toJSONString(appFeedbackBo);
     }
 
+    /**
+     * 获取行程评价
+     * @param groupId
+     * @return
+     */
     public String getJourney(String groupId){
         List<PhoneFeedback> list = phoneFeedbackDao.getJourney(groupId);
         Map<String,Map<String,Object>> map = new HashMap<>();
