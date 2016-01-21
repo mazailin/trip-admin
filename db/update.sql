@@ -111,7 +111,7 @@ INSERT INTO `phone_function` VALUES ('7', '请告诉我们您遇到的问题或�
 
 ALTER TABLE `journey_plan` ADD COLUMN `feedback_flag`  int(1) DEFAULT 0 COMMENT '是否评价 1评价 0不评价' AFTER `latitude`;
 
-ALTER TABLE `group` ADD COLUMN `chat_id` varchar(20) COMMENT '系统通知聊天编号' AFTER `to_date` ;
+ALTER TABLE `group` ADD COLUMN `chat_id` varchar(36) COMMENT '系统通知聊天编号' AFTER `to_date` ;
 ALTER TABLE `group` ADD COLUMN `chat_name` varchar(20) COMMENT '系统通知聊天名称' AFTER `to_date` ;
 ALTER TABLE `group` ADD COLUMN `tel_function` varchar(20) COMMENT '通话功能 1原生 2网络 3融云 '  AFTER `to_date` ;
 update `group` set chat_id = '',chat_name = '',tel_function = '';
