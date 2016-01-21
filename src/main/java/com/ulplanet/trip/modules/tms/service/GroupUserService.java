@@ -102,7 +102,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
     public ResponseBo saveGroupUsers(List<GroupUser> list,Group group){
         ResponseBo  responseBo = new ResponseBo();
         for(GroupUser groupUser : list) {
-            GroupUser g = getPassport(groupUser.getPassport(),group.getId());
+            GroupUser g = getByPassport(groupUser.getPassport(), group.getId());
             if("0".equals(g.getCode())){
                 continue;
             }
@@ -157,7 +157,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             qingmaDao.insert(qingma);
             return ResponseBo.getResult(1);
         }else{
-            logger.error("创建用户："+groupUser.getUser()+" 失败，"+ JSON.toJSONString(q));
+            logger.error("创建用户：" + groupUser.getUser() + " 失败，" + JSON.toJSONString(q));
             return new ResponseBo(0,"创建轻码云失败");
         }
     }
@@ -212,9 +212,12 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         try {
             SdkHttpResult sdkHttpResult = ApiHttpClient.quitGroup(groupUser.getId(), groupUser.getGroup());
             Group group = groupDao.get(groupUser.getGroup());
-            SdkHttpResult sdkHttpResult1 = ApiHttpClient.quitGroup(groupUser.getId(), group.getChatId());
-            if (sdkHttpResult.getHttpCode() == 200 && sdkHttpResult1.getHttpCode() == 200) {
-                versionTagService.save(new VersionTag(groupUser.getGroup(),1));
+            SdkHttpResult sdkHttpResult3 = null;
+            if (StringUtils.isNotEmpty(group.getChatId())) {
+                sdkHttpResult3  = ApiHttpClient.quitGroup(groupUser.getId(), group.getChatId());
+            }
+            if (sdkHttpResult.getHttpCode() == 200 &&  (sdkHttpResult3 == null || sdkHttpResult3.getHttpCode() == 200)) {
+                versionTagService.save(new VersionTag(groupUser.getGroup(), 1));
                 return ResponseBo.getResult(groupUserDao.deleteGroupUser(groupUser));
             }
         } catch (Exception e) {
@@ -234,7 +237,13 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
         }
     }
 
-    public GroupUser getPassport(String passport,String group) {
+    /**
+     * 根据护照获取用户信息
+     * @param passport
+     * @param group
+     * @return
+     */
+    public GroupUser getByPassport(String passport,String group) {
         List<GroupUser> list = groupUserDao.findUserByPassport(passport,null);
         if(list.size()>0){
             for(GroupUser groupUser1 : list){

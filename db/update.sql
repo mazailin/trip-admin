@@ -121,3 +121,34 @@ INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `
 INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `parent_id`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`) VALUES ('445b0479d6484dc0928a9bafd1535e54', '1', 'sim卡', 'tel', '手机通话状态', '10', '0', '1', '2016-01-05 10:03:57', '1', '2016-01-05 10:03:57', '');
 
 INSERT INTO `sys_menu` (id,parent_id,parent_ids,name,sort,href,target,icon,is_show,permission,create_by,create_date,update_by,update_date,remarks) VALUES ('1518382c210246bfb2b973ce12ef2947', '41', '0,1,4,41,', '系统通知', '60', '/tms/group/notice', '', 'comment', '1', '', '1', '2016-01-07 17:14:33', '1', '2016-01-07 17:14:33', ''), ('5ae660bd2475422dbbbaeff318a301ad', '7e18187519c54f71a79c703d8e7f36a0', '0,1,3,32,7e18187519c54f71a79c703d8e7f36a0,', '修改', '60', '', '', '', '0', 'tim:phone:edit', '1', '2016-01-11 18:42:24', '1', '2016-01-11 18:42:24', ''), ('7a1bf5b0ffb34b6a949260680494fb86', 'c4cb04cdf7d04b15b9def41c620b231d', '0,1,4,c4cb04cdf7d04b15b9def41c620b231d,', '行程评价', '60', '/tms/feedback/journey', '', 'road', '1', '', '1', '2016-01-06 17:16:08', '1', '2016-01-06 17:16:08', ''), ('7e18187519c54f71a79c703d8e7f36a0', '32', '0,1,3,32,', '当地电话', '180', '/tim/phone', '', 'bullhorn', '1', '', '1', '2016-01-11 18:41:24', '1', '2016-01-11 18:41:24', ''), ('908218a36811483a902e6bb916042694', '7e18187519c54f71a79c703d8e7f36a0', '0,1,3,32,7e18187519c54f71a79c703d8e7f36a0,', '查看', '30', '', '', '', '0', 'tim:phone:view', '1', '2016-01-11 18:41:59', '1', '2016-01-11 18:41:59', ''), ('a9d618b74c1a4d2ba95bb1f3de10eec5', 'c4cb04cdf7d04b15b9def41c620b231d', '0,1,4,c4cb04cdf7d04b15b9def41c620b231d,', 'App功能评价', '30', '/tms/feedback/app', '', 'inbox', '1', '', '1', '2016-01-06 17:15:49', '1', '2016-01-06 17:15:49', ''), ('c4cb04cdf7d04b15b9def41c620b231d', '4', '0,1,4,', '评价信息', '60', '', '', '', '1', '', '1', '2016-01-06 17:15:08', '1', '2016-01-06 17:15:08', '');
+
+DROP TABLE IF EXISTS `qingma_client`;
+CREATE TABLE `qingma_client` (
+  `id` varchar(36) NOT NULL,
+  `client_number` varchar(50) COMMENT '轻码云账号',
+  `client_pwd` varchar(50) COMMENT '轻码云密码',
+  `status` int(1) DEFAULT '1' COMMENT '状态 1.正常 0.关闭',
+  `create_time` varchar(50),
+  PRIMARY KEY (`id`)
+) COMMENT='轻码云';
+
+DROP TABLE IF EXISTS `qingma_record`;
+CREATE TABLE `qingma_record` (
+  `id` varchar(36) NOT NULL,
+  `app_id` varchar(50) COMMENT '应用id',
+  `client_number` varchar(50) COMMENT 'Client号码',
+  `call_type` int(2) COMMENT '呼叫类型。0：直拨；1：回拨。',
+  `caller` varchar(20) COMMENT '主叫电话号码。',
+  `called` varchar(20) COMMENT '被叫电话号码。',
+  `from_ser_num` varchar(20) COMMENT '主叫侧显示的号码。',
+  `to_ser_num` varchar(20) COMMENT '被叫侧显示的号码。',
+  `callId` varchar(50) COMMENT '（仅回拨存在）与回拨功能调用返回callid对应，唯一标示一路呼叫。',
+  `start_time` datetime COMMENT '通话开始时间。',
+  `stop_time` datetime COMMENT '通话结束时间。',
+  `called_pick_time` datetime COMMENT '被叫接通时间',
+  `bye_type` varchar(10) COMMENT '挂机类型。no_con 主被叫都未接通；a_con：主叫接通；b_con：主被叫都接通。',
+  `call_time` int(10) COMMENT '话时长。单位：秒。',
+  `reason` varchar(255) COMMENT '挂机原因描述。\r\n正常挂机：\r\n0：正常挂断（通话结束挂断）；\r\n1：余额不足；\r\n2：媒体超时；\r\n通用类型：\r\n10: 通话未建立，主叫挂机。\r\n11: 无人接听；\r\n12: 被叫拒绝接听；\r\n直拨类型：\r\n21: 直拨被叫未振铃，主叫挂断；\r\n22: 直拨被叫振铃了，主叫挂断；\r\n23: 直拨被叫振铃了，被叫挂断；\r\n回拨类型：\r\n31: 回拨主叫振铃了，主叫挂机；\r\n32: 回拨主叫接通了，被叫未振铃，主叫挂机；\r\n33: 回拨主叫接通了，被叫振铃了，主叫挂机；\r\n34: 回拨主叫接通了，被叫振铃了，被叫挂机；\r\n其他原因：',
+  `record_url` varchar(255) COMMENT '通话录音完整下载地址',
+  PRIMARY KEY (`id`)
+) COMMENT='轻码云';
