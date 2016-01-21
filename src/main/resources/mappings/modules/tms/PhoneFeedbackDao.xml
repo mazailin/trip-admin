@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.PhoneFeedbackDao">
+
+    <select id="findList" resultType="PhoneFeedback">
+        SELECT pf.score,pf.feedback,p.type,p.name,p.id,pf.create_date,pf.user_code
+        FROM phone_feedback pf
+        LEFT JOIN phone_function p on pf.function_id = p.id
+        ORDER BY pf.create_date DESC
+    </select>
+    <select id="getFunction" resultType="PhoneFeedback">
+        SELECT id,name
+        FROM phone_function
+    </select>
+    <select id="getJourney" resultType="PhoneFeedback">
+        SELECT jp.name,e.score,jp.id
+        FROM journey_day jd
+            INNER JOIN journey_plan jp on jd.id = jp.day_id
+            INNER JOIN evaluate e on e.plan_id = jp.id
+        WHERE jp.feedback_flag = 1 and jd.group_id = #{groupId}
+        ORDER BY jd.day_number,jp.sort
+    </select>
+
+</mapper>

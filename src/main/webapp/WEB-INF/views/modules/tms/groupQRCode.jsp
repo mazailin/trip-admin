@@ -18,24 +18,27 @@
       margin: 10px;
       padding-left: 5px;
     }
-    .container {
-      width: 100%;
-    }
     .title {
       margin-top: 10px;
     }
     .qr{
-      width: auto;
+      margin-bottom: 12mm;
+      margin-right: 2mm;
+      width: 40mm;
+      height:60mm;
       line-height: 4px;
       border: 2px solid #73AD21;
       padding: 0 10px 0 10px;
-      margin: 20px;
       float: left;
+      /*transform: rotate(90deg);*/
+      /*-o-transform: rotate(90deg);*/
+      /*-webkit-transform: rotate(90deg);*/
+      /*-moz-transform: rotate(90deg);*/
     }
   </style>
 </head>
 <body>
-<div class="container">
+<div>
     <c:forEach items="${list}" var="user">
       <div class="qr">
         <div class="title">

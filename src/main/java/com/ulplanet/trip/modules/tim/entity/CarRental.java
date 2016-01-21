@@ -44,7 +44,7 @@ public class CarRental extends DataEntity<CarRental> {
         this.type = type;
     }
 
-    @Length(min=0, max=64, message="描述长度必须介于 1 和 64 之间")
+    @Length(min=0, max=255, message="描述长度必须介于 1 和 255 之间")
     public String getPhone() {
         return phone;
     }

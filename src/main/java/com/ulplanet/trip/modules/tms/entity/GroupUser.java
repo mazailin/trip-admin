@@ -1,9 +1,9 @@
 package com.ulplanet.trip.modules.tms.entity;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.ulplanet.trip.common.persistence.DataEntity;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.utils.excel.annotation.ExcelField;
 import com.ulplanet.trip.modules.crm.entity.AppUser;
 
 import java.util.List;
@@ -37,6 +37,12 @@ public class GroupUser extends DataEntity<GroupUser> {
     private String cphone;
     private List<AppUser> list;
 
+    public GroupUser() {
+    }
+
+    public GroupUser(String group) {
+        this.group = group;
+    }
 
     public String getCphone() {
         return cphone;
@@ -166,6 +172,7 @@ public class GroupUser extends DataEntity<GroupUser> {
         this.type = type;
     }
 
+    @ExcelField(title="编码", align=1, sort=200)
     public String getCode() {
         return code;
     }
@@ -174,6 +181,7 @@ public class GroupUser extends DataEntity<GroupUser> {
         this.code = code;
     }
 
+    @ExcelField(title="姓名", align=1, sort=100)
     public String getName() {
         return name;
     }
@@ -206,6 +214,7 @@ public class GroupUser extends DataEntity<GroupUser> {
         this.passport = passport;
     }
 
+    @ExcelField(title="手机号", align=1, sort=300)
     public String getPhone() {
         return phone;
     }

@@ -24,6 +24,16 @@ public class JourneyPlan  extends DataEntity<JourneyPlan> implements java.io.Ser
 	private Integer sort;
 	private String longitude;
 	private String latitude;
+	private Integer feedbackFlag = 0;
+
+
+	public Integer getFeedbackFlag() {
+		return feedbackFlag;
+	}
+
+	public void setFeedbackFlag(Integer feedbackFlag) {
+		this.feedbackFlag = feedbackFlag;
+	}
 
 	public JourneyPlan(){
 	}

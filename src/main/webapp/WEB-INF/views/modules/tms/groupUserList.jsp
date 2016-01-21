@@ -40,6 +40,7 @@
     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="generate" class="btn" type="button" value="批量生成二维码" onclick="qrcode();"/></li>
     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<shiro:hasPermission name="tms:group:import">
     <button id="import" class="btn">导入Excel</button>
+    <button id="export" class="btn">导出Excel</button>
     </shiro:hasPermission></li>
   </ul>
 </form:form>
@@ -50,6 +51,9 @@
     <input id="file" name="file" type="file" style="width:330px" value=""/><br/><br/>　　
     <input id="btnImportSubmit" class="btn btn-primary" type="submit" value="   导    入   " onclick="_import(event)"/>
     <a href="http://7xluz8.dl1.z0.glb.clouddn.com/%E6%97%85%E8%A1%8C%E5%9B%A2%E7%94%A8%E6%88%B7%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xls?attrname=">下载模板</a>
+  </form>
+  <form id="exportForm" action="${ctx}/tms/groupUser/export" method="post">
+    <input type="hidden" name="groupId" value="${groupId}"/>
   </form>
 </div>
 <sys:message content="${message}"/>
@@ -66,6 +70,7 @@
       <td>
         <a href="#" onclick="getBarcode('${groupUser.name}','${groupUser.code}','${groupUser.phone}');">生成二维码</a>
         <a href="${ctx}/tms/groupUser/form?id=${groupUser.id}&&group=${groupUser.group}">修改</a>
+        <a href="${ctx}/tms/position?userId=${groupUser.id}">轨迹</a>
         <a href="${ctx}/tms/groupUser/delete?id=${groupUser.id}&&group=${groupUser.group}" onclick="return confirmx('确认要删除吗？', this.href)">删除</a>
       </td>
     </tr>
@@ -110,6 +115,10 @@
       e.preventDefault();
       $.jBox($("#importBox").html(), {title:"导入数据", buttons:{"关闭":true},
         bottomText:"仅允许导入“xls”或“xlsx”格式文件！"});
+    });
+    $("#export").click(function(e){
+      e.preventDefault();
+      $("#exportForm").submit();
     });
   });
 </script>

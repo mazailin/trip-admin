@@ -126,8 +126,8 @@
         type:"get",
         success:function(data){
           if(data.user!=null&&data.user.length>0){
-            if(data.code == 0){
-              swal("用户已存在", "用户已存在于本团队或其他团队中", "error");
+            if(data.code == '0'){
+              swal("用户已存在", "用户已存在于本团队中", "error");
               $("#btnSubmit").hide();
               return false;
             }

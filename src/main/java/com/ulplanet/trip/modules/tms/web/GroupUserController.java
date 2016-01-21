@@ -1,7 +1,9 @@
 package com.ulplanet.trip.modules.tms.web;
 
 import com.ulplanet.trip.common.persistence.Page;
+import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.common.utils.excel.ExportExcel;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.ims.bo.ResponseBo;
 import com.ulplanet.trip.modules.tms.entity.GroupUser;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -51,20 +54,14 @@ public class GroupUserController  extends BaseController {
 
 
         addMessage(redirectAttributes,responseBo.getMsg());
-        if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
-        }
-        return form(groupUser, model);
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
     }
 
     @RequestMapping(value = "/delete")
-    public String delete(GroupUser groupUser,Model model, RedirectAttributes redirectAttributes) {
+    public String delete(GroupUser groupUser, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupUserService.deleteUser(groupUser);
         addMessage(redirectAttributes, responseBo.getMsg());
-        if(responseBo.getStatus()==1) {
-            return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
-        }
-        return form(groupUser, model);
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupUser.getGroup() + "&&repage";
     }
 
     @RequestMapping(value = {"/list",""})
@@ -78,10 +75,10 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/getPassport")
     @ResponseBody
-    public Object getPassport(
+    public Object getByPassport(
             @RequestParam(value = "query", required = false) String searchValue,
             @RequestParam(value = "group", required = false) String group) {
-        return this.groupUserService.getPassport(searchValue,group);
+        return this.groupUserService.getByPassport(searchValue, group);
     }
 
     @RequestMapping(value = "/form",method = RequestMethod.GET)
@@ -91,6 +88,12 @@ public class GroupUserController  extends BaseController {
         return "modules/tms/groupUserForm";
     }
 
+    /**
+     * 获取用户列表，生成二维码
+     * @param groupId
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/groupQRCode")
     public String groupQRCode(@RequestParam String groupId,Model model){
         GroupUser groupUser = new GroupUser();
@@ -102,9 +105,24 @@ public class GroupUserController  extends BaseController {
 
     @RequestMapping(value = "/import")
     @Transactional(readOnly = false)
-    public String importExcel(@RequestParam MultipartFile file,@RequestParam String groupId,Model model, RedirectAttributes redirectAttributes){
+    public String importExcel(@RequestParam MultipartFile file,@RequestParam String groupId, RedirectAttributes redirectAttributes){
         ResponseBo responseBo = groupUserService.importExcel(file, groupId);
         addMessage(redirectAttributes, responseBo.getMsg());
+        return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupId + "&&repage";
+    }
+
+    @RequestMapping(value = "/export")
+    public String exportExcel(@RequestParam String groupId,HttpServletResponse response){
+        GroupUser groupUser = new GroupUser();
+        groupUser.setGroup(groupId);
+        List<GroupUser> list = groupUserService.findList(groupUser);
+        String fileName = "二维码数据"+ DateUtils.getDate("yyyyMMddHHmmss")+".xls";
+        try {
+            new ExportExcel(null, GroupUser.class).setDataList(list).write(response, fileName).dispose();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "redirect:" + adminPath + "/tms/groupUser/list/?group=" + groupId + "&&repage";
     }
 

@@ -66,10 +66,11 @@
 <body>
 <ul class="nav nav-tabs">
   <li><a href="${ctx}/tms/group/">旅游团列表</a></li>
-  <li class="active"><a href="${ctx}/tms/group/form?id=${phoneInfo.id}">旅游团${not empty phoneInfo.id?'修改':'添加'}</a></li>
+  <li class="active"><a href="${ctx}/tms/group/form?id=${group.id}">旅游团${not empty group.id?'修改':'添加'}</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="group" action="${ctx}/tms/group/save" method="post" class="form-horizontal">
   <form:hidden path="id"/>
+  <form:hidden path="telClean"/>
   <sys:message content="${message}"/>
   <div class="control-group">
     <label class="control-label">名称:</label>
@@ -94,9 +95,19 @@
   <div class="control-group">
     <label class="control-label">旅行社:</label>
     <div class="controls">
-      <form:select path="customer">
+      <form:select path="customer" cssStyle="width:200px">
         <form:options items="${group.customers}" itemLabel="name" itemValue="id" htmlEscape="false"/>
       </form:select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">通话方式选择:</label>
+    <div class="controls">
+      <select multiple="multiple" name="telFunction" id="telFunction" onclick="checkClean()" style="width: 500px">
+        <c:forEach items="${fns:getDictList('tel')}" var="tel">
+          <option value="${tel.value}">${tel.label}</option>
+        </c:forEach>
+      </select>
     </div>
   </div>
   <div class="control-group">
@@ -106,9 +117,23 @@
     </div>
   </div>
   <div class="form-actions">
-    <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
+    <shiro:hasPermission name="tms:group:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/></shiro:hasPermission>&nbsp;
     <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
   </div>
 </form:form>
+<script type="text/javascript">
+  var tel = "${group.telFunction}";
+  if(tel!=null && tel.length>0){
+    tel = tel.split(',');
+    $("#telFunction").val(tel).trigger("change");
+  }
+  function checkClean(){
+    if($("#telFunction").val() == null){
+      $("#telClean").val("1");
+    }else{
+      $("#telClean").val("");
+    }
+  }
+</script>
 </body>
 </html>

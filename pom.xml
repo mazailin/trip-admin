@@ -4,7 +4,7 @@
     <groupId>com.ulplanet.trip</groupId>
     <artifactId>trip-admin</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0beta</version>
+    <version>1.1.0</version>
     <name>trip-admin</name>
 
     <!-- 项目属性 -->
@@ -510,6 +510,13 @@
             <artifactId>apk-parser</artifactId>
             <version>1.1</version>
         </dependency>
+        <!--http client-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
 
     </dependencies>
 

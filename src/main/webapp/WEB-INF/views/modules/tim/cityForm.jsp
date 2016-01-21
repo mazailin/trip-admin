@@ -53,7 +53,7 @@
         <div class="control-group">
             <label class="control-label">国家:</label>
             <div class="controls">
-                <form:select id="country" path="country.id" style="width: 100px;">
+                <form:select id="country" path="country.id" class="input-large">
                     <form:options items="${countryList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
                 <span class="help-inline"><font color="red">*</font> </span>

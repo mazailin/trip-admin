@@ -67,17 +67,7 @@ public class PhoneInfoController extends BaseController {
         if (!beanValidator(model, phoneInfo)){
             return form(phoneInfo, model);
         }
-        if(StringUtils.isNotBlank(phoneInfo.getId())){
-            if(phoneInfo.getStatus()!=null && phoneInfo.getStatus() == 9999){
-                addMessage(redirectAttributes,"非法操作！！");
-                return "redirect:" + adminPath + "/ims/phone/form/?id="+phoneInfo.getId();
-            }
-            phoneInfo = this.phoneInfoService.updatePhoneInfo(phoneInfo);
-        }else {
-            phoneInfo = this.phoneInfoService.addPhoneInfo(phoneInfo);
-        }
-
-        if(phoneInfo!=null){
+        if(phoneInfoService.savePhoneInfo(phoneInfo)!=null){
             addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"成功");
         }else{
             addMessage(redirectAttributes,"保存手机信息"+phoneInfo.getCode()+"失败");

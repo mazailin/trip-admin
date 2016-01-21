@@ -81,7 +81,7 @@
     <div class="control-group">
       <label class="control-label">备注:</label>
       <div class="controls">
-        <form:textarea path="comment" htmlEscape="false" rows="3" maxlength="200" class="input-xlarge"/>
+        <form:textarea path="comment" htmlEscape="false" rows="3" maxlength="2000" class="input-xlarge"/>
       </div>
     </div>
     <div class="form-actions">

@@ -604,3 +604,199 @@ CREATE TABLE `code_opt` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `mod_type_UNIQUE` (`mod_type` ASC)
 ) COMMENT='编码表';
+
+
+-- 订单与库存管理
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `product_detail`;
+DROP TABLE IF EXISTS `product_in`;
+DROP TABLE IF EXISTS `in_detail`;
+DROP TABLE IF EXISTS `product_discard`;
+DROP TABLE IF EXISTS `rent`;
+DROP TABLE IF EXISTS `rent_detail`;
+DROP TABLE IF EXISTS `return`;
+CREATE TABLE `product` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `unit` VARCHAR(100) COMMENT '计量单位',
+  `avg_price` DECIMAL(10,2) COMMENT '平均价格',
+  `rent_price` DECIMAL(10,2) COMMENT '出租价格',
+  `pay_price` DECIMAL(10,2) COMMENT '赔偿价格',
+  `total_amt` DECIMAL(10,2) COMMENT '总数',
+  `rent_amt` DECIMAL(10,2) COMMENT '在租数量',
+  `rsv_amt` DECIMAL(10,2) COMMENT '库存数量',
+  `avl_amt` DECIMAL(10,2) COMMENT '可用数量',
+  `upper_limit` DECIMAL(10,2) COMMENT '上限',
+  `low_limit` DECIMAL(10,2) COMMENT '下限',
+  `use_detail` CHAR(1) COMMENT '是否按明细管理',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品列表';
+
+CREATE TABLE `product_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
+  `code` VARCHAR(36) COMMENT '编码',
+  `device` VARCHAR(64) COMMENT '设备号',
+  `status` VARCHAR(36) COMMENT '状态',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品明细';
+
+CREATE TABLE `product_in` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) NOT NULL COMMENT '单号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品id',
+  `in_date` DATETIME COMMENT '入库日期',
+  `in_type` INT(2) COMMENT '入库类型',
+  `operator` VARCHAR(64) COMMENT '经办人',
+  `bills` VARCHAR(255) COMMENT '采购单据',
+  `insure` CHAR(1) COMMENT '是否购买保险',
+  `amount` DECIMAL(10,2) COMMENT '数量',
+  `buy_amount` DECIMAL(10,2) COMMENT '采购数量',
+  `price` DECIMAL(10,2) COMMENT '单价',
+  `total_price` DECIMAL(10,2) COMMENT '总价',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品入库';
+
+CREATE TABLE `in_detail` (
+  `in_id` VARCHAR(36) NOT NULL COMMENT '产品入库明细编号',
+  `pro_detail_id` VARCHAR(36) NOT NULL COMMENT '产品明细id',
+  PRIMARY KEY (`in_id`, `pro_detail_id`)
+) COMMENT='产品入库明细';
+
+CREATE TABLE `product_discard` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) COMMENT '单据编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
+  `pro_detail_id` VARCHAR(36) COMMENT '产品明细编号',
+  `amount` DECIMAL(10,2) COMMENT '数量',
+  `reasons` VARCHAR(2000) COMMENT '原因',
+  `dis_date` DATETIME COMMENT '报废日期',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品报废';
+
+CREATE TABLE `rent` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) COMMENT '单据编号',
+  `renter` VARCHAR(255) COMMENT '租赁人',
+  `operator` VARCHAR(255) COMMENT '经办人',
+  `status` INT(2) COMMENT '状态',
+  `deposit` DECIMAL(10,2) COMMENT '押金',
+  `rent_date` DATETIME COMMENT '出租日期',
+  `return_date` DATETIME COMMENT '归还日期',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品租赁';
+
+CREATE TABLE `rent_detail` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
+  `pro_detail_id` VARCHAR(36) COMMENT '产品明细编号',
+  `amount` DECIMAL(10,2) COMMENT '数量',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='租赁明细';
+
+CREATE TABLE `return` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `code` VARCHAR(36) COMMENT '单据编号',
+  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
+  `operator` VARCHAR(255) COMMENT '经办人',
+  `return_date` DATETIME COMMENT '归还日期',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='产品归还';
+
+-- 位置轨迹
+DROP TABLE IF EXISTS `position`;
+CREATE TABLE `position` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '用户编号',
+  `lng` DECIMAL(10,6) NOT NULL COMMENT '经度',
+  `lat` DECIMAL(10,6) NOT NULL COMMENT '纬度',
+  `timing` TIMESTAMP NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) COMMENT='位置轨迹';
+
+-- 团队分组
+DROP TABLE IF EXISTS `team`;
+DROP TABLE IF EXISTS `team_user`;
+CREATE TABLE `team` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `group_id` VARCHAR(36) NOT NULL COMMENT '旅行团编号',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `comment` VARCHAR(2000) COMMENT '备注',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='团队分组';
+
+CREATE TABLE `team_user` (
+  `team_id` VARCHAR(36) NOT NULL COMMENT '小组编号',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '名称',
+  PRIMARY KEY (`team_id`, `user_id`)
+) COMMENT='小组成员';
+
+-- 当地电话
+DROP TABLE IF EXISTS `local_phone`;
+CREATE TABLE `local_phone` (
+  `id` VARCHAR(36) NOT NULL COMMENT '编号',
+  `country` VARCHAR(36) NOT NULL COMMENT '国家',
+  `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `phone` VARCHAR(255) COMMENT '电话',
+  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
+  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
+  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
+  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
+  `remarks` VARCHAR(255) COMMENT '备注信息',
+  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) COMMENT='当地电话';

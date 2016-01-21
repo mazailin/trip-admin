@@ -53,7 +53,7 @@ public class HotelController extends BaseController {
 
     @RequiresPermissions("tim:hotel:edit")
     @RequestMapping(value = "save")
-    public String save(Hotel hotel, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+    public String save(Hotel hotel, Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, hotel)){
             return form(hotel, model);
         }

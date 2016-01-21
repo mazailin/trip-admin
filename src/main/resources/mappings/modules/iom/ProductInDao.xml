@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.iom.dao.ProductInDao">
+
+    <sql id="productInColumns">
+        a.`id`,
+        a.`code`,
+        a.`product_id` AS 'product.id',
+        b.`name` AS 'product.name',
+        b.`use_detail` AS 'product.useDetail',
+        a.`amount`,
+        a.`buy_amount`,
+        a.`price`,
+        a.`total_price`,
+        a.`in_date`,
+        a.`in_type`,
+        a.`operator`,
+        a.`bills`,
+        a.`insure`,
+        a.`comment`
+    </sql>
+	<select id="findList" resultType="ProductIn">
+		SELECT
+            <include refid="productInColumns"/>
+        FROM product_in a
+        JOIN product b
+        ON a.product_id = b.id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="code != null and code != ''">
+            AND a.code like CONCAT('%', #{code}, '%')
+        </if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.code
+            </otherwise>
+        </choose>
+	</select>
+    <select id="get" resultType="ProductIn">
+        SELECT
+          <include refid="productInColumns"/>
+        FROM product_in a
+        JOIN product b
+        ON a.product_id = b.id
+        WHERE a.id = #{id}
+    </select>
+	<insert id="insert">
+        INSERT INTO product_in(
+            `id`,
+            `code`,
+            `product_id`,
+            `amount`,
+            `buy_amount`,
+            `price`,
+            `total_price`,
+            `in_date`,
+            `in_type`,
+            `operator`,
+            `bills`,
+            `insure`,
+            `comment`,
+            `create_by`,
+            `create_date`,
+            `update_by`,
+            `update_date`,
+            `remarks`,
+            `del_flag`
+        ) VALUES (
+            #{id},
+            #{code},
+            #{product.id},
+            #{amount},
+            #{buyAmount},
+            #{price},
+            #{totalPrice},
+            #{inDate},
+            #{inType},
+            #{operator},
+            #{bills},
+            #{insure},
+            #{comment},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+	</insert>
+	
+	<update id="update">
+        UPDATE product_in SET
+            `product_id` = #{product.id},
+            `amount` = #{amount},
+            `buy_amount` = #{buyAmount},
+            `price` = #{price},
+            `total_price` = #{totalPrice},
+            `in_date` = #{inDate},
+            `in_type` = #{inType},
+            `operator` = #{operator},
+            `bills` = #{bills},
+            `insure` = #{insure},
+            `comment` = #{comment},
+            `update_by` = #{updateBy.id},
+            `update_date` = #{updateDate},
+            `remarks` = #{remarks}
+        WHERE id = #{id}
+	</update>
+	<delete id="delete">
+		UPDATE product_in SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
+	</delete>
+
+    <insert id="insertProDetail">
+        INSERT INTO in_detail(
+        `in_id`,
+        `pro_detail_id`
+        ) VALUES (
+        #{inDetailId},
+        #{proDetailId}
+        )
+    </insert>
+
+    <select id="findDetail" resultType="ProductDetail">
+        SELECT
+            `code`,
+            `device`,
+            `comment`
+        FROM product_detail
+        JOIN in_detail
+        ON product_detail.id = in_detail.pro_detail_id
+        WHERE in_detail.in_id = #{id}
+        ORDER BY product_detail.`code`
+    </select>
+</mapper>

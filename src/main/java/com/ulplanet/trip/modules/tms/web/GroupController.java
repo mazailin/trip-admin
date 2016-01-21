@@ -84,14 +84,14 @@ public class GroupController  extends BaseController {
         addMessage(redirectAttributes, responseBo.getMsg());
         if(responseBo.getStatus()==1) {
             versionTagService.save(new VersionTag(group.getId(),1));
-            return "redirect:" + adminPath + "/tms/group/list/?repage";
+
         }
-        return form(group, model);
+        return "redirect:" + adminPath + "/tms/group/list/?repage";
     }
 
     @RequestMapping(value = "/delete")
     @RequiresPermissions("tms:group:edit")
-    public String delete(Group group,Model model, RedirectAttributes redirectAttributes) {
+    public String delete(Group group, RedirectAttributes redirectAttributes) {
         ResponseBo responseBo = this.groupService.deleteGroup(group);
         addMessage(redirectAttributes,responseBo.getMsg());
         return "redirect:" + adminPath + "/tms/group/list/?repage";
@@ -106,5 +106,20 @@ public class GroupController  extends BaseController {
         return "modules/tms/groupForm";
     }
 
+    @RequiresPermissions("tms:group:edit")
+     @RequestMapping(value = "notice")
+     public String notice( Model model){
+        model.addAttribute("userTree", groupService.getGroupUserTree());
+        return "modules/tms/sysNotific";
+    }
+
+    @RequiresPermissions("tms:group:edit")
+    @RequestMapping(value = "notice/send")
+    public String sendNotice(String menuIds, String comment, Model model){
+        String msg = groupService.sendNotice(menuIds, comment);
+        model.addAttribute("userTree", groupService.getGroupUserTree());
+        addMessage(model, msg);
+        return "modules/tms/sysNotific";
+    }
 
 }

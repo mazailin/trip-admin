@@ -19,6 +19,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by makun on 2015/11/27.
@@ -196,19 +198,20 @@ public class LogReader {
         for(Map<String,String> map : list){
             Map<String,String> m = new HashMap<>();
             String date = map.get("date");
-            String sim = map.get("sim");
+            String sim = map.get("userid");
             String[] strs;
-//            if(StringUtils.isNotEmpty(sim) && EhCacheUtils.get("logReader",sim)==null){
-//                strs = (String[]) EhCacheUtils.get("logReader",sim);
-//            }else {
+            if(StringUtils.isNotEmpty(sim) && EhCacheUtils.get("logReader",sim)!=null){
+                strs = (String[]) EhCacheUtils.get("logReader",sim);
+            }else {
                 strs = getCountry(sendGet(String.format(GOOGLE_URL, map.get("latitude"), map.get("longitude"))));
-//            }
-//            EhCacheUtils.put("logReader",sim,strs);
+                EhCacheUtils.put("logReader",sim,strs);
+            }
             if(infos.containsKey(date+strs[0])){//日期已存在
                 m = infos.get(date+strs[0]);
             }else{//日期不存在
                 m = loopEntry(map, m);
                 m.put("country",strs[1]);
+                m.put("_package",strs[0]);
             }
             m = getCount(map,m);
             infos.put(date+strs[0],m);
@@ -261,6 +264,44 @@ public class LogReader {
                 }
             }
             i++;
+        }
+        try {
+            File file = new File("D:\\report");
+            if(!file.exists())file.mkdirs();
+            FileOutputStream os = new FileOutputStream("D:\\report\\信息统计"+ DateUtils.formatDate(new Date(),"yyyyMMddSS")+".xls");
+            wb.write(os);
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void export1(Map<String,Integer> map){
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet();
+        HSSFRow row = sheet.createRow(0);
+        for(int i = 0 ;i < header1().size();i++){//创建表头
+            String head = header1().get(i);
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(head);
+            sheet.autoSizeColumn(i, true);
+            sheet.setColumnWidth(i, head.length() * 1024);
+        }
+        for(int i = 0; i < 3;i++){
+            HSSFRow row1 = sheet.createRow(i+1);
+            HSSFCell sexCell = row1.createCell(0);
+            switch (i){
+                case 0 : sexCell.setCellValue("未知");break;
+                case 1 : sexCell.setCellValue("男");break;
+                case 2 : sexCell.setCellValue("女");break;
+            }
+
+            for(int j = 0;j < 18;j++){
+                String key = i+"_"+j;
+                int value = map.containsKey(key)?map.get(key):0;
+                HSSFCell cell = row1.createCell(j+1);
+                cell.setCellValue(value);
+            }
         }
         try {
             File file = new File("D:\\report");
@@ -335,6 +376,30 @@ public class LogReader {
         list.add("hinfo");
         list.add("country");
         list.add("version");
+        return list;
+    }
+
+    private static List<String> header1(){
+        List<String> list = new ArrayList<>();
+        list.add("性别");
+        list.add("天气"    );
+        list.add("相机"    );
+        list.add("工具箱"  );
+        list.add("当地玩乐");
+        list.add("地图"    );
+        list.add("娱乐"    );
+        list.add("音乐"    );
+        list.add("视频"    );
+        list.add("电话"    );
+        list.add("聊天"    );
+        list.add("wifi"    );
+        list.add("紧急呼叫");
+        list.add("一键还原");
+        list.add("图库"    );
+        list.add("翻译"    );
+        list.add("租车"    );
+        list.add("我的行程");
+        list.add("个人信息");
         return list;
     }
 
@@ -502,24 +567,122 @@ public class LogReader {
 
     }
 
+    public Map<String,Integer> getCount() throws IOException {
+        Map<String,Integer> map = new HashMap<>();
+        File files = new File("D://log");
+        if(files.exists()){
+            Map<String,String> sql = getSex();
+            Map<String,String> group = getUserId();
+            File[] arr = files.listFiles();
+            for(File file : arr){
+                InputStream in = new FileInputStream(file);
+                Reader r = new InputStreamReader(in);
+                BufferedReader  reader = new BufferedReader(r);
+                String line;
+                while((line = reader.readLine()) != null){
+                    if(line.indexOf("-- function --")>0){//信息收集
+                        int ii = line.indexOf("userid:");
+                        String userId = line.substring(ii + 7, ii + 39);
+                        ii = line.indexOf("param:");
+                        String param = line.substring(ii+6);
+                        if(StringUtils.isEmpty(param))param = "0";
+                        if(group.containsKey(userId)){
+                            userId = sql.get(group.get(userId));
+                            if(StringUtils.isEmpty(userId))userId = "0";
+                            String key = userId+"_"+param;
+                            if(map.containsKey(key)){
+                                int i = map.get(key);
+                                i++;
+                                map.put(key,i);
+                            }else {
+                                map.put(key,1);
+                            }
+                        }
+
+                    }
+                }
+                in.close();
+                r.close();
+                reader.close();
+            }
+        }
+        return map;
+
+    }
+
+    private Map<String,String> getSex(){
+        File file = new File("D://user1.sql");
+        Pattern p = Pattern.compile("\\(.+?\\)");
+        InputStream in;
+        Map<String,String> map = new HashMap<>();
+        try {
+            in = new FileInputStream(file);
+            Reader r = new InputStreamReader(in);
+            BufferedReader  reader = new BufferedReader(r);
+            String line;
+            while((line = reader.readLine()) != null){
+                Matcher m = p.matcher(line);
+                while(m.find()){
+                    String s = m.group();
+                    s = s.substring(1, s.lastIndexOf(")"));
+                    String[] arr = s.split(",");
+                    String user = arr[0].trim();
+                    user = user.substring(1, user.length()-1);
+                    String sex = arr[2].trim();
+                    sex = sex.substring(1,sex.length()-1);
+                    map.put(user,sex);
+                }
+            }
+            in.close();
+            r.close();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private Map<String,String> getUserId(){
+        File file = new File("D://group_user.sql");
+        Pattern p = Pattern.compile("\\(.+?\\)");
+        InputStream in;
+        Map<String,String> map = new HashMap<>();
+        try {
+            in = new FileInputStream(file);
+            Reader r = new InputStreamReader(in);
+            BufferedReader  reader = new BufferedReader(r);
+            String line;
+            while((line = reader.readLine()) != null){
+                Matcher m = p.matcher(line);
+                while(m.find()){
+                    String s = m.group();
+                    s = s.substring(1, s.lastIndexOf(")"));
+                    String[] arr = s.split(",");
+                    String user = arr[0].trim();
+                    user = user.substring(1, user.length()-1);
+                    String sex = arr[2].trim();
+                    sex = sex.substring(1,sex.length()-1);
+                    map.put(user,sex);
+                }
+            }
+            in.close();
+            r.close();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
 
 
     public static void main(String [] args) throws ParseException {
         LogReader logReader = new LogReader();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(DateUtils.parseDate("2015-12-01","yyyy-MM-dd"));
-        /**获取多天**/
-        Map<String,Map<String,String>> m = new HashMap<>();
-        for(int i = 0;i<3;i++) {
-            List<Map<String, String>> map = logReader.getMapList(DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd"));
-            Map<String,Map<String,String>> infos = logReader.statistics(map);
-            System.out.println(JSON.toJSONString(infos));
-            m.putAll(infos);
-            calendar.add(Calendar.DATE,1);
+        try {
+            Map<String,Integer> map = logReader.getCount();
+            logReader.export1(map);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        /**获取指定天**/
-//        List<Map<String, String>> map = logReader.getMapList("2015-11-30");
-//        Map<String,Map<String,String>> m =logReader.statistics(map);
-        logReader.export(m);
     }
 }

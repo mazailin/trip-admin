@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ulplanet.trip.modules.tms.dao.TeamDao">
+
+    <select id="get" resultType="Team">
+        SELECT
+            id,
+            group_id AS 'group.id',
+            `name`,
+            `comment`
+        FROM
+            team
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="findList" resultType="Team">
+        SELECT
+            id,
+            group_id AS 'group.id',
+            `name`,
+            `comment`
+            FROM
+            team
+        WHERE
+            group_id = #{group.id}
+        ORDER BY `team`.update_date DESC
+    </select>
+
+    <select id="findUserList" resultType="GroupUser">
+        SELECT
+            group_user.id,
+            group_user.`code`,
+            `user`.`name`
+        FROM
+            `user`
+            JOIN group_user ON `user`.id = group_user.`user`
+            JOIN team_user ON group_user.id = team_user.user_id
+        WHERE
+            team_user.team_id = #{id}
+        ORDER BY
+            group_user.`code`
+    </select>
+
+    <select id="findPreUserList" resultType="GroupUser">
+        SELECT
+            group_user.id,
+            group_user.`code`,
+            `user`.`name`
+        FROM
+            `user`
+            JOIN group_user ON `user`.id = group_user.`user`
+        WHERE
+            group_user.id NOT IN (
+                SELECT
+                    user_id
+                FROM
+                    team_user
+                WHERE
+                    team_id = #{id}
+            )
+            AND group_user.`group` = #{group.id}
+        ORDER BY
+            group_user.`code`
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `team`(
+            id,
+            group_id,
+            name,
+            comment,
+            create_by,
+            create_date,
+            update_by ,
+            update_date,
+            remarks
+        ) VALUES (
+            #{id},
+            #{group.id},
+            #{name},
+            #{comment},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id} ,
+            #{updateDate},
+            #{remarks}
+        )
+    </insert>
+
+    <insert id="insertUsers">
+        INSERT INTO `team_user`(team_id, user_id) VALUES
+        <foreach collection ="users" item ="user" index ="index" separator =",">
+            ( #{teamId},#{user} )
+        </foreach >
+    </insert>
+
+    <delete id="deleteUsers">
+        DELETE FROM `team_user`
+        WHERE team_id = #{teamId}
+        AND user_id IN
+        <foreach item="user" index="index" collection="users" open="(" separator="," close=")">
+            #{user}
+        </foreach>
+    </delete>
+
+    <update id="update">
+        UPDATE `team` SET
+            name = #{name},
+            comment = #{comment},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM `team` WHERE id = #{id}
+    </delete>
+
+    <delete id="delAllTeamUsers">
+        DELETE FROM `team_user` WHERE team_id = #{id}
+    </delete>
+
+</mapper>

@@ -2,6 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ulplanet.trip.modules.tms.dao.GroupUserDao">
 
+    <select id="findAllList" resultType="GroupUser">
+        SELECT
+        group_user.id,
+        group_user.`group`,
+        group_user.user,
+        group_user.code,
+        group_user.type,
+        group_user.cphone,
+        user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.email
+        FROM
+        user
+        JOIN group_user ON user.id = group_user.user
+        ORDER BY group_user.code
+    </select>
+
     <select id="findList" resultType="GroupUser">
         SELECT
             group_user.id,
@@ -153,6 +180,35 @@
         </where>
     </select>
 
+    <select id="getByUserCode" resultType="GroupUser">
+        SELECT
+        group_user.id,
+        group_user.`group`,
+        group_user.user,
+        group_user.code,
+        group_user.type,
+        group_user.cphone,
+        user.name,
+        user.weChat,
+        user.qq,
+        user.birth,
+        user.issue_date,
+        user.expiry_date,
+        user.birth_place,
+        user.issue_place,
+        user.gender,
+        user.identity_card,
+        user.passport,
+        user.phone,
+        user.email
+        FROM
+        user
+        JOIN group_user ON user.id = group_user.user
+        <where>
+            group_user.`code` = #{code}
+        </where>
+    </select>
+
     <insert id="insertGroupUser">
         INSERT INTO group_user(
             id,
@@ -189,12 +245,19 @@
             type = #{type},
             update_by = #{updateBy.id},
             update_date = #{updateDate},
-            remarks = #{remarks},
             <if test="cphone!=null">
-                cphone = #{cphone}
+                cphone = #{cphone},
             </if>
+            remarks = #{remarks}
+
         WHERE id = #{id}
     </update>
+
+    <select id="findListByGroup" resultType="java.lang.String">
+        SELECT id
+        FROM group_user
+        WHERE `group` = #{id}
+    </select>
 
 
     <delete id="deleteGroupUser">
@@ -205,19 +268,8 @@
         DELETE FROM user WHERE id = #{user}
     </delete>
 
-    <select id="findMaxCode" resultType="java.lang.String">
-        SELECT
-            MAX(CODE)
-        FROM
-            group_user
-        WHERE
-            CODE LIKE CONCAT(#{code}, '___')
-    </select>
-
     <select id="findUserByPassport" resultType="GroupUser">
         SELECT
-            MAX(`group`.to_date) as toDate,
-            MIN(`group`.from_date) as fromDate,
             group_user.id,
             group_user.`group`,
             user.id as `user`,
@@ -237,15 +289,7 @@
                 AND `group`.id = #{group}
             </if>
         </where>
-        group by user.passport
 
-    </select>
-
-
-    <select id="getUserById"  resultType="GroupUser">
-        select `user`.id as user
-        from user
-        where id = #{id}
     </select>
 
 

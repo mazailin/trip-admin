@@ -20,8 +20,8 @@
             <result property="typeValue" column="typeValue"/>
             <result property="longitude" column="longitude"/>
             <result property="latitude" column="latitude"/>
+            <result property="feedbackFlag" column="feedbackFlag"/>
 	</resultMap>
-
     <resultMap id="InfoBo" type="com.ulplanet.trip.modules.tms.bo.InfoBo">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
@@ -31,172 +31,52 @@
         <result property="latitude" column="latitude"/>
         <result property="description" column="description"/>
     </resultMap>
-
-
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="BaseColumns">
 	    <![CDATA[
-            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude
+            id,day_id,info_id,type,name,time,time_flag,description,message,message_flag,sort,remarks,longitude,latitude,feedback_flag
 	    ]]>
 	</sql>
-
-<sql id="BaseWhere">
-    <where>
-                <if test="id != null and id != ''">
-                    AND id = #{id}
-                </if>
-                <if test="dayId != null and dayId != ''">
-                    AND day_id = #{dayId}
-                </if>
-                <if test="type != null and type != ''">
-                    AND type = #{type}
-                </if>
-                <if test="name != null and name != ''">
-                    AND name = #{name}
-                </if>
-                <if test="time != null and time != ''">
-                    AND time = #{time}
-                </if>
-                <if test="timeFlag != null and timeFlag != ''">
-                    AND time_flag = #{timeFlag}
-                </if>
-                <if test="description != null and description != ''">
-                    AND description = #{description}
-                </if>
-                <if test="message != null and message != ''">
-                    AND message = #{message}
-                </if>
-                <if test="messageFlag != null and messageFlag != ''">
-                    AND message_flag = #{messageFlag}
-                </if>
-                <if test="sort != null and sort != ''">
-                    AND sort = #{sort}
-                </if>
-                <if test="remarks != null and remarks != ''">
-                    AND remarks = #{remarks}
-                </if>
-    </where>
-
- </sql>
-
-
-
 	<insert id="insert">
-                INSERT INTO journey_plan (
-                  <trim suffix="" suffixOverrides=",">
-                      <if test="id != null and id != ''">
-                          id,
-                      </if>
-                      <if test="dayId != null and dayId != ''">
-                          day_id,
-                      </if>
-                      <if test="type != null and type != ''">
-                          type,
-                      </if>
-                      <if test="infoId != null and infoId != ''">
-                          info_id,
-                      </if>
-                      <if test="name != null and name != ''">
-                          name,
-                      </if>
-                      <if test="time != null and time != ''">
-                          time,
-                      </if>
-                      <if test="timeFlag != null and timeFlag != ''">
-                         time_flag,
-                      </if>
-                      <if test="description != null">
-                          description,
-                      </if>
-                      <if test="message != null">
-                         message,
-                      </if>
-                      <if test="messageFlag != null and messageFlag != ''">
-                         message_flag,
-                      </if>
-                      <if test="sort != null and sort != ''">
-                        sort,
-                      </if>
-                      <if test="latitude != null and latitude != ''">
-                          latitude,
-                      </if>
-                      <if test="longitude != null and longitude != ''">
-                          longitude,
-                      </if>
-                      <if test="createBy.id != null and createBy.id != ''">
-                        create_by,
-                      </if>
-                      <if test="createDate != null and createDate != ''">
-                        create_date,
-                      </if>
-                      <if test="updateBy != null and updateBy != ''">
-                          update_by,
-                      </if>
-                      <if test="updateDate != null and updateDate != ''">
-                        update_date,
-                      </if>
-                      <if test="remarks != null and remarks != ''">
-                        remarks,
-                      </if>
-                  </trim>
-                ) VALUES (
-                  <trim suffix="" suffixOverrides=",">
-                    <if test="id != null and id != ''">
-                        #{id},
-                    </if>
-                    <if test="dayId != null and dayId != ''">
-                        #{dayId},
-                    </if>
-                    <if test="type != null and type != ''">
-                        #{type},
-                    </if>
-                    <if test="infoId != null and infoId != ''">
-                        #{infoId},
-                    </if>
-                    <if test="name != null and name != ''">
-                        #{name},
-                    </if>
-                    <if test="time != null and time != ''">
-                        #{time},
-                    </if>
-                    <if test="timeFlag != null and timeFlag != ''">
-                       #{timeFlag},
-                    </if>
-                    <if test="description != null">
-                        #{description},
-                    </if>
-                    <if test="message != null">
-                        #{message},
-                    </if>
-                    <if test="messageFlag != null and messageFlag != ''">
-                        #{messageFlag},
-                    </if>
-                    <if test="sort != null and sort != ''">
-                        #{sort},
-                    </if>
-                      <if test="latitude != null and latitude != ''">
-                          #{latitude},
-                      </if>
-                      <if test="longitude != null and longitude != ''">
-                          #{longitude},
-                      </if>
-                    <if test="createBy.id != null and createBy.id != ''">
-                        #{createBy.id},
-                    </if>
-                    <if test="createDate != null and createDate != ''">
-                        #{createDate},
-                    </if>
-                  <if test="updateBy != null and updateBy != ''">
-                      #{updateBy.id},
-                  </if>
-                    <if test="updateDate != null and updateDate != ''">
-                        #{updateDate},
-                    </if>
-                    <if test="remarks != null and remarks != ''">
-                        #{remarks},
-                    </if>
-                  </trim>
-                )
+        INSERT INTO journey_plan (
+            id,
+            day_id,
+            type,
+            info_id,
+            name,
+            time,
+            time_flag,
+            description,
+            feedback_flag,
+            message,
+            sort,
+            latitude,
+            longitude,
+            create_by,
+            create_date,
+            update_by ,
+            update_date ,
+            remarks
+        ) VALUES (
+            #{id},
+            #{dayId},
+            #{type},
+            #{infoId},
+            #{name},
+            #{time},
+            #{timeFlag},
+            #{description},
+            #{feedbackFlag},
+            #{message},
+            #{sort},
+            #{latitude},
+            #{longitude},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks}
+        )
 	</insert>
 
 
@@ -210,6 +90,7 @@
                 time,
                 time_flag,
                 description,
+                feedback_flag,
                 message,
                 sort,
                 latitude,
@@ -230,6 +111,7 @@
                     #{item.time},
                     #{item.timeFlag},
                     #{item.description},
+                    #{item.feedbackFlag},
                     #{item.message},
                     #{item.sort},
                     #{item.latitude},
@@ -270,6 +152,9 @@
                  <if test="description != null">
                       description = #{description},
                   </if>
+                 <if test="feedbackFlag != null">
+                     feedback_flag = #{feedbackFlag},
+                 </if>
                  <if test="message != null">
                       message = #{message},
                   </if>
@@ -285,12 +170,8 @@
                  <if test="longitude != null and longitude != ''">
                      longitude = #{longitude},
                  </if>
-                 <if test="updateBy.id != null">
                       update_by = #{updateBy.id},
-                  </if>
-                 <if test="updateDate != null">
                       update_date = #{updateDate},
-                  </if>
                  <if test="remarks != null">
                       remarks = #{remarks}
                   </if>
@@ -302,10 +183,10 @@
             DELETE FROM journey_plan
             <where>
                 <if test="id!=null and id!=''">
-                    id = #{id}
+                    AND id = #{id}
                 </if>
                 <if test="dayId!=null and dayId!=''">
-                    day_id = #{dayId}
+                    AND day_id = #{dayId}
                 </if>
             </where>
     </delete>
@@ -323,7 +204,7 @@
     <select id="findList" resultMap="JourneyPlan">
         SELECT <![CDATA[
             jp.id,jp.info_id,jp.day_id,jp.type,jp.name as name,jp.time,jp.time_flag,jp.description,
-            jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude
+            jp.message,jp.message_flag,jp.sort,jp.type as typeValue,jp.longitude as longitude,jp.latitude as latitude,jp.feedback_flag
 	    ]]>
         <![CDATA[
 		    FROM journey_plan jp
@@ -359,11 +240,6 @@
         </where>
     </select>
 
-    <select id="findPage" resultMap="JourneyPlan">
-    	SELECT <include refid="BaseColumns" />
-	    FROM journey_plan 
-		<include refid="BaseWhere"/>
-    </select>
 
 
 

@@ -245,11 +245,6 @@
 	
 
 		
-    <select id="findPageCount" resultType="long">
-        SELECT count(1) FROM stock_order
-		<include refid="BaseWhere"/>
-    </select>
-
     <select id="findListByParams" resultMap="StockOrder">
     	SELECT <include refid="BaseColumns" />
 	    FROM stock_order 

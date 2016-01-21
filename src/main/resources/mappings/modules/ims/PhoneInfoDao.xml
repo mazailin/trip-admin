@@ -191,13 +191,6 @@
             </where>
     </select>
 
-
-
-    <select id="findPageCount" resultType="long">
-        SELECT count(1) FROM phone_info
-        <include refid="BaseWhere"/>
-    </select>
-
     <select id="findListByParams" resultMap="PhoneInfo">
         SELECT <include refid="BaseColumns" />
         FROM phone_info
@@ -210,20 +203,6 @@
         WHERE
              id = #{id}
     </select>
-
-    <!--<select id="get" resultMap="PhoneInfo">-->
-        <!--SELECT <include refid="BaseColumns" />-->
-        <!--FROM phone_info-->
-        <!--<where>-->
-
-            <!--<if test="id != null and id != ''">-->
-                <!--AND id = #{id}-->
-            <!--</if>-->
-            <!--<if test="code != null and code != ''">-->
-                <!--AND code = #{code}-->
-            <!--</if>-->
-        <!--</where>-->
-    <!--</select>-->
 
     <select id="findList" resultMap="PhoneInfo">
         SELECT <include refid="BaseColumns" />,s.order_id as orderNo
@@ -244,6 +223,7 @@
                 AND phone_info.stock_order_id = #{stockOrderId}
             </if>
         </where>
+        ORDER BY phone_info.update_date DESC
     </select>
 
 

@@ -136,3 +136,6 @@ Temporary Items
 .apdisk
 
 # Created by .ignore support plugin (hsz.mobi)
+#project
+jdbc.properties
+config.properties

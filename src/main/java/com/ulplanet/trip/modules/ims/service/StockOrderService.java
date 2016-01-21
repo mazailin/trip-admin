@@ -3,7 +3,9 @@ package com.ulplanet.trip.modules.ims.service;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
+import com.ulplanet.trip.modules.ims.dao.PhoneInfoDao;
 import com.ulplanet.trip.modules.ims.dao.StockOrderDao;
+import com.ulplanet.trip.modules.ims.entity.PhoneInfo;
 import com.ulplanet.trip.modules.ims.entity.StockOrder;
 import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,17 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
 
     @Resource
     StockOrderDao stockOrderDao;
+    @Resource
+    PhoneInfoDao phoneInfoDao;
+
+    public StockOrder saveOrder(StockOrder stockOrder){
+        if(StringUtils.isNotBlank(stockOrder.getId())){
+            stockOrder =  this.updateOrder(stockOrder);
+        }else {
+            stockOrder = this.addOrder(stockOrder);
+        }
+        return stockOrder;
+    }
 
     public StockOrder addOrder(StockOrder stockOrder) {
         stockOrder.preInsert();
@@ -32,6 +45,18 @@ public class StockOrderService extends CrudService<StockOrderDao,StockOrder> {
 
     public StockOrder updateOrder(StockOrder stockOrder) {
         stockOrder.preUpdate();
+        StockOrder old = stockOrderDao.get(stockOrder);
+        int oldNumber = old.getQuantity();
+        int number = stockOrder.getQuantity();
+        if(number < oldNumber){
+            PhoneInfo phoneInfo = new PhoneInfo();
+            phoneInfo.setStockOrderId(stockOrder.getId());
+            if(phoneInfoDao.queryDeliverPhone(phoneInfo) > number){
+                return null;
+            }
+        }else if(number > oldNumber){
+            stockOrder.setStatus(1);
+        }
         if(stockOrderDao.update(stockOrder) > 0){
             return stockOrder;
         }
