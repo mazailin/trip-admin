@@ -157,7 +157,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
             return ResponseBo.getResult(1);
         }else{
             logger.error("创建用户：" + groupUser.getUser() + " 失败，" + JSON.toJSONString(q));
-            return new ResponseBo(0,"创建轻码云失败");
+            return new ResponseBo(0,"创建轻码云失败,错误代码："+q.getRespCode());
         }
     }
 
