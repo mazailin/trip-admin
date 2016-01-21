@@ -33,10 +33,15 @@ public class JourneyDayController  extends BaseController {
 
     @ModelAttribute
     public JourneyDay get(@RequestParam(required=false) String id,@RequestParam(value = "groupId",required=false) String group) {
+        JourneyDay journeyDay;
         if (StringUtils.isNotBlank(id)){
-            return journeyDayService.get(id);
+            journeyDay =  journeyDayService.get(id);
+            if(journeyDay == null){
+                journeyDay = (JourneyDay) EhCacheUtils.get(group,id);
+            }
+            return journeyDay;
         }else{
-            JourneyDay journeyDay = new JourneyDay();
+            journeyDay = new JourneyDay();
             if(StringUtils.isNotBlank(group)){
                 journeyDay.setGroupId(group);
             }
