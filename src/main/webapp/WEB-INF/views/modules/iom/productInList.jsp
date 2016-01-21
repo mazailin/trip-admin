@@ -42,7 +42,9 @@
 				<td>${productIn.operator}</td>
                 <shiro:hasPermission name="iom:product:in:edit"><td>
                     <a href="${ctx}/iom/product/in/form?id=${productIn.id}">修改</a>
-                    <a href="#">入库明细</a>
+                <c:if test="${'1' eq productIn.product.useDetail}">
+                    <a href="${ctx}/iom/product/detail/in/list">入库明细</a>
+                </c:if>
                 </td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

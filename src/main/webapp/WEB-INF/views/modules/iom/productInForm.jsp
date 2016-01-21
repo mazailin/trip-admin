@@ -97,6 +97,12 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">实际数量:</label>
+        <div class="controls">
+            <form:input path="amount" htmlEscape="false" class="input-small" readonly="true"/>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">单价:</label>
         <div class="controls">
             <form:input path="price" htmlEscape="false" class="input-small"/>&nbsp;元
