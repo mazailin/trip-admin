@@ -34,7 +34,7 @@ public class QingHttpClient {
     public QingResultInfo create(String phone){
         String url = URL + CREATE;
         Map<String,String> map = new HashMap<>();
-        String timestamp = DateUtils.formatDate(new Date(),"yyyyMMddHHmmss");
+        String timestamp = DateUtils.formatDate(DateUtils.getBjDate(), "yyyyMMddHHmmss");
         map.put("accountSid",ACCOUNT_SID);
         map.put("appId",APP_ID);
         map.put("mobile",phone);
