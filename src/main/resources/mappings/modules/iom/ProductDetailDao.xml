@@ -43,12 +43,9 @@
         ON a.product_id = b.id
         JOIN in_detail c
         ON a.id = c.pro_detail_id
-        WHERE c.in_id = #{inId}
+        WHERE c.in_id = #{sqlMap.inId}
         <if test="device != null and device != ''">
             AND a.device like CONCAT('%', #{device}, '%')
-        </if>
-        <if test="product != null and product.id != null and product.id != ''">
-            AND b.id = #{product.id}
         </if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
