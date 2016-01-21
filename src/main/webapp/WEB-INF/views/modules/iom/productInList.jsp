@@ -29,14 +29,21 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>单号</th><th>日期</th><th>类型</th><th>经办人</th></tr></thead>
+		<thead><tr><th>单号</th><th>产品</th><th>日期</th><th>采购数量</th><th>实际数量</th><th>类型</th><th>经办人</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productIn">
 			<tr>
-				<td><a href="${ctx}/iom/product/in/view?id=${productIn.id}">${productIn.code}</a></td>
-				<td><fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td><a href="${ctx}/iom/product/in/form?id=${productIn.id}">${productIn.code}</a></td>
+                <td>${productIn.product.name}</td>
+                <td><fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td>${productIn.buyAmount}</td>
+				<td ${productIn.amount ne productIn.buyAmount ? 'style="color:red;"' : ''}>${productIn.amount}</td>
 				<td>${fns:getDictLabel(productIn.inType, 'product_in_type', '')}</td>
 				<td>${productIn.operator}</td>
+                <shiro:hasPermission name="iom:product:in:edit"><td>
+                    <a href="${ctx}/iom/product/in/form?id=${productIn.id}">修改</a>
+                    <a href="#">入库明细</a>
+                </td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

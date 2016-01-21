@@ -3,7 +3,6 @@ package com.ulplanet.trip.modules.tms.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.EhCacheUtils;
 import com.ulplanet.trip.common.utils.IdGen;
 import com.ulplanet.trip.common.utils.StringUtils;
@@ -30,8 +29,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Administrator on 2015/10/27.
@@ -60,7 +61,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
 
         if(StringUtils.isBlank(groupUser.getId())){//添加用户
             Group group = groupDao.get(groupUser.getGroup());
-            String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
+            String code =  codeService.getCode(CodeService.CODE_TYPE_GROUP_USER, "");
             groupUser.setCode(code);
             groupUser.preInsert();
 
@@ -98,7 +99,7 @@ public class GroupUserService extends CrudService<GroupUserDao,GroupUser> {
                 continue;
             }
             groupUser.setId(IdGen.uuid());
-            String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER);
+            String code = codeService.getCode(CodeService.CODE_TYPE_GROUP_USER, "");
             groupUser.setCode(code);
             responseBo = addChat(groupUser,group);
         }

@@ -32,7 +32,7 @@ public class ReturnService extends CrudService<ReturnDao, Return> {
 
     public void saveReturn(Return re) {
         if (StringUtils.isBlank(re.getId())){
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_RETURN);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_RETURN, "");
             re.preInsert();
             re.setCode(code);
 

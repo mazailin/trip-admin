@@ -36,11 +36,11 @@
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/iom/product/in/list">产品入库</a></li>
     <li class="active"><a href="${ctx}/iom/product/in/form?id=${productIn.id}">入库<shiro:hasPermission name="iom:product:in:edit">${not empty productIn.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:in:edit">查看</shiro:lacksPermission></a></li>
-    <li ${not empty productIn.id?'':'hidden'}><a href="${ctx}/iom/product/in/detail/form?productIn.id=${productIn.id}">入库明细</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="productIn" action="${ctx}/iom/product/in/save" method="post" class="form-horizontal">
     <form:hidden path="id"/>
     <form:hidden path="product.id"/>
+    <form:hidden path="product.code"/>
     <sys:message content="${message}"/>
     <div class="control-group">
         <label class="control-label">单据编号:</label>

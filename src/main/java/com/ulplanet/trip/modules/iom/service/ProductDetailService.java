@@ -30,7 +30,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
     public void saveProductDetail(ProductDetail productDetail) {
         if (StringUtils.isBlank(productDetail.getId())) {
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DETAIL);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DETAIL, productDetail.getProduct().getCode());
             productDetail.setCode(code);
             productDetail.preInsert();
             productDetailDao.insert(productDetail);
@@ -43,7 +43,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
     public void saveProductDetailIn(String inId, ProductDetail productDetail) {
         if (StringUtils.isBlank(productDetail.getId())) {
 
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DETAIL);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DETAIL, productDetail.getProduct().getCode());
             productDetail.setCode(code);
             productDetail.setStatus("1");
             productDetail.preInsert();

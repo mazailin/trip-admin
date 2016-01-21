@@ -3,7 +3,6 @@ package com.ulplanet.trip.modules.iom.web;
 import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
-import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 import com.ulplanet.trip.modules.iom.entity.ProductIn;
 import com.ulplanet.trip.modules.iom.service.ProductInService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * 产品入库Controller
@@ -54,15 +52,15 @@ public class ProductInController extends BaseController {
         return "modules/iom/productInForm";
     }
 
-    @RequiresPermissions("iom:product:in:view")
-    @RequestMapping(value = "view")
-    public String view(ProductIn productIn, Model model) {
-        model.addAttribute("productIn", productIn);
-
-        List<ProductDetail> detail = productInService.findDetail(productIn.getId());
-        model.addAttribute("detail", detail);
-        return "modules/iom/productInView";
-    }
+//    @RequiresPermissions("iom:product:in:view")
+//    @RequestMapping(value = "view")
+//    public String view(ProductIn productIn, Model model) {
+//        model.addAttribute("productIn", productIn);
+//
+//        List<ProductDetail> detail = productInService.findDetail(productIn.getId());
+//        model.addAttribute("detail", detail);
+//        return "modules/iom/productInView";
+//    }
 
     @RequiresPermissions("iom:product:in:edit")
     @RequestMapping(value = "save")
@@ -71,14 +69,8 @@ public class ProductInController extends BaseController {
             return form(productIn, model);
         }
         productInService.saveProductIn(productIn);
-        if ("1".equals(productIn.getProduct().getUseDetail())) {
-            redirectAttributes.addAttribute("inId", productIn.getId());
-            redirectAttributes.addAttribute("product.id", productIn.getProduct().getId());
-            redirectAttributes.addAttribute("product.name", productIn.getProduct().getName());
-            return "redirect:" + adminPath + "/iom/product/detail/in/form";
-        } else {
-            return "redirect:" + adminPath + "/iom/product/in/list?repage";
-        }
+        redirectAttributes.addAttribute("code", productIn.getCode());
+        return "redirect:" + adminPath + "/iom/product/in/list?repage";
     }
 
     @RequiresPermissions("iom:product:in:edit")

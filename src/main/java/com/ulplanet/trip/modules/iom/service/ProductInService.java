@@ -29,7 +29,7 @@ public class ProductInService extends CrudService<ProductInDao, ProductIn> {
 
     public void saveProductIn(ProductIn productIn) {
         if (StringUtils.isBlank(productIn.getId())) {
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_IN);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_IN, "");
             productIn.setCode(code);
             productIn.preInsert();
 

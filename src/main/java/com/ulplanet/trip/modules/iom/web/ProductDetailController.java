@@ -90,6 +90,7 @@ public class ProductDetailController extends BaseController {
         redirectAttributes.addAttribute("inId", inId);
         redirectAttributes.addAttribute("product.id", productDetail.getProduct().getId());
         redirectAttributes.addAttribute("product.name", productDetail.getProduct().getName());
+        redirectAttributes.addAttribute("product.code", productDetail.getProduct().getCode());
         return "redirect:" + adminPath + "/iom/product/detail/in/form";
     }
 

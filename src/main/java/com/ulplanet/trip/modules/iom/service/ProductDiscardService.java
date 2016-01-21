@@ -28,7 +28,7 @@ public class ProductDiscardService extends CrudService<ProductDiscardDao, Produc
 
     public void saveProductDiscard(ProductDiscard productDiscard) {
         if (StringUtils.isBlank(productDiscard.getId())){
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DISCARD);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DISCARD, "");
             productDiscard.preInsert();
             productDiscard.setCode(code);
 

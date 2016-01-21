@@ -6,6 +6,7 @@
         a.`id`,
         b.`id` AS 'product.id',
         b.`name` AS 'product.name',
+        b.`code` AS 'product.code',
         a.`code`,
         a.`device`,
         a.`status`,
