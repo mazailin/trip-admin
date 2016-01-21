@@ -84,9 +84,9 @@ public class GroupController  extends BaseController {
         addMessage(redirectAttributes, responseBo.getMsg());
         if(responseBo.getStatus()==1) {
             versionTagService.save(new VersionTag(group.getId(),1));
-            return "redirect:" + adminPath + "/tms/group/list/?repage";
+
         }
-        return form(group, model);
+        return "redirect:" + adminPath + "/tms/group/list/?repage";
     }
 
     @RequestMapping(value = "/delete")

@@ -33,6 +33,11 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
     @Resource
     private CityService cityService;
 
+    /**
+     * 获取行程信息
+     * @param groupId
+     * @return
+     */
     public List<JourneyDayBo> queryList(String groupId){
         JourneyDay j = new JourneyDay();
         j.setGroupId(groupId);
@@ -53,6 +58,12 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
         return journeyDayBos;
     }
 
+    /**
+     * 获取当天行程
+     * @param id
+     * @param groupId
+     * @return
+     */
     public JourneyDay getJourneyDay(String id,String groupId){
         JourneyDay j;
         if(EhCacheUtils.get(groupId,id)!=null){
@@ -92,7 +103,8 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
         String groupId = journeyBo.getGroupId();
         List<JourneyDay> addDayList = new ArrayList<>();
         List<JourneyPlan> addPlanList = new ArrayList<>();
-        for(int i = 0;i < sortBos.length;i++){//每天行程保存
+        //每天行程保存
+        for(int i = 0;i < sortBos.length;i++){
             SortBo sortBo = sortBos[i];
             JourneyDay journeyDay ;
             if(!groupId.equals(sortBo.getGroupId())){
@@ -116,7 +128,8 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
                 addDayList.add(journeyDay);
             }
             SortBo[] sortBos1 = sortBo.getChildren();
-            for(int j = 0;j < sortBos1.length;j++){//每天详细行程保存
+            //每天详细行程保存
+            for(int j = 0;j < sortBos1.length;j++){
                 SortBo sortBo1 = sortBos1[j];
                 JourneyPlan journeyPlan;
                 if(!groupId.equals(sortBo1.getGroupId())){
@@ -142,7 +155,8 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
                 }
             }
         }
-        journeyDayDao.deleteByGroupId(groupId);//清空行程原有信息，重新插入
+        //清空行程原有信息，重新插入
+        journeyDayDao.deleteByGroupId(groupId);
         if(addPlanList.size()>0)journeyPlanService.inserts(addPlanList);
         if(addDayList.size()>0)journeyDayDao.inserts(addDayList);
         versionTagService.save(new VersionTag(groupId, 2));
@@ -157,6 +171,11 @@ public class JourneyDayService extends CrudService<JourneyDayDao,JourneyDay> {
     }
 
 
+    /**
+     * 预览
+     * @param journeyBo
+     * @return
+     */
     public List<JourneyDayBo> preview(JourneyBo journeyBo){
         SortBo[] sortBos = journeyBo.getList();
         List<JourneyDayBo> addDayList = new ArrayList<>();

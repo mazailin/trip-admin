@@ -23,10 +23,6 @@ public class JourneyPlanService extends CrudService<JourneyPlanDao,JourneyPlan> 
     @Resource
     private FlightService flightService;
 
-    public JourneyPlan saveJourneyPlan(JourneyPlan journeyPlan){
-        save(journeyPlan);
-        return journeyPlan;
-    }
 
     /**
      * 根据ID获取通用表列表信息
