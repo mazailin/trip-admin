@@ -16,4 +16,6 @@ public interface ProductDao extends CrudDao<Product> {
     List<Product> findUseDetailList(Product product);
 
     List<Product> findNUseDetailList(Product product);
+
+    void updateAvlPrice(Product product);
 }

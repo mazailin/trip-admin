@@ -27,6 +27,6 @@ public class ProductCalService extends CrudService<ProductDao, Product> {
      * 计算产品平均价格
      */
     public void updateAvlPrice(String productId) {
-
+        this.productDao.updateAvlPrice(new Product(productId));
     }
 }

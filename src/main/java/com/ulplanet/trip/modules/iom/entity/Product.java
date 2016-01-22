@@ -30,13 +30,13 @@ public class Product extends DataEntity<Product> {
         super();
     }
 
+    public Product(String id) {
+        super(id);
+    }
+
     public Product(String id, String name) {
         super(id);
         this.name = name;
-    }
-
-    public Product(String useDetail) {
-        this.useDetail = useDetail;
     }
 
     @Length(min=1, max=255, message="名称长度必须介于 1 和 255 之间")

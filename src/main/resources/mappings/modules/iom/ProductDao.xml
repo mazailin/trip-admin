@@ -113,6 +113,20 @@
             `remarks` = #{remarks}
         WHERE id = #{id}
 	</update>
+    <update id="updateAvlPrice">
+        UPDATE product
+        SET avg_price = (
+            SELECT
+                SUM(total_price) / SUM(buy_amount)
+            FROM
+                product_in
+            WHERE
+                product_id = product.id
+                AND del_flag = #{DEL_FLAG_NORMAL}
+        )
+        WHERE
+            id = #{id}
+    </update>
 	<delete id="delete">
 		UPDATE product SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
 	</delete>
