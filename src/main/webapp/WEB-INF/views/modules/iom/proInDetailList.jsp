@@ -15,10 +15,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/iom/product/detail/in/list?inId=${inId}">产品明细</a></li>
-		<li><a href="${ctx}/iom/product/detail/in/form?inId=${inId}">明细添加</a></li>
+		<li class="active"><a href="${ctx}/iom/product/detail/in/list?inId=${inId}&product.id=${productDetail.product.id}&product.name=${productDetail.product.name}&product.code=${productDetail.product.code}">产品明细</a></li>
+		<li><a href="${ctx}/iom/product/detail/in/form?inId=${inId}&product.id=${productDetail.product.id}&product.name=${productDetail.product.name}&product.code=${productDetail.product.code}">明细添加</a></li>
 	</ul>
-	<form:form id="searchForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/list?inId=${inId}" method="post" class="breadcrumb form-search ">
+	<form:form id="searchForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/list?inId=${inId}&product.id=${productDetail.product.id}&product.name=${productDetail.product.name}&product.code=${productDetail.product.code}" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>

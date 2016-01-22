@@ -52,16 +52,6 @@ public class ProductInController extends BaseController {
         return "modules/iom/productInForm";
     }
 
-//    @RequiresPermissions("iom:product:in:view")
-//    @RequestMapping(value = "view")
-//    public String view(ProductIn productIn, Model model) {
-//        model.addAttribute("productIn", productIn);
-//
-//        List<ProductDetail> detail = productInService.findDetail(productIn.getId());
-//        model.addAttribute("detail", detail);
-//        return "modules/iom/productInView";
-//    }
-
     @RequiresPermissions("iom:product:in:edit")
     @RequestMapping(value = "save")
     public String save(ProductIn productIn, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {

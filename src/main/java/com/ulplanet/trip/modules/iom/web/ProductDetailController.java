@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +100,7 @@ public class ProductDetailController extends BaseController {
         redirectAttributes.addAttribute("product.id", productDetail.getProduct().getId());
         redirectAttributes.addAttribute("product.name", productDetail.getProduct().getName());
         redirectAttributes.addAttribute("product.code", productDetail.getProduct().getCode());
-        return "redirect:" + adminPath + "/iom/product/detail/in/form";
+        return "redirect:" + adminPath + "/iom/product/detail/in/list";
     }
 
     @RequiresPermissions("iom:product:detail:edit")
@@ -124,6 +125,24 @@ public class ProductDetailController extends BaseController {
         productDetailService.delete(productDetail);
         addMessage(redirectAttributes, "删除产品明细" + productDetail.getDevice() + "成功");
         return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    /**
+     * 验证设备是否有效
+     * @param oldDevice
+     * @param productDetail
+     * @return
+     */
+    @ResponseBody
+    @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "checkDevice")
+    public String checkName(String oldDevice, ProductDetail productDetail) {
+        if (oldDevice != null && oldDevice.equals(productDetail.getDevice())) {
+            return "true";
+        } else if (productDetail.getDevice() != null && productDetailService.getDetailByDevice(productDetail) == null) {
+            return "true";
+        }
+        return "false";
     }
 
 }

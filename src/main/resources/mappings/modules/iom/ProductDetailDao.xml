@@ -35,6 +35,17 @@
             </otherwise>
         </choose>
 	</select>
+    <select id="findByDevice" resultType="ProductDetail">
+        SELECT
+        <include refid="proDetailColumns"/>
+        FROM product_detail a
+        JOIN product b
+        ON a.product_id = b.id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        AND b.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.product_id = #{product.id}
+        AND a.device = #{device}
+    </select>
     <select id="findInDetailList" resultType="ProductDetail">
         SELECT
         <include refid="proDetailColumns"/>

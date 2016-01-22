@@ -97,4 +97,8 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
         page.setList(dao.findInDetailList(productDetail));
         return page;
     }
+
+    public ProductDetail getDetailByDevice(ProductDetail productDetail) {
+        return productDetailDao.findByDevice(productDetail);
+    }
 }

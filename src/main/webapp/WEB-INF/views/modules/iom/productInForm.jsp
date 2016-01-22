@@ -5,7 +5,29 @@
     <title>产品入库管理</title>
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
+
         $(document).ready(function() {
+            var useDetail = '${productIn.product.useDetail}';
+
+            var calculateTotalAmount = function () {
+                var totalPrice = $("#buyAmount").val() * $("#price").val();
+                if (totalPrice) {
+                    $("#totalPrice").val(totalPrice.toFixed(2));
+                }
+            };
+
+            $("#buyAmount").change(function() {
+                if ('1' != useDetail) {
+                    $("#amount").val($(this).val());
+                }
+                calculateTotalAmount();
+            });
+
+            $("#price").change(function() {
+                calculateTotalAmount();
+            });
+
+
             $("#inputForm").validate({
                 rules: {
                     buyAmount: {
@@ -93,19 +115,25 @@
     <div class="control-group">
         <label class="control-label">采购数量:</label>
         <div class="controls">
-            <form:input path="buyAmount" htmlEscape="false" class="input-small"/>
+            <form:input id="buyAmount" path="buyAmount" htmlEscape="false" class="input-small"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">实际数量:</label>
         <div class="controls">
-            <form:input path="amount" htmlEscape="false" class="input-small" readonly="true"/>
+            <form:input id="amount" path="amount" htmlEscape="false" class="input-small" readonly="true"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">单价:</label>
         <div class="controls">
-            <form:input path="price" htmlEscape="false" class="input-small"/>&nbsp;元
+            <form:input id="price" path="price" htmlEscape="false" class="input-small"/>&nbsp;元
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">总价:</label>
+        <div class="controls">
+            <form:input id="totalPrice" path="totalPrice" htmlEscape="false" class="input-small" readonly="true"/>&nbsp;元
         </div>
     </div>
     <div class="control-group">
