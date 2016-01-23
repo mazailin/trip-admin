@@ -43,7 +43,7 @@ public class RentDetailService extends CrudService<RentDetailDao, RentDetail> {
             rentDetail.preInsert();
 
             ProductDetail productDetail = productDetailService.get(rentDetail.getProductDetail().getId());
-            productDetail.setStatus("4");
+            productDetail.setStatus(ProductDetail.STATUS_RENTED);
 
             Product product = productService.get(productDetail.getProduct().getId());
             product.setRsvAmt(product.getRsvAmt() - 1);

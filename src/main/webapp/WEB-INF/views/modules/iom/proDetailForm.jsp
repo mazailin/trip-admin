@@ -7,6 +7,12 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#inputForm").validate({
+                rules: {
+                    device: {remote: "${ctx}/iom/product/detail/checkDevice?product.id=" + encodeURIComponent('${productDetail.product.id}') + "&oldDevice=" + encodeURIComponent('${productDetail.device}')}
+                },
+                messages: {
+                    device: {remote: "设备已存在"}
+                },
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
 					form.submit();
@@ -50,7 +56,8 @@
         <div class="control-group">
             <label class="control-label">设备号:</label>
             <div class="controls">
-                <form:input path="device" htmlEscape="false" maxlength="64"/>
+                <form:input path="device" htmlEscape="false" maxlength="64" class="required"/>
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
 		<div class="control-group">

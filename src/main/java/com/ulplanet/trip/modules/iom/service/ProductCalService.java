@@ -20,7 +20,11 @@ public class ProductCalService extends CrudService<ProductDao, Product> {
      * 计算产品总数，在租数量，库存数量，可用数量
      */
     public void updateAmount(String productId, boolean useDetail) {
+        if (useDetail) {
 
+        } else {
+
+        }
     }
 
     /**

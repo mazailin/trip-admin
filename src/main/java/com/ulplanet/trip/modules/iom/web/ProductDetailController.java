@@ -120,6 +120,14 @@ public class ProductDetailController extends BaseController {
     }
 
     @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "repair")
+    public String repair(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        productDetailService.saveRepairStatus(productDetail);
+        addMessage(redirectAttributes, "产品明细'" + productDetail.getDevice() + "'送修成功");
+        return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    @RequiresPermissions("iom:product:detail:edit")
     @RequestMapping(value = "delete")
     public String delete(ProductDetail productDetail, RedirectAttributes redirectAttributes) {
         productDetailService.delete(productDetail);

@@ -48,7 +48,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
             String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DETAIL, productDetail.getProduct().getCode());
             productDetail.setCode(code);
-            productDetail.setStatus("1");
+            productDetail.setStatus(ProductDetail.STATUS_UNTEST);
             productDetail.preInsert();
 
             ProductIn productIn = productInService.get(inId);
@@ -69,16 +69,28 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
     public void saveTestStatus(ProductDetail productDetail) {
         productDetail.preUpdate();
-        productDetail.setStatus("2");
+        productDetail.setStatus(ProductDetail.STATUS_TESTED);
         productDetailDao.update(productDetail);
     }
 
     public void saveSaleStatus(ProductDetail productDetail) {
         productDetail.preUpdate();
-        productDetail.setStatus("3");
+        productDetail.setStatus(ProductDetail.STATUS_UNRENT);
 
         Product product = productService.get(productDetail.getProduct().getId());
         product.setAvlAmt(product.getAvlAmt() + 1);
+        productDetail.setProduct(product);
+
+        productDetailDao.update(productDetail);
+        productService.saveProduct(product);
+    }
+
+    public void saveRepairStatus(ProductDetail productDetail) {
+        productDetail.preUpdate();
+        productDetail.setStatus(ProductDetail.STATUS_REPAIR);
+
+        Product product = productService.get(productDetail.getProduct().getId());
+        product.setAvlAmt(product.getAvlAmt() - 1);
         productDetail.setProduct(product);
 
         productDetailDao.update(productDetail);

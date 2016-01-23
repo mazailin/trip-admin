@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 产品租赁Service
+ * 产品归还Service
  * Created by zhangxd on 15/12/17.
  */
 @Service
@@ -52,7 +52,7 @@ public class ReturnService extends CrudService<ReturnDao, Return> {
                     product.setRentAmt(product.getRentAmt() - amount);
                 } else {
                     ProductDetail productDetail = productDetailService.get(productDetailId);
-                    productDetail.setStatus("2");
+                    productDetail.setStatus(ProductDetail.STATUS_TESTED);
 
                     product.setRsvAmt(product.getRsvAmt() + 1);
                     product.setRentAmt(product.getRentAmt() - 1);

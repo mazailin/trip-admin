@@ -80,7 +80,7 @@
         <label class="control-label">入库日期:</label>
         <div class="controls">
             <input id="inDate" name="inDate" type="text" readonly="readonly" maxlength="20" class="input-large Wdate"
-                   value="<fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" required/>
+                   value="<fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});" required/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>

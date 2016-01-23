@@ -45,7 +45,7 @@ public class ProductDiscardService extends CrudService<ProductDiscardDao, Produc
                 if ("3".equals(productDetail.getStatus())) {
                     product.setAvlAmt(product.getAvlAmt() - 1);
                 }
-                productDetail.setStatus("9000");
+                productDetail.setStatus(ProductDetail.STATUS_DISCARD);
 
                 productDiscard.setProductDetail(productDetail);
                 productDetailService.save(productDetail);
