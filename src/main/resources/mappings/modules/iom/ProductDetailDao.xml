@@ -76,6 +76,7 @@
         WHERE a.del_flag = #{DEL_FLAG_NORMAL}
         AND b.del_flag = #{DEL_FLAG_NORMAL}
         AND a.status = '3'
+        AND b.id = #{product.id}
         ORDER BY a.code
     </select>
     <select id="get" resultType="ProductDetail">

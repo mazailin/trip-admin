@@ -38,6 +38,7 @@
 	<form:form id="inputForm" modelAttribute="productDetail" action="${ctx}/iom/product/detail/in/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<form:hidden path="product.id"/>
+		<form:hidden path="product.name"/>
 		<form:hidden path="product.code"/>
         <input type="hidden" name="inId" value="${inId}">
 		<sys:message content="${message}"/>

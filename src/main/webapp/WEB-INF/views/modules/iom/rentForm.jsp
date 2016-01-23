@@ -5,7 +5,30 @@
 	<title>产品租赁管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
+        function calDays() {
+            var begin = $("#beginDate").val();
+            var end = $("#endDate").val();
+
+            if (begin && end) {
+                var beginArr = begin.split("-");
+                var endArr = end.split("-");
+
+                var beginDate = new Date(parseInt(beginArr[0]), parseInt(beginArr[1]) + 1, parseInt(beginArr[2]));
+                var endDate = new Date(parseInt(endArr[0]), parseInt(endArr[1]) + 1, parseInt(endArr[2]));
+
+                var days = Math.floor((endDate.getTime() - beginDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                if (days < 0) {
+                    $("#days").val(0);
+                } else {
+                    $("#days").val(days + 1);
+                }
+            }
+        }
+
 		$(document).ready(function() {
+            calDays();
+
 			$("#inputForm").validate({
 				rules: {
                     deposit: {
@@ -63,17 +86,30 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">出租日期:</label>
+            <label class="control-label">取货日期:</label>
             <div class="controls">
-                <input id="rentDate" name="rentDate" type="text" readonly="readonly" maxlength="10" class="input-large Wdate"
-                       value="<fmt:formatDate value="${rent.rentDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+                <input id="getDate" name="getDate" type="text" readonly="readonly" maxlength="10" class="input-large Wdate"
+                       value="<fmt:formatDate value="${rent.getDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">归还日期:</label>
+            <label class="control-label">开始日期:</label>
             <div class="controls">
-                <input id="returnDate" name="returnDate" type="text" readonly="readonly" maxlength="10" class="input-large Wdate"
-                       value="<fmt:formatDate value="${rent.rentDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+                <input id="beginDate" name="beginDate" type="text" readonly="readonly" maxlength="10" class="input-large Wdate"
+                       value="<fmt:formatDate value="${rent.beginDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false, onpicked: calDays});" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">结束日期:</label>
+            <div class="controls">
+                <input id="endDate" name="endDate" type="text" readonly="readonly" maxlength="10" class="input-large Wdate"
+                       value="<fmt:formatDate value="${rent.endDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false, onpicked: calDays});" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">出租天数:</label>
+            <div class="controls">
+                <input id="days" type="text" class="input-mini" disabled="true" value="0"/>
             </div>
         </div>
 		<div class="control-group">

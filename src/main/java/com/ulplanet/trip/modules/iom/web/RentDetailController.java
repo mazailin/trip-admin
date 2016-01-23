@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,10 +67,20 @@ public class RentDetailController extends BaseController {
     @RequiresPermissions("iom:product:view")
     @RequestMapping(value = "yform")
     public String yform(RentDetail rentDetail, Model model) {
-        List<ProductDetail> productDetailList = productDetailService.findAvlList(new ProductDetail());
-        model.addAttribute("productDetailList", productDetailList);
+        List<Product> productList = productService.findUseDetailList(new Product());
+        model.addAttribute("productList", productList);
         model.addAttribute("rentDetail", rentDetail);
         return "modules/iom/rentDetailYForm";
+    }
+
+    @RequestMapping(value = "listDetail")
+    @ResponseBody
+    public List<ProductDetail> findDetailList(String productId) {
+        ProductDetail productDetail = new ProductDetail();
+        Product product = new Product(productId);
+        productDetail.setProduct(product);
+
+        return productDetailService.findAvlList(productDetail);
     }
 
     @RequiresPermissions("iom:product:edit")

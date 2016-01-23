@@ -4,7 +4,6 @@ import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.service.CrudService;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.modules.iom.dao.ProductDetailDao;
-import com.ulplanet.trip.modules.iom.entity.Product;
 import com.ulplanet.trip.modules.iom.entity.ProductDetail;
 import com.ulplanet.trip.modules.iom.entity.ProductIn;
 import com.ulplanet.trip.modules.sys.service.CodeService;
@@ -29,6 +28,8 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
     @Autowired
     private ProductService productService;
     @Autowired
+    private ProductCalService productCalService;
+    @Autowired
     private CodeService codeService;
 
     public void saveProductDetail(ProductDetail productDetail) {
@@ -52,18 +53,13 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
             productDetail.preInsert();
 
             ProductIn productIn = productInService.get(inId);
-            Product product = productService.get(productDetail.getProduct().getId());
-
             productIn.setAmount(productIn.getAmount() + 1);
 
-            product.setTotalAmt(product.getTotalAmt() + 1);
-            product.setRsvAmt(product.getRsvAmt() + 1);
-            productDetail.setProduct(product);
-
             productInService.saveProductIn(productIn);
-            productService.saveProduct(product);
             productDetailDao.insert(productDetail);
             productInService.insertProDetail(inId, productDetail.getId());
+
+            productCalService.updateAmount(productDetail.getProduct().getId(), true);
         }
     }
 
@@ -77,24 +73,18 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
         productDetail.preUpdate();
         productDetail.setStatus(ProductDetail.STATUS_UNRENT);
 
-        Product product = productService.get(productDetail.getProduct().getId());
-        product.setAvlAmt(product.getAvlAmt() + 1);
-        productDetail.setProduct(product);
-
         productDetailDao.update(productDetail);
-        productService.saveProduct(product);
+
+        productCalService.updateAmount(productDetail.getProduct().getId(), true);
     }
 
     public void saveRepairStatus(ProductDetail productDetail) {
         productDetail.preUpdate();
         productDetail.setStatus(ProductDetail.STATUS_REPAIR);
 
-        Product product = productService.get(productDetail.getProduct().getId());
-        product.setAvlAmt(product.getAvlAmt() - 1);
-        productDetail.setProduct(product);
-
         productDetailDao.update(productDetail);
-        productService.saveProduct(product);
+
+        productCalService.updateAmount(productDetail.getProduct().getId(), true);
     }
 
     public List<ProductDetail> findAvlList(ProductDetail productDetail) {

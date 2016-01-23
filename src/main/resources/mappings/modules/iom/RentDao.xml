@@ -9,8 +9,9 @@
         `operator`,
         `status`,
         `deposit`,
-        `rent_date`,
-        `return_date`,
+        `get_date`,
+        `begin_date`,
+        `end_date`,
         `comment`
     </sql>
 	<select id="findList" resultType="Rent">
@@ -44,8 +45,9 @@
             `operator`,
             `status`,
             `deposit`,
-            `rent_date`,
-            `return_date`,
+            `get_date`,
+            `begin_date`,
+            `end_date`,
             `comment`,
             `create_by`,
             `create_date`,
@@ -60,8 +62,9 @@
             #{operator},
             #{status},
             #{deposit},
-            #{rentDate},
-            #{returnDate},
+            #{getDate},
+            #{beginDate},
+            #{endDate},
             #{comment},
             #{createBy.id},
             #{createDate},
@@ -78,8 +81,9 @@
             `operator` = #{operator},
             `status` = #{status},
             `deposit` = #{deposit},
-            `rent_date` = #{rentDate},
-            `return_date` = #{returnDate},
+            `get_date` = #{getDate},
+            `begin_date` = #{beginDate},
+            `end_date` = #{endDate},
             `comment` = #{comment}
         WHERE id = #{id}
 	</update>

@@ -6,6 +6,28 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+            $('#product').change(function() {
+                $.ajax({
+                    url: "${ctx}/iom/product/rent/detail/listDetail",
+                    dataType:"json",
+                    type:"get",
+                    data:{"productId":$("#product").val()},
+                    beforeSend : function() {
+                        $('#productDetail').empty()
+                                .append('<option value="">'+'--选择产品--'+'</option>')
+                                .select2("val", "");
+                    }
+                }).success(function(data) {
+                    if (data != null && data.length > 0) {
+                        for (var i=0;i<data.length;i++) {
+                            $('#productDetail').append('<option value="'+data[i].id+'">'+data[i].code+'</option>');
+                        }
+                    }
+                });
+            });
+
+
 			$("#inputForm").validate({
 				rules: {
                     amount: {
@@ -38,12 +60,22 @@
 	<form:form id="inputForm" modelAttribute="rentDetail" action="${ctx}/iom/product/rent/detail/ysave" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<form:hidden path="rent.id"/>
-		<form:hidden path="product.id"/>
 		<sys:message content="${message}"/>
+        <div class="control-group">
+            <label class="control-label">产品:</label>
+            <div class="controls">
+                <form:select id="product" path="product.id" class="input-large required">
+                    <option value="">--选择产品--</option>
+                    <form:options items="${productList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+                </form:select>
+                <span class="help-inline"><font color="red">*</font> </span>
+            </div>
+        </div>
 		<div class="control-group">
 			<label class="control-label">产品明细:</label>
 			<div class="controls">
-                <form:select id="productDetail" path="productDetail.id" class="input-large">
+                <form:select id="productDetail" path="productDetail.id" class="input-large required">
+                    <option value="">--选择明细--</option>
                     <form:options items="${productDetailList}" itemLabel="code" itemValue="id" htmlEscape="false"/>
                 </form:select>
                 <span class="help-inline"><font color="red">*</font> </span>
