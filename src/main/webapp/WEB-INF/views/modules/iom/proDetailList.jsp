@@ -22,6 +22,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
 		<ul class="ul-form">
+			<li><label>编号：</label><form:input path="code" htmlEscape="false" maxlength="64" class="input-medium"/></li>
 			<li><label>设备号：</label><form:input path="device" htmlEscape="false" maxlength="64" class="input-medium"/></li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 			<li class="clearfix"></li>

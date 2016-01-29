@@ -16,6 +16,8 @@ public class RentDetail extends DataEntity<RentDetail> {
     private Product product;
     private ProductDetail productDetail;
     private double amount;
+    private double returnAmount;
+    private double oldReturnAmount;
 
     public RentDetail() {
         super();
@@ -60,4 +62,19 @@ public class RentDetail extends DataEntity<RentDetail> {
         this.amount = amount;
     }
 
+    public double getReturnAmount() {
+        return returnAmount;
+    }
+
+    public void setReturnAmount(double returnAmount) {
+        this.returnAmount = returnAmount;
+    }
+
+    public double getOldReturnAmount() {
+        return oldReturnAmount;
+    }
+
+    public void setOldReturnAmount(double oldReturnAmount) {
+        this.oldReturnAmount = oldReturnAmount;
+    }
 }

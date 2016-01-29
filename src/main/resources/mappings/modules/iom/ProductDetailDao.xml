@@ -23,6 +23,9 @@
         <if test="device != null and device != ''">
             AND a.device like CONCAT('%', #{device}, '%')
         </if>
+        <if test="code != null and code != ''">
+            AND a.code like CONCAT('%', #{code}, '%')
+        </if>
         <if test="product != null and product.id != null and product.id != ''">
             AND b.id = #{product.id}
         </if>

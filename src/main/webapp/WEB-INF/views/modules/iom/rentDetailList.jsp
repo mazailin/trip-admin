@@ -26,13 +26,26 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>产品</th><th>产品明细</th><th>数量</th></tr></thead>
+		<thead><tr><th>产品</th><th>产品明细</th><th>数量</th><th>归还状态</th><shiro:hasPermission name="iom:product:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="rentDetail">
 			<tr>
-				<td>${rentDetail.product.name}</td>
-				<td>${rentDetail.productDetail.code}</td>
+				<td><a href="${ctx}/iom/product/store?name=${rentDetail.product.name}">${rentDetail.product.name}</a></td>
+				<td><a href="${ctx}/iom/product/detail/list?code=${rentDetail.productDetail.code}">${rentDetail.productDetail.code}</a></td>
 				<td>${rentDetail.amount}</td>
+				<td>${'0' eq rentDetail.product.useDetail ? rentDetail.returnAmount : (1 eq rentDetail.returnAmount ? '已还' : '未还')}</td>
+                <shiro:hasPermission name="iom:product:edit"><td>
+                    <c:choose>
+                        <c:when test="${'0' eq rentDetail.product.useDetail}">
+                            <a href="${ctx}/iom/product/rent/detail/nreturn?id=${rentDetail.id}&rent.id=${rentDetail.rent.id}&oldReturnAmount=${rentDetail.returnAmount}&returnAmount=" onclick="return promptx('确认归还此产品吗？', '归还数量', this.href)">归还</a>
+                            <a href="${ctx}/iom/product/discard/form?product.id=${rentDetail.product.id}&product.name=${rentDetail.product.name}">报废</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${ctx}/iom/product/rent/detail/yreturn?id=${rentDetail.id}&rent.id=${rentDetail.rent.id}" onclick="return confirmx('确认归还此产品吗？', this.href)">归还</a>
+                            <a href="${ctx}/iom/product/discard/form?product.id=${rentDetail.product.id}&product.name=${rentDetail.product.name}&productDetail.id=${rentDetail.productDetail.id}&productDetail.code=${rentDetail.productDetail.code}">报废</a>
+                        </c:otherwise>
+                    </c:choose>
+                </td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>

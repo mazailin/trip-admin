@@ -26,8 +26,6 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
     @Autowired
     private ProductInService productInService;
     @Autowired
-    private ProductService productService;
-    @Autowired
     private ProductCalService productCalService;
     @Autowired
     private CodeService codeService;
@@ -59,7 +57,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
             productDetailDao.insert(productDetail);
             productInService.insertProDetail(inId, productDetail.getId());
 
-            productCalService.updateAmount(productDetail.getProduct().getId(), true);
+            productCalService.updateAmount(productDetail.getProduct().getId());
         }
     }
 
@@ -75,7 +73,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
         productDetailDao.update(productDetail);
 
-        productCalService.updateAmount(productDetail.getProduct().getId(), true);
+        productCalService.updateAmount(productDetail.getProduct().getId());
     }
 
     public void saveRepairStatus(ProductDetail productDetail) {
@@ -84,7 +82,7 @@ public class ProductDetailService extends CrudService<ProductDetailDao, ProductD
 
         productDetailDao.update(productDetail);
 
-        productCalService.updateAmount(productDetail.getProduct().getId(), true);
+        productCalService.updateAmount(productDetail.getProduct().getId());
     }
 
     public List<ProductDetail> findAvlList(ProductDetail productDetail) {

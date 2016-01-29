@@ -105,4 +105,18 @@ public class RentDetailController extends BaseController {
         return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
     }
 
+    @RequiresPermissions("iom:product:edit")
+    @RequestMapping(value = "nreturn")
+    public String nreturn(RentDetail rentDetail) {
+        rentDetailService.saveNReturn(rentDetail);
+        return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
+    }
+
+    @RequiresPermissions("iom:product:edit")
+    @RequestMapping(value = "yreturn")
+    public String yreturn(RentDetail rentDetail) {
+        rentDetailService.saveYReturn(rentDetail);
+        return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
+    }
+
 }

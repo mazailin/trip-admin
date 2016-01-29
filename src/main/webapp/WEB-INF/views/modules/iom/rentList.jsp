@@ -43,9 +43,6 @@
 				<shiro:hasPermission name="iom:product:edit"><td>
     				<a href="${ctx}/iom/product/rent/form?id=${rent.id}">修改</a>
     				<a href="${ctx}/iom/product/rent/detail/list?rent.id=${rent.id}">明细</a>
-                    <c:if test="${0 eq rent.status}">
-    				    <a href="${ctx}/iom/product/return/form?rent.id=${rent.id}">归还</a>
-                    </c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

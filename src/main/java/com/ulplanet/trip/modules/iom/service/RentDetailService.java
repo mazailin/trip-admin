@@ -22,6 +22,8 @@ public class RentDetailService extends CrudService<RentDetailDao, RentDetail> {
     private ProductService productService;
     @Autowired
     private ProductDetailService productDetailService;
+    @Autowired
+    private ProductCalService productCalService;
 
     public void saveRentDetail(RentDetail rentDetail) {
         if (StringUtils.isBlank(rentDetail.getId())){
@@ -57,5 +59,32 @@ public class RentDetailService extends CrudService<RentDetailDao, RentDetail> {
             productService.saveProduct(product);
             productDetailService.saveProductDetail(productDetail);
         }
+    }
+
+    public void saveNReturn(RentDetail rentDetail) {
+        String productId = rentDetail.getProduct().getId();
+        double oldReturnAmount = rentDetail.getOldReturnAmount();
+        double returnAmount = rentDetail.getReturnAmount();
+
+        Product product = productService.get(productId);
+        product.setRsvAmt(product.getRsvAmt() - oldReturnAmount + returnAmount);
+        product.setAvlAmt(product.getAvlAmt() - oldReturnAmount + returnAmount);
+        product.setRentAmt(product.getRentAmt() + oldReturnAmount - returnAmount);
+        productService.saveProduct(product);
+        rentDetailDao.updateReturnAmount(rentDetail);
+    }
+
+    public void saveYReturn(RentDetail rentDetail) {
+        String productId = rentDetail.getProduct().getId();
+        String productDetailId = rentDetail.getProductDetail().getId();
+
+        ProductDetail productDetail = productDetailService.get(productDetailId);
+        productDetail.setStatus(ProductDetail.STATUS_TESTED);
+
+        productDetailService.saveProductDetail(productDetail);
+        productCalService.updateAmount(productId);
+
+        rentDetail.setReturnAmount(1.0);
+        rentDetailDao.updateReturnAmount(rentDetail);
     }
 }

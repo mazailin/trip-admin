@@ -25,7 +25,6 @@ public class RentService extends CrudService<RentDao, Rent> {
             String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_RENT, "");
             rent.preInsert();
             rent.setCode(code);
-            rent.setStatus(0);
             rentDao.insert(rent);
         }else{
             rent.preUpdate();

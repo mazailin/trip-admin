@@ -55,7 +55,8 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/iom/product/rent/list">产品租赁单</a></li>
-		<li class="active"><a href="${ctx}/iom/product/rent/form?id=${rent.id}">产品租赁<shiro:hasPermission name="iom:product:edit">${not empty product.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/iom/product/rent/form?id=${rent.id}">产品租赁<shiro:hasPermission name="iom:product:edit">${not empty rent.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:edit">查看</shiro:lacksPermission></a></li>
+        <li ${not empty rent.id?'':'hidden'}><a href="${ctx}/iom/product/rent/list">预订数量</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="rent" action="${ctx}/iom/product/rent/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

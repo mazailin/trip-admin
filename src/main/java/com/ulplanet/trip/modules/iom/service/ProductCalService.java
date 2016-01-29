@@ -19,47 +19,31 @@ public class ProductCalService extends CrudService<ProductDao, Product> {
     /**
      * 计算产品总数，在租数量，库存数量，可用数量
      */
-    public void updateAmount(String productId, boolean useDetail) {
-        this.updateTotalAmt(productId, useDetail);
-        this.updateRsvAmt(productId, useDetail);
-        this.updateAvlAmt(productId, useDetail);
-        this.updateRentAmt(productId, useDetail);
+    public void updateAmount(String productId) {
+        this.updateTotalAmt(productId);
+        this.updateRsvAmt(productId);
+        this.updateAvlAmt(productId);
+        this.updateRentAmt(productId);
     }
 
     // 更新总数
-    private void updateTotalAmt(String productId, boolean useDetail) {
-        if (useDetail) {
-            this.productDao.updateTotalAmt(new Product(productId));
-        } else {
-
-        }
+    private void updateTotalAmt(String productId) {
+        this.productDao.updateTotalAmt(new Product(productId));
     }
 
     // 更新库存数量
-    private void updateRsvAmt(String productId, boolean useDetail) {
-        if (useDetail) {
-            this.productDao.updateRsvAmt(new Product(productId));
-        } else {
-
-        }
+    private void updateRsvAmt(String productId) {
+        this.productDao.updateRsvAmt(new Product(productId));
     }
 
     // 更新平均数量
-    private void updateAvlAmt(String productId, boolean useDetail) {
-        if (useDetail) {
-            this.productDao.updateAvlAmt(new Product(productId));
-        } else {
-
-        }
+    private void updateAvlAmt(String productId) {
+        this.productDao.updateAvlAmt(new Product(productId));
     }
 
     // 更新租出数量
-    private void updateRentAmt(String productId, boolean useDetail) {
-        if (useDetail) {
-            this.productDao.updateRentAmt(new Product(productId));
-        } else {
-            
-        }
+    private void updateRentAmt(String productId) {
+        this.productDao.updateRentAmt(new Product(productId));
     }
 
     /**

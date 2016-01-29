@@ -18,7 +18,6 @@ public class Rent extends DataEntity<Rent> {
     private String renter;
     private String operator;
     private double deposit;
-    private int status;
     private Date getDate;
     private Date beginDate;
     private Date endDate;
@@ -52,14 +51,6 @@ public class Rent extends DataEntity<Rent> {
 
     public void setOperator(String operator) {
         this.operator = operator;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public double getDeposit() {

@@ -45,7 +45,7 @@ public class ProductDiscardService extends CrudService<ProductDiscardDao, Produc
                 productDiscard.setProductDetail(productDetail);
                 productDetailService.save(productDetail);
 
-                productCalService.updateAmount(productDiscard.getProduct().getId(), true);
+                productCalService.updateAmount(productDiscard.getProduct().getId());
             } else {
                 Product product = productService.get(productDiscard.getProduct().getId());
                 product.setTotalAmt(product.getTotalAmt() - productDiscard.getAmount());
