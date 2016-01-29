@@ -64,7 +64,7 @@
   <div class="control-group">
     <label class="control-label">头像:</label>
     <div class="controls">
-      <img <c:if test="${appUser.photo!=null && appUser.photo.length()>0}"> src="${appUser.photo}" </c:if> />
+      <img <c:if test="${appUser.photo!=null && appUser.photo.length()>0}"> src="${ctx}/photo/${appUser.photo}" </c:if> />
     </div>
   </div>
   <div class="control-group">
