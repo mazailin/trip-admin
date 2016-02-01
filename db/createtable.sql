@@ -614,19 +614,16 @@ DROP TABLE IF EXISTS `in_detail`;
 DROP TABLE IF EXISTS `product_discard`;
 DROP TABLE IF EXISTS `rent`;
 DROP TABLE IF EXISTS `rent_detail`;
-DROP TABLE IF EXISTS `return`;
 CREATE TABLE `product` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `name` VARCHAR(255) NOT NULL COMMENT '名称',
+  `code` VARCHAR(10) NOT NULL COMMENT '编码',
   `unit` VARCHAR(100) COMMENT '计量单位',
   `avg_price` DECIMAL(10,2) COMMENT '平均价格',
-  `rent_price` DECIMAL(10,2) COMMENT '出租价格',
-  `pay_price` DECIMAL(10,2) COMMENT '赔偿价格',
   `total_amt` DECIMAL(10,2) COMMENT '总数',
   `rent_amt` DECIMAL(10,2) COMMENT '在租数量',
   `rsv_amt` DECIMAL(10,2) COMMENT '库存数量',
   `avl_amt` DECIMAL(10,2) COMMENT '可用数量',
-  `upper_limit` DECIMAL(10,2) COMMENT '上限',
   `low_limit` DECIMAL(10,2) COMMENT '下限',
   `use_detail` CHAR(1) COMMENT '是否按明细管理',
   `comment` VARCHAR(2000) COMMENT '备注',
@@ -642,7 +639,7 @@ CREATE TABLE `product` (
 CREATE TABLE `product_detail` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
-  `code` VARCHAR(36) COMMENT '编码',
+  `code` VARCHAR(64) COMMENT '编码',
   `device` VARCHAR(64) COMMENT '设备号',
   `status` VARCHAR(36) COMMENT '状态',
   `comment` VARCHAR(2000) COMMENT '备注',
@@ -706,10 +703,10 @@ CREATE TABLE `rent` (
   `code` VARCHAR(36) COMMENT '单据编号',
   `renter` VARCHAR(255) COMMENT '租赁人',
   `operator` VARCHAR(255) COMMENT '经办人',
-  `status` INT(2) COMMENT '状态',
   `deposit` DECIMAL(10,2) COMMENT '押金',
-  `rent_date` DATETIME COMMENT '出租日期',
-  `return_date` DATETIME COMMENT '归还日期',
+  `get_date` DATETIME COMMENT '取货日期',
+  `begin_date` DATETIME COMMENT '开始日期',
+  `end_date` DATETIME COMMENT '结束日期',
   `comment` VARCHAR(2000) COMMENT '备注',
   `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
   `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
@@ -720,12 +717,20 @@ CREATE TABLE `rent` (
   PRIMARY KEY (`id`)
 ) COMMENT='产品租赁';
 
+CREATE TABLE `rent_order` (
+  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
+  `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
+  `amount` DECIMAL(10,2) COMMENT '数量',
+  PRIMARY KEY (`rent_id`, `product_id`)
+) COMMENT='预订数量';
+
 CREATE TABLE `rent_detail` (
   `id` VARCHAR(36) NOT NULL COMMENT '编号',
   `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
   `product_id` VARCHAR(36) NOT NULL COMMENT '产品编号',
   `pro_detail_id` VARCHAR(36) COMMENT '产品明细编号',
   `amount` DECIMAL(10,2) COMMENT '数量',
+  `return_amount` DECIMAL(10,2) COMMENT '归还数量',
   `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
   `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
   `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
@@ -734,22 +739,6 @@ CREATE TABLE `rent_detail` (
   `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) COMMENT='租赁明细';
-
-CREATE TABLE `return` (
-  `id` VARCHAR(36) NOT NULL COMMENT '编号',
-  `code` VARCHAR(36) COMMENT '单据编号',
-  `rent_id` VARCHAR(36) NOT NULL COMMENT '租赁单据编号',
-  `operator` VARCHAR(255) COMMENT '经办人',
-  `return_date` DATETIME COMMENT '归还日期',
-  `comment` VARCHAR(2000) COMMENT '备注',
-  `create_by` VARCHAR(64) NOT NULL COMMENT '创建者',
-  `create_date` TIMESTAMP NOT NULL COMMENT '创建时间',
-  `update_by` VARCHAR(64) NOT NULL COMMENT '更新者',
-  `update_date` TIMESTAMP NOT NULL COMMENT '更新时间',
-  `remarks` VARCHAR(255) COMMENT '备注信息',
-  `del_flag` CHAR(1) DEFAULT '0' COMMENT '删除标记',
-  PRIMARY KEY (`id`)
-) COMMENT='产品归还';
 
 -- 位置轨迹
 DROP TABLE IF EXISTS `position`;

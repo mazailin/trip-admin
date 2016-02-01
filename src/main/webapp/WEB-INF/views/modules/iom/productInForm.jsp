@@ -5,7 +5,29 @@
     <title>产品入库管理</title>
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
+
         $(document).ready(function() {
+            var useDetail = '${productIn.product.useDetail}';
+
+            var calculateTotalAmount = function () {
+                var totalPrice = $("#buyAmount").val() * $("#price").val();
+                if (totalPrice) {
+                    $("#totalPrice").val(totalPrice.toFixed(2));
+                }
+            };
+
+            $("#buyAmount").change(function() {
+                if ('1' != useDetail) {
+                    $("#amount").val($(this).val());
+                }
+                calculateTotalAmount();
+            });
+
+            $("#price").change(function() {
+                calculateTotalAmount();
+            });
+
+
             $("#inputForm").validate({
                 rules: {
                     buyAmount: {
@@ -36,11 +58,11 @@
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/iom/product/in/list">产品入库</a></li>
     <li class="active"><a href="${ctx}/iom/product/in/form?id=${productIn.id}">入库<shiro:hasPermission name="iom:product:in:edit">${not empty productIn.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="iom:product:in:edit">查看</shiro:lacksPermission></a></li>
-    <li ${not empty productIn.id?'':'hidden'}><a href="${ctx}/iom/product/in/detail/form?productIn.id=${productIn.id}">入库明细</a></li>
 </ul><br/>
 <form:form id="inputForm" modelAttribute="productIn" action="${ctx}/iom/product/in/save" method="post" class="form-horizontal">
     <form:hidden path="id"/>
     <form:hidden path="product.id"/>
+    <form:hidden path="product.code"/>
     <sys:message content="${message}"/>
     <div class="control-group">
         <label class="control-label">单据编号:</label>
@@ -58,7 +80,7 @@
         <label class="control-label">入库日期:</label>
         <div class="controls">
             <input id="inDate" name="inDate" type="text" readonly="readonly" maxlength="20" class="input-large Wdate"
-                   value="<fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" required/>
+                   value="<fmt:formatDate value="${productIn.inDate}" pattern="yyyy-MM-dd HH:mm"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});" required/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
@@ -93,13 +115,25 @@
     <div class="control-group">
         <label class="control-label">采购数量:</label>
         <div class="controls">
-            <form:input path="buyAmount" htmlEscape="false" class="input-small"/>
+            <form:input id="buyAmount" path="buyAmount" htmlEscape="false" class="input-small"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">实际数量:</label>
+        <div class="controls">
+            <form:input id="amount" path="amount" htmlEscape="false" class="input-small" readonly="true"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">单价:</label>
         <div class="controls">
-            <form:input path="price" htmlEscape="false" class="input-small"/>&nbsp;元
+            <form:input id="price" path="price" htmlEscape="false" class="input-small"/>&nbsp;元
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">总价:</label>
+        <div class="controls">
+            <form:input id="totalPrice" path="totalPrice" htmlEscape="false" class="input-small" readonly="true"/>&nbsp;元
         </div>
     </div>
     <div class="control-group">

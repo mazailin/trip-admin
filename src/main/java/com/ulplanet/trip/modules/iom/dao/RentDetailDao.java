@@ -11,4 +11,6 @@ import com.ulplanet.trip.modules.iom.entity.RentDetail;
 @MyBatisDao
 public interface RentDetailDao extends CrudDao<RentDetail> {
 
+    void updateReturnAmount(RentDetail rentDetail);
+
 }

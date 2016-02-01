@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,9 +61,17 @@ public class ProductDetailController extends BaseController {
     }
 
     @RequiresPermissions("iom:product:detail:view")
+    @RequestMapping(value = "in/list")
+    public String inList(ProductDetail productDetail, HttpServletRequest request, HttpServletResponse response, String inId, Model model) {
+        Page<ProductDetail> page = productDetailService.findInDetail(new Page<>(request, response), productDetail, inId);
+        model.addAttribute("page", page);
+        model.addAttribute("inId", inId);
+        return "modules/iom/proInDetailList";
+    }
+
+    @RequiresPermissions("iom:product:detail:view")
     @RequestMapping(value = "in/form")
     public String inForm(ProductDetail productDetail, String inId, Model model) {
-
         model.addAttribute("productDetail", productDetail);
         model.addAttribute("inId", inId);
         return "modules/iom/proInDetailForm";
@@ -90,7 +99,8 @@ public class ProductDetailController extends BaseController {
         redirectAttributes.addAttribute("inId", inId);
         redirectAttributes.addAttribute("product.id", productDetail.getProduct().getId());
         redirectAttributes.addAttribute("product.name", productDetail.getProduct().getName());
-        return "redirect:" + adminPath + "/iom/product/detail/in/form";
+        redirectAttributes.addAttribute("product.code", productDetail.getProduct().getCode());
+        return "redirect:" + adminPath + "/iom/product/detail/in/list";
     }
 
     @RequiresPermissions("iom:product:detail:edit")
@@ -110,11 +120,37 @@ public class ProductDetailController extends BaseController {
     }
 
     @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "repair")
+    public String repair(ProductDetail productDetail, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        productDetailService.saveRepairStatus(productDetail);
+        addMessage(redirectAttributes, "产品明细'" + productDetail.getDevice() + "'送修成功");
+        return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    @RequiresPermissions("iom:product:detail:edit")
     @RequestMapping(value = "delete")
     public String delete(ProductDetail productDetail, RedirectAttributes redirectAttributes) {
         productDetailService.delete(productDetail);
         addMessage(redirectAttributes, "删除产品明细" + productDetail.getDevice() + "成功");
         return "redirect:" + adminPath + "/iom/product/detail/list?repage";
+    }
+
+    /**
+     * 验证设备是否有效
+     * @param oldDevice
+     * @param productDetail
+     * @return
+     */
+    @ResponseBody
+    @RequiresPermissions("iom:product:detail:edit")
+    @RequestMapping(value = "checkDevice")
+    public String checkName(String oldDevice, ProductDetail productDetail) {
+        if (oldDevice != null && oldDevice.equals(productDetail.getDevice())) {
+            return "true";
+        } else if (productDetail.getDevice() != null && productDetailService.getDetailByDevice(productDetail) == null) {
+            return "true";
+        }
+        return "false";
     }
 
 }

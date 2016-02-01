@@ -7,10 +7,10 @@
         `code`,
         `renter`,
         `operator`,
-        `status`,
         `deposit`,
-        `rent_date`,
-        `return_date`,
+        `get_date`,
+        `begin_date`,
+        `end_date`,
         `comment`
     </sql>
 	<select id="findList" resultType="Rent">
@@ -42,10 +42,10 @@
             `code`,
             `renter`,
             `operator`,
-            `status`,
             `deposit`,
-            `rent_date`,
-            `return_date`,
+            `get_date`,
+            `begin_date`,
+            `end_date`,
             `comment`,
             `create_by`,
             `create_date`,
@@ -58,10 +58,10 @@
             #{code},
             #{renter},
             #{operator},
-            #{status},
             #{deposit},
-            #{rentDate},
-            #{returnDate},
+            #{getDate},
+            #{beginDate},
+            #{endDate},
             #{comment},
             #{createBy.id},
             #{createDate},
@@ -76,10 +76,10 @@
         UPDATE rent SET
             `renter` = #{renter},
             `operator` = #{operator},
-            `status` = #{status},
             `deposit` = #{deposit},
-            `rent_date` = #{rentDate},
-            `return_date` = #{returnDate},
+            `get_date` = #{getDate},
+            `begin_date` = #{beginDate},
+            `end_date` = #{endDate},
             `comment` = #{comment}
         WHERE id = #{id}
 	</update>

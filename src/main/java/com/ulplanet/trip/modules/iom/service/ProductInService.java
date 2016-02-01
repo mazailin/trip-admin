@@ -26,10 +26,13 @@ public class ProductInService extends CrudService<ProductInDao, ProductIn> {
     private CodeService codeService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductCalService productCalService;
+
 
     public void saveProductIn(ProductIn productIn) {
         if (StringUtils.isBlank(productIn.getId())) {
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_IN);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_IN, "");
             productIn.setCode(code);
             productIn.preInsert();
 
@@ -40,11 +43,11 @@ public class ProductInService extends CrudService<ProductInDao, ProductIn> {
             double totalPrice = (double) Math.round(buyAmount * price * 100) / 100;
 
             double productAmount = product.getTotalAmt() + buyAmount;
-            double avgPrice = (double) Math.round((product.getAvgPrice() * product.getTotalAmt() + totalPrice) * 100 / productAmount) / 100;
+//            double avgPrice = (double) Math.round((product.getAvgPrice() * product.getTotalAmt() + totalPrice) * 100 / productAmount) / 100;
 
             productIn.setTotalPrice(totalPrice);
 
-            product.setAvgPrice(avgPrice);
+//            product.setAvgPrice(avgPrice);
             if (!"1".equals(product.getUseDetail())) {
                 productIn.setAmount(buyAmount);
                 product.setTotalAmt(productAmount);
@@ -60,6 +63,9 @@ public class ProductInService extends CrudService<ProductInDao, ProductIn> {
             productIn.preUpdate();
             productInDao.update(productIn);
         }
+
+        //计算产品平均价格
+        productCalService.updateAvlPrice(productIn.getProduct().getId());
     }
 
     void insertProDetail(String inDetailId, String proDetailId) {

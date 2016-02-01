@@ -22,10 +22,9 @@ public class RentService extends CrudService<RentDao, Rent> {
 
     public void saveRent(Rent rent) {
         if (StringUtils.isBlank(rent.getId())){
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_RENT);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_RENT, "");
             rent.preInsert();
             rent.setCode(code);
-            rent.setStatus(0);
             rentDao.insert(rent);
         }else{
             rent.preUpdate();

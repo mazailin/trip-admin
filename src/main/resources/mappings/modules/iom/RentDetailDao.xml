@@ -7,9 +7,11 @@
         a.`rent_id` AS 'rent.id',
         a.`product_id` AS 'product.id',
         b.`name` AS 'product.name',
+        b.`use_detail` AS 'product.useDetail',
         a.`pro_detail_id` AS 'productDetail.id',
         c.`code` AS 'productDetail.code',
         a.`amount`,
+        a.`return_amount`,
         a.`remarks`
     </sql>
 	<select id="findList" resultType="RentDetail">
@@ -40,6 +42,7 @@
             `product_id`,
             `pro_detail_id`,
             `amount`,
+            `return_amount`,
             `create_by`,
             `create_date`,
             `update_by`,
@@ -52,6 +55,7 @@
             #{product.id},
             #{productDetail.id},
             #{amount},
+            #{returnAmount},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
@@ -60,5 +64,11 @@
             #{delFlag}
         )
 	</insert>
+
+    <update id="updateReturnAmount">
+        UPDATE rent_detail
+        SET return_amount = #{returnAmount}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

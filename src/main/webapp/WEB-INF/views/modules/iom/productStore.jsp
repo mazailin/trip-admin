@@ -29,20 +29,19 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th class="sort-column name">产品</th><th>单位</th><th>上限</th><th>下限</th><th>库存数量</th><th>在租数量</th><th>可用数量</th><th>总数</th><th>操作</th></tr></thead>
+		<thead><tr><th class="sort-column name">产品</th><th>单位</th><th>下限</th><th>库存数量</th><th>在租数量</th><th>可用数量</th><th>总数</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="product">
 			<tr>
 				<td>${product.name}</td>
 				<td>${fns:getDictLabel(product.unit, 'unit', '')}</td>
-				<td ${product.rsvAmt > product.upperLimit ? 'style="color:red;" title="库存溢出"' : ''}>${product.upperLimit}</td>
 				<td ${product.rsvAmt < product.lowLimit ? 'style="color:red;" title="库存不足"' : ''}>${product.lowLimit}</td>
 				<td>${product.rsvAmt}</td>
                 <td>${product.rentAmt}</td>
                 <td>${product.avlAmt}</td>
                 <td>${product.totalAmt}</td>
                 <td>
-                    <a href="${ctx}/iom/product/in/form?product.id=${product.id}&product.name=${product.name}&product.useDetail=${product.useDetail}">入库</a>
+                    <a href="${ctx}/iom/product/in/form?product.id=${product.id}&product.name=${product.name}&product.code=${product.code}&product.useDetail=${product.useDetail}">入库</a>
                     <c:choose>
                         <c:when test="${'1' eq product.useDetail}">
                             <a href="${ctx}/iom/product/detail/list?product.id=${product.id}">产品明细</a>

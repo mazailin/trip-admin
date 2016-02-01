@@ -30,21 +30,19 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th class="sort-column code">单号</th><th>租赁人</th><th>经办人</th><th>租赁时间</th><th>归还时间</th><shiro:hasPermission name="iom:product:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th class="sort-column code">单号</th><th>租赁人</th><th>经办人</th><th>取货时间</th><th>开始时间</th><th>结束时间</th><shiro:hasPermission name="iom:product:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="rent">
 			<tr>
 				<td><a href="${ctx}/iom/product/rent/form?id=${rent.id}">${rent.code}</a></td>
 				<td>${rent.renter}</td>
 				<td>${rent.operator}</td>
-				<td><fmt:formatDate value="${rent.rentDate}" pattern="yyyy-MM-dd"/></td>
-				<td><fmt:formatDate value="${rent.returnDate}" pattern="yyyy-MM-dd"/></td>
+				<td><fmt:formatDate value="${rent.getDate}" pattern="yyyy-MM-dd"/></td>
+				<td><fmt:formatDate value="${rent.beginDate}" pattern="yyyy-MM-dd"/></td>
+				<td><fmt:formatDate value="${rent.endDate}" pattern="yyyy-MM-dd"/></td>
 				<shiro:hasPermission name="iom:product:edit"><td>
     				<a href="${ctx}/iom/product/rent/form?id=${rent.id}">修改</a>
     				<a href="${ctx}/iom/product/rent/detail/list?rent.id=${rent.id}">明细</a>
-                    <c:if test="${0 eq rent.status}">
-    				    <a href="${ctx}/iom/product/return/form?rent.id=${rent.id}">归还</a>
-                    </c:if>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

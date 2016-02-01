@@ -13,6 +13,19 @@ public class ProductDetail extends DataEntity<ProductDetail> {
 
 	private static final long serialVersionUID = 1L;
 
+    /** 待测试 */
+    public static final String STATUS_UNTEST = "1";
+    /** 已测试 */
+    public static final String STATUS_TESTED = "2";
+    /** 待租 */
+    public static final String STATUS_UNRENT = "3";
+    /** 已租 */
+    public static final String STATUS_RENTED = "4";
+    /** 维修 */
+    public static final String STATUS_REPAIR = "5";
+    /** 报废 */
+    public static final String STATUS_DISCARD = "9000";
+
     private Product product;
     private String code;
     private String device;
@@ -40,7 +53,7 @@ public class ProductDetail extends DataEntity<ProductDetail> {
         this.code = code;
     }
 
-    @Length(min=0, max=64, message="设备号长度必须介于 1 和 64 之间")
+    @Length(min=1, max=64, message="设备号长度必须介于 1 和 64 之间")
     public String getDevice() {
         return device;
     }

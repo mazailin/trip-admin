@@ -48,7 +48,7 @@
 		<div class="control-group">
 			<label class="control-label">前缀:</label>
 			<div class="controls">
-				<form:input path="prefix" htmlEscape="false" maxlength="10"/>
+				<form:input path="prefix" style="text-transform:uppercase;" htmlEscape="false" maxlength="10"/>
 			</div>
 		</div>
 		<div class="control-group">

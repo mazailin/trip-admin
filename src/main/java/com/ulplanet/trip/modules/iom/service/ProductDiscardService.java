@@ -25,14 +25,14 @@ public class ProductDiscardService extends CrudService<ProductDiscardDao, Produc
     private ProductDiscardDao productDiscardDao;
     @Autowired
     private CodeService codeService;
+    @Autowired
+    private ProductCalService productCalService;
 
     public void saveProductDiscard(ProductDiscard productDiscard) {
         if (StringUtils.isBlank(productDiscard.getId())){
-            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DISCARD);
+            String code = codeService.getCode(CodeService.CODE_TYPE_PRODUCT_DISCARD, "");
             productDiscard.preInsert();
             productDiscard.setCode(code);
-
-            Product product = productService.get(productDiscard.getProduct().getId());
 
             String productDetailId = productDiscard.getProductDetail().getId();
             if (StringUtils.isNotBlank(productDetailId)) {
@@ -40,25 +40,23 @@ public class ProductDiscardService extends CrudService<ProductDiscardDao, Produc
                 ProductDetail productDetail = productDetailService.get(productDetailId);
 
                 productDiscard.setAmount(1);
-                product.setTotalAmt(product.getTotalAmt() - 1);
-                product.setRsvAmt(product.getRsvAmt() - 1);
-                if ("3".equals(productDetail.getStatus())) {
-                    product.setAvlAmt(product.getAvlAmt() - 1);
-                }
-                productDetail.setStatus("9000");
+                productDetail.setStatus(ProductDetail.STATUS_DISCARD);
 
                 productDiscard.setProductDetail(productDetail);
                 productDetailService.save(productDetail);
+
+                productCalService.updateAmount(productDiscard.getProduct().getId());
             } else {
+                Product product = productService.get(productDiscard.getProduct().getId());
                 product.setTotalAmt(product.getTotalAmt() - productDiscard.getAmount());
                 product.setRsvAmt(product.getRsvAmt() - productDiscard.getAmount());
                 product.setAvlAmt(product.getAvlAmt() - productDiscard.getAmount());
+                productDiscard.setProduct(product);
+                productService.save(product);
             }
 
-            productDiscard.setProduct(product);
-            productService.save(product);
             productDiscardDao.insert(productDiscard);
-        }else{
+        } else {
             productDiscard.preUpdate();
             productDiscardDao.update(productDiscard);
         }

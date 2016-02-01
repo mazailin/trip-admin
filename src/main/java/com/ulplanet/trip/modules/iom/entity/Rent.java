@@ -18,9 +18,9 @@ public class Rent extends DataEntity<Rent> {
     private String renter;
     private String operator;
     private double deposit;
-    private int status;
-    private Date rentDate;
-    private Date returnDate;
+    private Date getDate;
+    private Date beginDate;
+    private Date endDate;
     private String comment;
 
     public Rent() {
@@ -53,14 +53,6 @@ public class Rent extends DataEntity<Rent> {
         this.operator = operator;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public double getDeposit() {
         return deposit;
     }
@@ -70,21 +62,30 @@ public class Rent extends DataEntity<Rent> {
     }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    public Date getRentDate() {
-        return rentDate;
+    public Date getGetDate() {
+        return getDate;
     }
 
-    public void setRentDate(Date rentDate) {
-        this.rentDate = rentDate;
+    public void setGetDate(Date getDate) {
+        this.getDate = getDate;
     }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    public Date getReturnDate() {
-        return returnDate;
+    public Date getBeginDate() {
+        return beginDate;
     }
 
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Length(min=0, max=2000, message="备注长度必须介于 1 和 2000 之间")

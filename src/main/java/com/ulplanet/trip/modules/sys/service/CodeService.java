@@ -29,7 +29,7 @@ public class CodeService extends CrudService<CodeDao, Code> {
     @Autowired
     private CodeDao codeDao;
 
-    public String getCode(String type) {
+    public String getCode(String type, String ext) {
         if (StringUtils.isBlank(type)) {
             return null;
         }
@@ -38,11 +38,11 @@ public class CodeService extends CrudService<CodeDao, Code> {
             lock = type.intern();
         }
         synchronized (lock) {
-            return _getCode(type);
+            return _getCode(type, ext);
         }
     }
 
-    private String _getCode(String type) {
+    private String _getCode(String type, String ext) {
 
         Code code = codeDao.getByType(new Code(NumberUtils.toInt(type, 0)));
 
@@ -95,11 +95,21 @@ public class CodeService extends CrudService<CodeDao, Code> {
                 sResult = sDate + separator + sResult;
             }
 
+            if (CODE_TYPE_PRODUCT_DETAIL.equals(type)
+                    && StringUtils.isNotBlank(ext)) {
+                sResult = ext + separator + sResult;
+            }
+
             if (StringUtils.isNotBlank(sPrefix)) {
                 sResult = sPrefix + separator + sResult;
             }
         } else {
-            sResult = sPrefix + sDate + sCurrNo;
+            if (CODE_TYPE_PRODUCT_DETAIL.equals(type)
+                    && StringUtils.isNotBlank(ext)) {
+                sResult = sPrefix + ext + sDate + sCurrNo;
+            } else {
+                sResult = sPrefix + sDate + sCurrNo;
+            }
         }
         return sResult;
     }

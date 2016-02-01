@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,10 +67,20 @@ public class RentDetailController extends BaseController {
     @RequiresPermissions("iom:product:view")
     @RequestMapping(value = "yform")
     public String yform(RentDetail rentDetail, Model model) {
-        List<ProductDetail> productDetailList = productDetailService.findAvlList(new ProductDetail());
-        model.addAttribute("productDetailList", productDetailList);
+        List<Product> productList = productService.findUseDetailList(new Product());
+        model.addAttribute("productList", productList);
         model.addAttribute("rentDetail", rentDetail);
         return "modules/iom/rentDetailYForm";
+    }
+
+    @RequestMapping(value = "listDetail")
+    @ResponseBody
+    public List<ProductDetail> findDetailList(String productId) {
+        ProductDetail productDetail = new ProductDetail();
+        Product product = new Product(productId);
+        productDetail.setProduct(product);
+
+        return productDetailService.findAvlList(productDetail);
     }
 
     @RequiresPermissions("iom:product:edit")
@@ -91,6 +102,20 @@ public class RentDetailController extends BaseController {
         }
         rentDetailService.saveYRentDetail(rentDetail);
         addMessage(redirectAttributes, "保存产品租赁明细'" + rentDetail.getProduct().getName() + "'成功");
+        return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
+    }
+
+    @RequiresPermissions("iom:product:edit")
+    @RequestMapping(value = "nreturn")
+    public String nreturn(RentDetail rentDetail) {
+        rentDetailService.saveNReturn(rentDetail);
+        return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
+    }
+
+    @RequiresPermissions("iom:product:edit")
+    @RequestMapping(value = "yreturn")
+    public String yreturn(RentDetail rentDetail) {
+        rentDetailService.saveYReturn(rentDetail);
         return "redirect:" + adminPath + "/iom/product/rent/detail/list?rent.id="+ rentDetail.getRent().getId() +"&repage";
     }
 

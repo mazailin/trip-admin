@@ -22,6 +22,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
 		<ul class="ul-form">
+			<li><label>编号：</label><form:input path="code" htmlEscape="false" maxlength="64" class="input-medium"/></li>
 			<li><label>设备号：</label><form:input path="device" htmlEscape="false" maxlength="64" class="input-medium"/></li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 			<li class="clearfix"></li>
@@ -48,7 +49,10 @@
                     <c:if test="${'2' eq productDetail.status}">
     				    <a href="${ctx}/iom/product/detail/sale?id=${productDetail.id}" onclick="return confirmx('确认此产品要正式上架了吗？', this.href)">上架</a>
                     </c:if>
-                    <c:if test="${'4' ne productDetail.status and '9000' ne productDetail.status}">
+                    <c:if test="${'9000' ne productDetail.status}">
+                        <a href="${ctx}/iom/product/detail/repair?id=${productDetail.id}" onclick="return confirmx('确认此产品要送修吗？', this.href)">送修</a>
+                    </c:if>
+                    <c:if test="${'9000' ne productDetail.status}">
                         <a href="${ctx}/iom/product/discard/form?product.id=${productDetail.product.id}&product.name=${productDetail.product.name}&productDetail.id=${productDetail.id}&productDetail.code=${productDetail.code}">报废</a>
                     </c:if>
 				</td></shiro:hasPermission>

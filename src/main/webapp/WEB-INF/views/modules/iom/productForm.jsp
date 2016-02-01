@@ -8,15 +8,6 @@
 		$(document).ready(function() {
 			$("#inputForm").validate({
 				rules: {
-                    rentPrice: {
-                        decimal: 2
-                    },
-                    payPrice: {
-                        decimal: 2
-                    },
-                    upperLimit: {
-                        decimal: 2
-                    },
                     lowLimit: {
                         decimal: 2
                     }
@@ -54,6 +45,13 @@
 			</div>
 		</div>
         <div class="control-group">
+            <label class="control-label">编码:</label>
+            <div class="controls">
+                <form:input path="code" htmlEscape="false" maxlength="10" style="text-transform:uppercase;" />
+                <span class="help-inline"><font color="red">*</font> </span>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">计量单位:</label>
             <div class="controls">
                 <form:select path="unit">
@@ -65,25 +63,6 @@
             <label class="control-label">平均价格:</label>
             <div class="controls">
                 <form:input path="avgPrice" htmlEscape="false" disabled="true" class="input-small"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">出租单价:</label>
-            <div class="controls">
-                <form:input path="rentPrice" htmlEscape="false" class="input-small"/>
-                <label>&nbsp;&nbsp;&nbsp;元/天</label>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">赔偿价格:</label>
-            <div class="controls">
-                <form:input path="payPrice" htmlEscape="false" class="input-small"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">库存上限:</label>
-            <div class="controls">
-                <form:input path="upperLimit" htmlEscape="false" class="input-small"/>
             </div>
         </div>
         <div class="control-group">

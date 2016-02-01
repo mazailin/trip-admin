@@ -5,15 +5,13 @@
     <sql id="productColumns">
         `id`,
         `name`,
+        `code`,
         `unit`,
         `avg_price`,
-        `rent_price`,
-        `pay_price`,
         `total_amt`,
         `rent_amt`,
         `rsv_amt`,
         `avl_amt`,
-        `upper_limit`,
         `low_limit`,
         `use_detail`,
         `comment`
@@ -59,15 +57,13 @@
         INSERT INTO product(
             `id`,
             `name`,
+            `code`,
             `unit`,
             `avg_price`,
-            `rent_price`,
-            `pay_price`,
             `total_amt`,
             `rent_amt`,
             `rsv_amt`,
             `avl_amt`,
-            `upper_limit`,
             `low_limit`,
             `use_detail`,
             `comment`,
@@ -80,15 +76,13 @@
         ) VALUES (
             #{id},
             #{name},
+            #{code},
             #{unit},
             #{avgPrice},
-            #{rentPrice},
-            #{payPrice},
             #{totalAmt},
             #{rentAmt},
             #{rsvAmt},
             #{avlAmt},
-            #{upperLimit},
             #{lowLimit},
             #{useDetail},
             #{comment},
@@ -104,15 +98,13 @@
 	<update id="update">
         UPDATE product SET
             `name` = #{name},
+            `code` = #{code},
             `unit` = #{unit},
             `avg_price` = #{avgPrice},
-            `rent_price` = #{rentPrice},
-            `pay_price` = #{payPrice},
             `total_amt` = #{totalAmt},
             `rent_amt` = #{rentAmt},
             `rsv_amt` = #{rsvAmt},
             `avl_amt` = #{avlAmt},
-            `upper_limit` = #{upperLimit},
             `low_limit` = #{lowLimit},
             `use_detail` = #{useDetail},
             `comment` = #{comment},
@@ -121,6 +113,80 @@
             `remarks` = #{remarks}
         WHERE id = #{id}
 	</update>
+    <update id="updateAvlPrice">
+        UPDATE product
+        SET avg_price = (
+            SELECT
+                SUM(total_price) / SUM(buy_amount)
+            FROM
+                product_in
+            WHERE
+                product_id = product.id
+                AND del_flag = #{DEL_FLAG_NORMAL}
+        )
+        WHERE
+            id = #{id}
+    </update>
+    <update id="updateTotalAmt">
+        UPDATE product
+        SET total_amt = (
+            SELECT
+                count(*)
+            FROM
+                product_detail
+            WHERE
+                del_flag = #{DEL_FLAG_NORMAL}
+                AND product_id = product.id
+                AND `status` IN ('1', '2', '3', '4', '5')
+        )
+        WHERE
+            id = #{id}
+    </update>
+    <update id="updateRsvAmt">
+        UPDATE product
+        SET rsv_amt = (
+            SELECT
+                count(*)
+            FROM
+                product_detail
+            WHERE
+                del_flag = #{DEL_FLAG_NORMAL}
+                AND product_id = product.id
+                AND `status` IN ('1', '2', '3', '5')
+        )
+        WHERE
+            id = #{id}
+    </update>
+    <update id="updateAvlAmt">
+        UPDATE product
+        SET avl_amt = (
+            SELECT
+                count(*)
+            FROM
+                product_detail
+            WHERE
+                del_flag = #{DEL_FLAG_NORMAL}
+                AND product_id = product.id
+                AND `status` = '3'
+        )
+        WHERE
+            id = #{id}
+    </update>
+    <update id="updateRentAmt">
+        UPDATE product
+        SET rent_amt = (
+            SELECT
+                count(*)
+            FROM
+                product_detail
+            WHERE
+                del_flag = #{DEL_FLAG_NORMAL}
+                AND product_id = product.id
+                AND `status` = '4'
+        )
+        WHERE
+            id = #{id}
+    </update>
 	<delete id="delete">
 		UPDATE product SET del_flag = #{DEL_FLAG_DELETE} WHERE id = #{id}
 	</delete>
