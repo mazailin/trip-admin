@@ -16,7 +16,6 @@ import com.ulplanet.trip.modules.sys.dao.UserDao;
 import com.ulplanet.trip.modules.sys.entity.Menu;
 import com.ulplanet.trip.modules.sys.entity.Role;
 import com.ulplanet.trip.modules.sys.entity.User;
-import com.ulplanet.trip.modules.sys.security.SystemAuthorizingRealm;
 import com.ulplanet.trip.modules.sys.utils.LogUtils;
 import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import org.apache.shiro.session.Session;
@@ -48,8 +47,6 @@ public class SystemService extends BaseService {
 	private MenuDao menuDao;
 	@Autowired
 	private SessionDAO sessionDao;
-	@Autowired
-	private SystemAuthorizingRealm systemRealm;
 
 	public SessionDAO getSessionDao() {
 		return sessionDao;
@@ -112,8 +109,6 @@ public class SystemService extends BaseService {
 			}
 			// 清除用户缓存
 			UserUtils.clearCache(user);
-//			// 清除权限缓存
-//			systemRealm.clearAllCachedAuthorizationInfo();
 		}
 	}
 	
@@ -123,8 +118,6 @@ public class SystemService extends BaseService {
 		userDao.updateUserInfo(user);
 		// 清除用户缓存
 		UserUtils.clearCache(user);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 	
 	@Transactional(readOnly = false)
@@ -132,8 +125,6 @@ public class SystemService extends BaseService {
 		userDao.delete(user);
 		// 清除用户缓存
 		UserUtils.clearCache(user);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 	
 	@Transactional(readOnly = false)
@@ -144,8 +135,6 @@ public class SystemService extends BaseService {
 		// 清除用户缓存
 		user.setLoginName(loginName);
 		UserUtils.clearCache(user);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 	
 	@Transactional(readOnly = false)
@@ -154,7 +143,6 @@ public class SystemService extends BaseService {
 		user.setOldLoginIp(user.getLoginIp());
 		user.setOldLoginDate(user.getLoginDate());
 		// 更新本次登录信息
-//		user.setLoginIp(UserUtils.getSession().getHost());
 		user.setLoginIp(StringUtils.getRemoteAddr(Servlets.getRequest()));
 		user.setLoginDate(new Date());
 		userDao.updateLoginInfo(user);
@@ -225,8 +213,6 @@ public class SystemService extends BaseService {
 		}
 		// 清除用户角色缓存
 		UserUtils.removeCache(UserUtils.CACHE_ROLE_LIST);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 
 	@Transactional(readOnly = false)
@@ -234,8 +220,6 @@ public class SystemService extends BaseService {
 		roleDao.delete(role);
 		// 清除用户角色缓存
 		UserUtils.removeCache(UserUtils.CACHE_ROLE_LIST);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 	}
 	
 	@Transactional(readOnly = false)
@@ -306,8 +290,6 @@ public class SystemService extends BaseService {
 		}
 		// 清除用户菜单缓存
 		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 		// 清除日志相关缓存
 		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
 	}
@@ -317,8 +299,6 @@ public class SystemService extends BaseService {
 		menuDao.updateSort(menu);
 		// 清除用户菜单缓存
 		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 		// 清除日志相关缓存
 		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
 	}
@@ -328,8 +308,6 @@ public class SystemService extends BaseService {
 		menuDao.delete(menu);
 		// 清除用户菜单缓存
 		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-//		// 清除权限缓存
-//		systemRealm.clearAllCachedAuthorizationInfo();
 		// 清除日志相关缓存
 		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
 	}

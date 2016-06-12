@@ -86,7 +86,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		Object obj = getAvailablePrincipal(principals);
-		Principal principal = null;
+		Principal principal;
 		try {
 			principal = (Principal) obj;
 		}catch(Exception e){
@@ -183,28 +183,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		setCredentialsMatcher(matcher);
 	}
 	
-//	/**
-//	 * 清空用户关联权限认证，待下次使用时重新加载
-//	 */
-//	public void clearCachedAuthorizationInfo(Principal principal) {
-//		SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
-//		clearCachedAuthorizationInfo(principals);
-//	}
-
-	/**
-	 * 清空所有关联认证
-	 * @Deprecated 不需要清空，授权缓存保存到session中
-	 */
-	@Deprecated
-	public void clearAllCachedAuthorizationInfo() {
-//		Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
-//		if (cache != null) {
-//			for (Object key : cache.keys()) {
-//				cache.remove(key);
-//			}
-//		}
-	}
-
 	/**
 	 * 获取系统业务对象
 	 */

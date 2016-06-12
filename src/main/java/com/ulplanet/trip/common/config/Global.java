@@ -3,10 +3,7 @@ package com.ulplanet.trip.common.config;
 import com.google.common.collect.Maps;
 import com.ulplanet.trip.common.utils.PropertiesLoader;
 import com.ulplanet.trip.common.utils.StringUtils;
-import org.springframework.core.io.DefaultResourceLoader;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -28,12 +25,6 @@ public class Global {
 	 * 属性文件加载对象
 	 */
 	private static PropertiesLoader loader = new PropertiesLoader("config.properties");
-
-	/**
-	 * 显示/隐藏
-	 */
-	public static final String SHOW = "1";
-	public static final String HIDE = "0";
 
 	/**
 	 * 是/否
@@ -92,36 +83,4 @@ public class Global {
 		return null;
 	}
 
-    /**
-     * 获取工程路径
-     * @return
-     */
-    public static String getProjectPath(){
-    	// 如果配置了工程路径，则直接返回，否则自动获取。
-		String projectPath = Global.getConfig("projectPath");
-		if (StringUtils.isNotBlank(projectPath)){
-			return projectPath;
-		}
-		try {
-			File file = new DefaultResourceLoader().getResource("").getFile();
-			if (file != null){
-				while(true){
-					File f = new File(file.getPath() + File.separator + "src" + File.separator + "main");
-					if (f == null || f.exists()){
-						break;
-					}
-					if (file.getParentFile() != null){
-						file = file.getParentFile();
-					}else{
-						break;
-					}
-				}
-				projectPath = file.toString();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return projectPath;
-    }
-	
 }

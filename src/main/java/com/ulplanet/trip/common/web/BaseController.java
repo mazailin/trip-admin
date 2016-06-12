@@ -1,7 +1,6 @@
 package com.ulplanet.trip.common.web;
 
 import com.ulplanet.trip.common.beanvalidator.BeanValidators;
-import com.ulplanet.trip.common.mapper.JsonMapper;
 import com.ulplanet.trip.common.utils.DateUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import java.beans.PropertyEditorSupport;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -121,34 +118,6 @@ public abstract class BaseController {
 			sb.append(message).append(messages.length>1?"<br/>":"");
 		}
 		redirectAttributes.addFlashAttribute("message", sb.toString());
-	}
-	
-	/**
-	 * 客户端返回JSON字符串
-	 * @param response
-	 * @param object
-	 * @return
-	 */
-	protected String renderString(HttpServletResponse response, Object object) {
-		return renderString(response, JsonMapper.toJsonString(object), "application/json");
-	}
-	
-	/**
-	 * 客户端返回字符串
-	 * @param response
-	 * @param string
-	 * @return
-	 */
-	protected String renderString(HttpServletResponse response, String string, String type) {
-		try {
-			response.reset();
-	        response.setContentType(type);
-	        response.setCharacterEncoding("utf-8");
-			response.getWriter().print(string);
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
 	}
 
 	/**

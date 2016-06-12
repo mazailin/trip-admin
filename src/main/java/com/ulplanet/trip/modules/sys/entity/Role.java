@@ -23,7 +23,6 @@ public class Role extends DataEntity<Role> {
 	
 	private User user;		// 根据用户ID查询角色列表
 
-//	private List<User> userList = Lists.newArrayList(); // 拥有用户列表
 	private List<Menu> menuList = Lists.newArrayList(); // 拥有菜单列表
 
 	public Role() {
@@ -72,26 +71,6 @@ public class Role extends DataEntity<Role> {
 	public void setOldName(String oldName) {
 		this.oldName = oldName;
 	}
-
-//	public List<User> getUserList() {
-//		return userList;
-//	}
-//
-//	public void setUserList(List<User> userList) {
-//		this.userList = userList;
-//	}
-//	
-//	public List<String> getUserIdList() {
-//		List<String> nameIdList = Lists.newArrayList();
-//		for (User user : userList) {
-//			nameIdList.add(user.getId());
-//		}
-//		return nameIdList;
-//	}
-//
-//	public String getUserIds() {
-//		return StringUtils.join(getUserIdList(), ",");
-//	}
 
 	public List<Menu> getMenuList() {
 		return menuList;
@@ -151,20 +130,4 @@ public class Role extends DataEntity<Role> {
 		this.user = user;
 	}
 
-//	public boolean isAdmin(){
-//		return isAdmin(this.id);
-//	}
-//	
-//	public static boolean isAdmin(String id){
-//		return id != null && "1".equals(id);
-//	}
-	
-//	@Transient
-//	public String getMenuNames() {
-//		List<String> menuNameList = Lists.newArrayList();
-//		for (Menu menu : menuList) {
-//			menuNameList.add(menu.getName());
-//		}
-//		return StringUtils.join(menuNameList, ",");
-//	}
 }

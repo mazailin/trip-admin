@@ -207,18 +207,6 @@
             <version>${mysql.driver.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>${oracle.driver.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.jtds</groupId>
-            <artifactId>jtds</artifactId>
-            <version>${mssql.driver.version}</version>
-            <scope>runtime</scope>
-        </dependency>
         <!-- PERSISTENCE end -->
 
         <!-- WEB begin -->
@@ -464,26 +452,6 @@
             <version>${poi.version}</version>
         </dependency>
 
-         <!--image util-->
-        <dependency>
-            <groupId>com.drewnoakes</groupId>
-            <artifactId>metadata-extractor</artifactId>
-            <version>2.6.2</version>
-        </dependency>
-
-        <!-- 条形码、二维码生成  -->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <!-- GENERAL UTILS end -->
-
         <!-- TEST begin -->
         <dependency>
             <groupId>junit</groupId>
@@ -496,27 +464,6 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- TEST end -->
-
-        <!-- User Agent -->
-        <dependency>
-            <groupId>bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>1.13</version>
-        </dependency>
-
-        <!--parse apk-->
-        <dependency>
-            <groupId>net.erdfelt.android</groupId>
-            <artifactId>apk-parser</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <!--http client-->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-
 
     </dependencies>
 
