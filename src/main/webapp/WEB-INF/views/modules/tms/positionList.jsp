@@ -179,6 +179,6 @@
 
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAObFcwI1lG4WjSFQkEsSz09d5nMlyrhj8&signed_in=false&callback=initMap"></script>
+        src="http://ditu.google.cn/maps/api/js?language=zh-CN&callback=initMap"></script>
 </body>
 </html>
