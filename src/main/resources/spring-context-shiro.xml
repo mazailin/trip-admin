@@ -20,7 +20,6 @@
 				${adminPath}/login = authc
 				${adminPath}/logout = logout
 				${adminPath}/** = user
-				/ReportServer/** = user
 			</value>
 		</constructor-arg>
 	</bean>
