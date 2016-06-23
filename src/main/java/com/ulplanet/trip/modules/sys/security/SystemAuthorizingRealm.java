@@ -4,11 +4,9 @@ import com.ulplanet.trip.common.config.Global;
 import com.ulplanet.trip.common.servlet.ValidateCodeServlet;
 import com.ulplanet.trip.common.utils.Encodes;
 import com.ulplanet.trip.common.utils.SpringContextHolder;
-import com.ulplanet.trip.common.web.Servlets;
 import com.ulplanet.trip.modules.sys.entity.Menu;
 import com.ulplanet.trip.modules.sys.entity.User;
 import com.ulplanet.trip.modules.sys.service.SystemService;
-import com.ulplanet.trip.modules.sys.utils.LogUtils;
 import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import com.ulplanet.trip.modules.sys.web.LoginController;
 import org.apache.commons.lang3.StringUtils;
@@ -125,8 +123,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			info.addStringPermission("user");
 			// 更新登录IP和时间
 			getSystemService().updateUserLoginInfo(user);
-			// 记录登录日志
-			LogUtils.saveLog(Servlets.getRequest(), "系统登录");
 			return info;
 		} else {
 			return null;

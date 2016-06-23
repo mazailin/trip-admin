@@ -7,7 +7,6 @@ import com.ulplanet.trip.common.config.Global;
 import com.ulplanet.trip.common.persistence.DataEntity;
 import com.ulplanet.trip.common.utils.Collections3;
 import com.ulplanet.trip.common.utils.excel.annotation.ExcelField;
-import com.ulplanet.trip.common.utils.excel.fieldtype.RoleListType;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -222,11 +221,10 @@ public class User extends DataEntity<User> {
 	}
 
 	@JsonIgnore
-	@ExcelField(title="拥有角色", align=1, sort=800, fieldType=RoleListType.class)
 	public List<Role> getRoleList() {
 		return roleList;
 	}
-	
+
 	public void setRoleList(List<Role> roleList) {
 		this.roleList = roleList;
 	}

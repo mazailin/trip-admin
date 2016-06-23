@@ -1,14 +1,15 @@
 package com.ulplanet.trip.modules.sys.service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.ulplanet.trip.common.service.CrudService;
-import com.ulplanet.trip.common.utils.CacheUtils;
 import com.ulplanet.trip.modules.sys.dao.DictDao;
 import com.ulplanet.trip.modules.sys.entity.Dict;
-import com.ulplanet.trip.modules.sys.utils.DictUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典Service
@@ -29,13 +30,28 @@ public class DictService extends CrudService<DictDao, Dict> {
 	@Transactional(readOnly = false)
 	public void save(Dict dict) {
 		super.save(dict);
-		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
 	}
 
 	@Transactional(readOnly = false)
 	public void delete(Dict dict) {
 		super.delete(dict);
-		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
 	}
+
+    public List<Dict> getDictList(String type) {
+        Map<String, List<Dict>> dictMap = Maps.newHashMap();
+        for (Dict dict : dao.findAllList(new Dict())) {
+            List<Dict> dictList = dictMap.get(dict.getType());
+            if (dictList != null) {
+                dictList.add(dict);
+            } else {
+                dictMap.put(dict.getType(), Lists.newArrayList(dict));
+            }
+        }
+        List<Dict> dictList = dictMap.get(type);
+        if (dictList == null) {
+            dictList = Lists.newArrayList();
+        }
+        return dictList;
+    }
 
 }

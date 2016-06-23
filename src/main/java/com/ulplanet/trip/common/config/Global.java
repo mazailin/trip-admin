@@ -58,13 +58,6 @@ public class Global {
 	}
 	
 	/**
-	 * 获取管理端根路径
-	 */
-	public static String getAdminPath() {
-		return getConfig("adminPath");
-	}
-	
-	/**
 	 * 获取URL后缀
 	 */
 	public static String getUrlSuffix() {

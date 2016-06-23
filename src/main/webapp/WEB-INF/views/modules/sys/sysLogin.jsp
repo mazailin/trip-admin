@@ -65,7 +65,7 @@
 		</div>
 	</form>
 	<div class="footer">
-		Copyright &copy; ${fns:getConfig('copyrightYear')} <a href="${pageContext.request.contextPath}${fns:getAdminPath()}">${fns:getConfig('productName')}</a> - Powered By <a href="http://www.ulplanet.com" target="_blank">GoLocal</a> ${fns:getConfig('version')}
+		Copyright &copy; ${fns:getConfig('copyrightYear')} <a href="${pageContext.request.contextPath}">${fns:getConfig('productName')}</a> - Powered By <a href="http://www.ulplanet.com" target="_blank">GoLocal</a> ${fns:getConfig('version')}
 	</div>
 	<script src="${ctxStatic}/flash/zoom.min.js" type="text/javascript"></script>
 </body>

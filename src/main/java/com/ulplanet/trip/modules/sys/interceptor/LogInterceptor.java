@@ -2,7 +2,6 @@ package com.ulplanet.trip.modules.sys.interceptor;
 
 import com.ulplanet.trip.common.service.BaseService;
 import com.ulplanet.trip.common.utils.DateUtils;
-import com.ulplanet.trip.modules.sys.utils.LogUtils;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,9 +43,6 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, 
 			Object handler, Exception ex) throws Exception {
 
-		// 保存日志
-		LogUtils.saveLog(request, handler, ex, null);
-		
 		// 打印JVM信息。
 		if (logger.isDebugEnabled()){
 			long beginTime = startTimeThreadLocal.get();//得到线程绑定的局部变量（开始时间）  

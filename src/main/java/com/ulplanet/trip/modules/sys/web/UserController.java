@@ -1,13 +1,9 @@
 package com.ulplanet.trip.modules.sys.web;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.ulplanet.trip.common.beanvalidator.BeanValidators;
-import com.ulplanet.trip.common.config.Global;
-import com.ulplanet.trip.common.persistence.Page;
-import com.ulplanet.trip.common.utils.DateUtils;
 import com.ulplanet.trip.common.utils.StringUtils;
-import com.ulplanet.trip.common.utils.excel.ExportExcel;
-import com.ulplanet.trip.common.utils.excel.ImportExcel;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.sys.entity.Role;
 import com.ulplanet.trip.modules.sys.entity.User;
@@ -17,13 +13,14 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
@@ -31,7 +28,7 @@ import java.util.List;
  * Created by zhangxd on 15/10/20.
  */
 @Controller
-@RequestMapping(value = "${adminPath}/sys/user")
+@RequestMapping(value = "/sys/user")
 public class UserController extends BaseController {
 
 	@Autowired
@@ -49,8 +46,9 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<User> page = systemService.findUser(new Page<>(request, response), user);
-        model.addAttribute("page", page);
+        Page page = getPage(request, response);
+		PageInfo<User> pageInfo = systemService.findUser(page, user);
+        model.addAttribute("page", pageInfo);
 		return "modules/sys/userList";
 	}
 
@@ -58,7 +56,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(User user, Model model) {
 		model.addAttribute("user", user);
-		model.addAttribute("allRoles", systemService.findAllRole());
+		model.addAttribute("allRoles", systemService.findAllRole(UserUtils.getUser()));
 		return "modules/sys/userForm";
 	}
 
@@ -79,7 +77,7 @@ public class UserController extends BaseController {
 		// 角色数据有效性验证，过滤不在授权内的角色
 		List<Role> roleList = Lists.newArrayList();
 		List<String> roleIdList = user.getRoleIdList();
-        for (Role r : systemService.findAllRole()){
+        for (Role r : systemService.findAllRole(UserUtils.getUser())){
             if (roleIdList.contains(r.getId())){
                 roleList.add(r);
             }
@@ -87,13 +85,8 @@ public class UserController extends BaseController {
 		user.setRoleList(roleList);
 		// 保存用户信息
 		systemService.saveUser(user);
-		// 清除当前用户缓存
-		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())){
-			UserUtils.clearCache();
-			//UserUtils.getCacheMap().clear();
-		}
 		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
-		return "redirect:" + adminPath + "/sys/user/list?repage";
+		return "redirect:/sys/user/list?repage";
 	}
 	
 	@RequiresPermissions("sys:user:edit")
@@ -107,98 +100,9 @@ public class UserController extends BaseController {
 			systemService.deleteUser(user);
 			addMessage(redirectAttributes, "删除用户成功");
 		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
+		return "redirect:/sys/user/list?repage";
 	}
 	
-	/**
-	 * 导出用户数据
-	 * @param user
-	 * @param request
-	 * @param response
-	 * @param redirectAttributes
-	 * @return
-	 */
-	@RequiresPermissions("sys:user:view")
-    @RequestMapping(value = "export", method=RequestMethod.POST)
-    public String exportFile(User user, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
-		try {
-            String fileName = "用户数据"+ DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
-            Page<User> page = systemService.findUser(new Page<>(request, response, -1), user);
-    		new ExportExcel("用户数据", User.class).setDataList(page.getList()).write(response, fileName).dispose();
-    		return null;
-		} catch (Exception e) {
-			addMessage(redirectAttributes, "导出用户失败！失败信息："+e.getMessage());
-		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
-    }
-
-	/**
-	 * 导入用户数据
-	 * @param file
-	 * @param redirectAttributes
-	 * @return
-	 */
-	@RequiresPermissions("sys:user:edit")
-    @RequestMapping(value = "import", method=RequestMethod.POST)
-    public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
-		try {
-			int successNum = 0;
-			int failureNum = 0;
-			StringBuilder failureMsg = new StringBuilder();
-			ImportExcel ei = new ImportExcel(file, 1, 0);
-			List<User> list = ei.getDataList(User.class);
-			for (User user : list){
-				try{
-					if ("true".equals(checkLoginName("", user.getLoginName()))){
-						user.setPassword(SystemService.entryptPassword("123456"));
-						BeanValidators.validateWithException(validator, user);
-						systemService.saveUser(user);
-						successNum++;
-					}else{
-						failureMsg.append("<br/>登录名 "+user.getLoginName()+" 已存在; ");
-						failureNum++;
-					}
-				}catch(ConstraintViolationException ex){
-					failureMsg.append("<br/>登录名 "+user.getLoginName()+" 导入失败：");
-					List<String> messageList = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
-					for (String message : messageList){
-						failureMsg.append(message+"; ");
-						failureNum++;
-					}
-				}catch (Exception ex) {
-					failureMsg.append("<br/>登录名 "+user.getLoginName()+" 导入失败："+ex.getMessage());
-				}
-			}
-			if (failureNum>0){
-				failureMsg.insert(0, "，失败 "+failureNum+" 条用户，导入信息如下：");
-			}
-			addMessage(redirectAttributes, "已成功导入 "+successNum+" 条用户"+failureMsg);
-		} catch (Exception e) {
-			addMessage(redirectAttributes, "导入用户失败！失败信息："+e.getMessage());
-		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
-    }
-	
-	/**
-	 * 下载导入用户数据模板
-	 * @param response
-	 * @param redirectAttributes
-	 * @return
-	 */
-	@RequiresPermissions("sys:user:view")
-    @RequestMapping(value = "import/template")
-    public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
-		try {
-            String fileName = "用户数据导入模板.xlsx";
-    		List<User> list = Lists.newArrayList(); list.add(UserUtils.getUser());
-    		new ExportExcel("用户数据", User.class, 2).setDataList(list).write(response, fileName).dispose();
-    		return null;
-		} catch (Exception e) {
-			addMessage(redirectAttributes, "导入模板下载失败！失败信息："+e.getMessage());
-		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
-    }
-
 	/**
 	 * 验证登录名是否有效
 	 * @param oldLoginName
@@ -236,7 +140,6 @@ public class UserController extends BaseController {
 			model.addAttribute("message", "保存用户信息成功");
 		}
 		model.addAttribute("user", currentUser);
-		model.addAttribute("Global", new Global()); //TODO 是否无用?
 		return "modules/sys/userInfo";
 	}
 

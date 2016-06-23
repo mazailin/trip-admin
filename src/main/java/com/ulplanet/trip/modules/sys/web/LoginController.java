@@ -39,7 +39,7 @@ public class LoginController extends BaseController {
 	/**
 	 * 管理登录
 	 */
-	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
 
@@ -54,7 +54,7 @@ public class LoginController extends BaseController {
 		
 		// 如果已经登录，则跳转到管理首页
 		if(principal != null){
-			return "redirect:" + adminPath;
+			return "redirect:/";
 		}
 		return "modules/sys/sysLogin";
 	}
@@ -62,13 +62,13 @@ public class LoginController extends BaseController {
 	/**
 	 * 登录失败，真正登录的POST请求由Filter完成
 	 */
-	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginFail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Principal principal = UserUtils.getPrincipal();
 		
 		// 如果已经登录，则跳转到管理首页
 		if(principal != null){
-			return "redirect:" + adminPath;
+			return "redirect:/";
 		}
 
 		String username = WebUtils.getCleanParam(request, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
@@ -105,7 +105,7 @@ public class LoginController extends BaseController {
 	 * 登录成功，进入管理首页
 	 */
 	@RequiresPermissions("user")
-	@RequestMapping(value = "${adminPath}")
+	@RequestMapping(value = "/")
 	public String index(HttpServletRequest request, HttpServletResponse response) {
 		Principal principal = UserUtils.getPrincipal();
 
@@ -123,7 +123,7 @@ public class LoginController extends BaseController {
 				CookieUtils.setCookie(response, "LOGINED", "true");
 			}else if (StringUtils.equals(logined, "true")){
 				UserUtils.getSubject().logout();
-				return "redirect:" + adminPath + "/login";
+				return "redirect:/login";
 			}
 		}
 		

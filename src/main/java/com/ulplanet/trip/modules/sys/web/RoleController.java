@@ -1,9 +1,10 @@
 package com.ulplanet.trip.modules.sys.web;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.ulplanet.trip.common.config.Global;
-import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.Collections3;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
@@ -29,7 +30,7 @@ import java.util.Map;
  * Created by zhangxd on 15/10/20.
  */
 @Controller
-@RequestMapping(value = "${adminPath}/sys/role")
+@RequestMapping(value = "/sys/role")
 public class RoleController extends BaseController {
 
 	@Autowired
@@ -47,7 +48,7 @@ public class RoleController extends BaseController {
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Role role, Model model) {
-		List<Role> list = systemService.findAllRole();
+		List<Role> list = systemService.findAllRole(UserUtils.getUser());
 		model.addAttribute("list", list);
 		return "modules/sys/roleList";
 	}
@@ -65,7 +66,7 @@ public class RoleController extends BaseController {
 	public String save(Role role, Model model, RedirectAttributes redirectAttributes) {
 		if(!UserUtils.getUser().isAdmin()&&role.getSysData().equals(Global.YES)){
 			addMessage(redirectAttributes, "越权操作，只有超级管理员才能修改此数据！");
-			return "redirect:" + adminPath + "/sys/role/?repage";
+			return "redirect:" + "/sys/role/?repage";
 		}
 		if (!beanValidator(model, role)){
 			return form(role, model);
@@ -76,7 +77,7 @@ public class RoleController extends BaseController {
 		}
 		systemService.saveRole(role);
 		addMessage(redirectAttributes, "保存角色'" + role.getName() + "'成功");
-		return "redirect:" + adminPath + "/sys/role/?repage";
+		return "redirect:/sys/role/?repage";
 	}
 	
 	@RequiresPermissions("sys:role:edit")
@@ -84,11 +85,11 @@ public class RoleController extends BaseController {
 	public String delete(Role role, RedirectAttributes redirectAttributes) {
 		if(!UserUtils.getUser().isAdmin() && role.getSysData().equals(Global.YES)){
 			addMessage(redirectAttributes, "越权操作，只有超级管理员才能修改此数据！");
-			return "redirect:" + adminPath + "/sys/role/?repage";
+			return "redirect:/sys/role/?repage";
 		}
         systemService.deleteRole(role);
         addMessage(redirectAttributes, "删除角色成功");
-		return "redirect:" + adminPath + "/sys/role/?repage";
+		return "redirect:/sys/role/?repage";
 	}
 	
 	/**
@@ -115,7 +116,7 @@ public class RoleController extends BaseController {
 	@RequestMapping(value = "usertorole")
 	public String selectUserToRole(Role role, Model model) {
         List<Map<String, Object>> allUserList = Lists.newArrayList();
-        Page<User> page = systemService.findUser(new Page<>(1, -1), new User());
+        PageInfo<User> page = systemService.findUser(new Page(1, 0), new User());
         for (User e : page.getList()) {
             Map<String, Object> map = Maps.newHashMap();
             map.put("id", e.getId());
@@ -158,7 +159,7 @@ public class RoleController extends BaseController {
 				}
 			}		
 		}
-		return "redirect:" + adminPath + "/sys/role/assign?id="+role.getId();
+		return "redirect:/sys/role/assign?id="+role.getId();
 	}
 	
 	/**
@@ -181,7 +182,7 @@ public class RoleController extends BaseController {
 			}
 		}
 		addMessage(redirectAttributes, "已成功分配 "+newNum+" 个用户"+msg);
-		return "redirect:" + adminPath + "/sys/role/assign?id="+role.getId();
+		return "redirect:/sys/role/assign?id="+role.getId();
 	}
 
 	/**

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by zhangxd on 15/10/20.
  */
 @Controller
-@RequestMapping(value = "${adminPath}/tag")
+@RequestMapping(value = "/tag")
 public class TagController extends BaseController {
 	
 	/**

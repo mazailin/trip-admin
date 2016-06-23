@@ -17,9 +17,7 @@
     	a.id,
     	a.name,
 		a.remarks,
-		a.create_by AS "createBy.id",
 		a.create_date,
-		a.update_by AS "updateBy.id",
 		a.update_date,
     	a.useable AS useable,
     	a.is_sys AS sysData
@@ -68,20 +66,16 @@
 		INSERT INTO sys_role(
 			id, 
 			name,
-			create_by,
-			create_date, 
-			update_by, 
-			update_date, 
+			create_date,
+			update_date,
 			remarks, 
 			is_sys,
 			useable
 		) VALUES (
 			#{id}, 
 			#{name},
-			#{createBy.id},
-			#{createDate}, 
-			#{updateBy.id}, 
-			#{updateDate}, 
+			#{createDate},
+			#{updateDate},
 			#{remarks}, 
 			#{sysData},
 			#{useable}
@@ -91,8 +85,7 @@
 	<update id="update">
 		UPDATE sys_role SET 
 			name = #{name},
-			update_by = #{updateBy.id},
-			update_date = #{updateDate}, 
+			update_date = #{updateDate},
 			remarks = #{remarks},
 			is_sys = #{sysData},
 			useable = #{useable}

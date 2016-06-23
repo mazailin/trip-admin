@@ -7,6 +7,7 @@
 <link href="${ctxStatic}/awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
 <!--[if lte IE 6]><link href="${ctxStatic}/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<script src="${ctxStatic}/pagination/jquery.twbsPagination.min.js" type="text/javascript"></script>
 <link href="${ctxStatic}/jquery-select2/3.4/select2.min.css" rel="stylesheet" />
 <script src="${ctxStatic}/jquery-select2/3.4/select2.min.js" type="text/javascript"></script>
 <link href="${ctxStatic}/jquery-validation/1.11.0/jquery.validate.min.css" type="text/css" rel="stylesheet" />

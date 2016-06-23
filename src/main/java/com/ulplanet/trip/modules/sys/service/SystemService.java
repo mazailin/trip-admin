@@ -1,12 +1,12 @@
 package com.ulplanet.trip.modules.sys.service;
 
-import com.ulplanet.trip.common.config.Global;
-import com.ulplanet.trip.common.persistence.Page;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.SqlUtil;
 import com.ulplanet.trip.common.security.Digests;
 import com.ulplanet.trip.common.security.shiro.session.SessionDAO;
 import com.ulplanet.trip.common.service.BaseService;
 import com.ulplanet.trip.common.service.ServiceException;
-import com.ulplanet.trip.common.utils.CacheUtils;
 import com.ulplanet.trip.common.utils.Encodes;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.Servlets;
@@ -16,8 +16,6 @@ import com.ulplanet.trip.modules.sys.dao.UserDao;
 import com.ulplanet.trip.modules.sys.entity.Menu;
 import com.ulplanet.trip.modules.sys.entity.Role;
 import com.ulplanet.trip.modules.sys.entity.User;
-import com.ulplanet.trip.modules.sys.utils.LogUtils;
-import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +58,12 @@ public class SystemService extends BaseService {
 	 * @return
 	 */
 	public User getUser(String id) {
-		return UserUtils.get(id);
+        User user = userDao.get(id);
+        if (user == null) {
+            return null;
+        }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        return user;
 	}
 
 	/**
@@ -69,15 +72,19 @@ public class SystemService extends BaseService {
 	 * @return
 	 */
 	public User getUserByLoginName(String loginName) {
-		return UserUtils.getByLoginName(loginName);
+        User user = userDao.getByLoginName(new User(null, loginName));
+        if (user == null) {
+            return null;
+        }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        return user;
 	}
 	
-	public Page<User> findUser(Page<User> page, User user) {
-		// 设置分页参数
-		user.setPage(page);
+	public PageInfo<User> findUser(Page page, User user) {
+		SqlUtil.setLocalPage(page);
 		// 执行分页查询
-		page.setList(userDao.findList(user));
-		return page;
+        List<User> list = userDao.findList(user);
+		return new PageInfo<>(list);
 	}
 	
 	/**
@@ -107,8 +114,6 @@ public class SystemService extends BaseService {
 			}else{
 				throw new ServiceException(user.getLoginName() + "没有设置角色！");
 			}
-			// 清除用户缓存
-			UserUtils.clearCache(user);
 		}
 	}
 	
@@ -116,15 +121,11 @@ public class SystemService extends BaseService {
 	public void updateUserInfo(User user) {
 		user.preUpdate();
 		userDao.updateUserInfo(user);
-		// 清除用户缓存
-		UserUtils.clearCache(user);
 	}
 	
 	@Transactional(readOnly = false)
 	public void deleteUser(User user) {
 		userDao.delete(user);
-		// 清除用户缓存
-		UserUtils.clearCache(user);
 	}
 	
 	@Transactional(readOnly = false)
@@ -134,7 +135,6 @@ public class SystemService extends BaseService {
 		userDao.updatePasswordById(user);
 		// 清除用户缓存
 		user.setLoginName(loginName);
-		UserUtils.clearCache(user);
 	}
 	
 	@Transactional(readOnly = false)
@@ -176,7 +176,7 @@ public class SystemService extends BaseService {
 	public Collection<Session> getActiveSessions(){
 		return sessionDao.getActiveSessions(false);
 	}
-	
+
 	//-- Role Service --//
 	
 	public Role getRole(String id) {
@@ -193,8 +193,15 @@ public class SystemService extends BaseService {
 		return roleDao.findList(role);
 	}
 	
-	public List<Role> findAllRole(){
-		return UserUtils.getRoleList();
+	public List<Role> findAllRole(User currentUser){
+        List<Role> roleList;
+        if (currentUser.isAdmin()) {
+            roleList = roleDao.findAllList(new Role());
+        } else {
+            Role role = new Role();
+            roleList = roleDao.findList(role);
+        }
+        return roleList;
 	}
 	
 	@Transactional(readOnly = false)
@@ -211,15 +218,11 @@ public class SystemService extends BaseService {
 		if (role.getMenuList().size() > 0){
 			roleDao.insertRoleMenu(role);
 		}
-		// 清除用户角色缓存
-		UserUtils.removeCache(UserUtils.CACHE_ROLE_LIST);
 	}
 
 	@Transactional(readOnly = false)
 	public void deleteRole(Role role) {
 		roleDao.delete(role);
-		// 清除用户角色缓存
-		UserUtils.removeCache(UserUtils.CACHE_ROLE_LIST);
 	}
 	
 	@Transactional(readOnly = false)
@@ -255,8 +258,16 @@ public class SystemService extends BaseService {
 		return menuDao.get(id);
 	}
 
-	public List<Menu> findAllMenu(){
-		return UserUtils.getMenuList();
+	public List<Menu> findAllMenu(User currentUser){
+        List<Menu> menuList;
+        if (currentUser.isAdmin()) {
+            menuList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(currentUser.getId());
+            menuList = menuDao.findByUserId(m);
+        }
+        return menuList;
 	}
 	
 	@Transactional(readOnly = false)
@@ -288,40 +299,16 @@ public class SystemService extends BaseService {
 			e.setParentIds(e.getParentIds().replace(oldParentIds, menu.getParentIds()));
 			menuDao.updateParentIds(e);
 		}
-		// 清除用户菜单缓存
-		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-		// 清除日志相关缓存
-		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
 	}
 
 	@Transactional(readOnly = false)
 	public void updateMenuSort(Menu menu) {
 		menuDao.updateSort(menu);
-		// 清除用户菜单缓存
-		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-		// 清除日志相关缓存
-		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
 	}
 
 	@Transactional(readOnly = false)
 	public void deleteMenu(Menu menu) {
 		menuDao.delete(menu);
-		// 清除用户菜单缓存
-		UserUtils.removeCache(UserUtils.CACHE_MENU_LIST);
-		// 清除日志相关缓存
-		CacheUtils.remove(LogUtils.CACHE_MENU_NAME_PATH_MAP);
-	}
-	
-	/**
-	 * 获取Key加载信息
-	 */
-	public static boolean printKeyLoadMessage(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("\r\n======================================================================\r\n");
-        sb.append("\r\n    欢迎使用 " + Global.getConfig("productName") + "  - Powered By http://www.ulplanet.com\r\n");
-		sb.append("\r\n======================================================================\r\n");
-		System.out.println(sb.toString());
-		return true;
 	}
 	
 }

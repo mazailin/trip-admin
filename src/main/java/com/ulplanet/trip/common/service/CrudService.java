@@ -1,8 +1,11 @@
 package com.ulplanet.trip.common.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.SqlUtil;
 import com.ulplanet.trip.common.persistence.CrudDao;
 import com.ulplanet.trip.common.persistence.DataEntity;
-import com.ulplanet.trip.common.persistence.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +56,10 @@ public abstract class CrudService<D extends CrudDao<T>, T extends DataEntity<T>>
 	 * @param entity
 	 * @return
 	 */
-	public Page<T> findPage(Page<T> page, T entity) {
-		entity.setPage(page);
-		page.setList(dao.findList(entity));
-		return page;
+	public PageInfo<T> findPage(Page page, T entity) {
+        SqlUtil.setLocalPage(page);
+        List<T> list = dao.findList(entity);
+		return new PageInfo<>(list);
 	}
 
 	/**

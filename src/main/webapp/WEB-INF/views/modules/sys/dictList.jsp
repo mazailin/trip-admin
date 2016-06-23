@@ -5,12 +5,19 @@
 	<title>字典管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
-		function page(n,s){
-			$("#pageNo").val(n);
-			$("#pageSize").val(s);
-			$("#searchForm").submit();
-	    	return false;
-	    }
+        $(document).ready(function() {
+            $('.pagination').twbsPagination({
+                startPage: ${page.pageNum},
+                totalPages: ${page.pages},
+                onPageClick: function (event, page) {
+                    var pageNum = $("#pageNum");
+                    if (pageNum.val() != page) {
+                        pageNum.val(page);
+                        $("#searchForm").submit();
+                    }
+                }
+            });
+        });
 	</script>
 </head>
 <body>
@@ -19,8 +26,7 @@
 		<shiro:hasPermission name="sys:dict:edit"><li><a href="${ctx}/sys/dict/form?sort=10">字典添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="dict" action="${ctx}/sys/dict/" method="post" class="breadcrumb form-search">
-		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
-		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<input id="pageNum" name="pageNum" type="hidden" value="${page.pageNum}"/>
 		<label>类型：</label><form:select id="type" path="type" class="input-medium"><form:option value="" label=""/><form:options items="${typeList}" htmlEscape="false"/></form:select>
 		&nbsp;&nbsp;<label>描述 ：</label><form:input path="description" htmlEscape="false" maxlength="50" class="input-medium"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
@@ -39,12 +45,12 @@
 				<shiro:hasPermission name="sys:dict:edit"><td>
     				<a href="${ctx}/sys/dict/form?id=${dict.id}">修改</a>
 					<a href="${ctx}/sys/dict/delete?id=${dict.id}&type=${dict.type}" onclick="return confirmx('确认要删除该字典吗？', this.href)">删除</a>
-    				<a href="<c:url value='${fns:getAdminPath()}/sys/dict/form?type=${dict.type}&sort=${dict.sort+10}'><c:param name='description' value='${dict.description}'/></c:url>">添加键值</a>
+    				<a href="<c:url value='/sys/dict/form?type=${dict.type}&sort=${dict.sort+10}'><c:param name='description' value='${dict.description}'/></c:url>">添加键值</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>
 		</tbody>
 	</table>
-	<div class="pagination">${page}</div>
+	<div class="pagination"></div>
 </body>
 </html>

@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by zhangxd on 15/10/20.
  */
 @Controller
-@RequestMapping(value = "${adminPath}/sys/menu")
+@RequestMapping(value = "/sys/menu")
 public class MenuController extends BaseController {
 
 	@Autowired
@@ -45,7 +45,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(Model model) {
 		List<Menu> list = Lists.newArrayList();
-		List<Menu> sourcelist = systemService.findAllMenu();
+		List<Menu> sourcelist = systemService.findAllMenu(UserUtils.getUser());
 		Menu.sortList(list, sourcelist, Menu.getRootId(), true);
         model.addAttribute("list", list);
 		return "modules/sys/menuList";
@@ -61,7 +61,7 @@ public class MenuController extends BaseController {
 		// 获取排序号，最末节点排序号+30
 		if (StringUtils.isBlank(menu.getId())){
 			List<Menu> list = Lists.newArrayList();
-			List<Menu> sourcelist = systemService.findAllMenu();
+			List<Menu> sourcelist = systemService.findAllMenu(UserUtils.getUser());
 			Menu.sortList(list, sourcelist, menu.getParentId(), false);
 			if (list.size() > 0){
 				menu.setSort(list.get(list.size()-1).getSort() + 30);
@@ -76,14 +76,14 @@ public class MenuController extends BaseController {
 	public String save(Menu menu, Model model, RedirectAttributes redirectAttributes) {
 		if(!UserUtils.getUser().isAdmin()){
 			addMessage(redirectAttributes, "越权操作，只有超级管理员才能添加或修改数据！");
-			return "redirect:" + adminPath + "/sys/role/?repage";
+			return "redirect:" + "/sys/role/?repage";
 		}
 		if (!beanValidator(model, menu)){
 			return form(menu, model);
 		}
 		systemService.saveMenu(menu);
 		addMessage(redirectAttributes, "保存菜单'" + menu.getName() + "'成功");
-		return "redirect:" + adminPath + "/sys/menu/";
+		return "redirect:" + "/sys/menu/";
 	}
 	
 	@RequiresPermissions("sys:menu:edit")
@@ -91,7 +91,7 @@ public class MenuController extends BaseController {
 	public String delete(Menu menu, RedirectAttributes redirectAttributes) {
         systemService.deleteMenu(menu);
         addMessage(redirectAttributes, "删除菜单成功");
-		return "redirect:" + adminPath + "/sys/menu/";
+		return "redirect:" + "/sys/menu/";
 	}
 
 	@RequiresPermissions("user")
@@ -119,7 +119,7 @@ public class MenuController extends BaseController {
     		systemService.updateMenuSort(menu);
     	}
     	addMessage(redirectAttributes, "保存菜单排序成功!");
-		return "redirect:" + adminPath + "/sys/menu/";
+		return "redirect:/sys/menu/";
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "treeData")
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId,@RequestParam(required=false) String isShowHide, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<Menu> list = systemService.findAllMenu();
+		List<Menu> list = systemService.findAllMenu(UserUtils.getUser());
         for (Menu e : list) {
             if (StringUtils.isBlank(extId) || (!extId.equals(e.getId()) && !e.getParentIds().contains("," + extId + ","))) {
                 if (isShowHide != null && isShowHide.equals("0") && e.getIsShow().equals("0")) {

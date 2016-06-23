@@ -1,14 +1,10 @@
 package com.ulplanet.trip.modules.sys.utils;
 
-import com.ulplanet.trip.common.utils.CacheUtils;
 import com.ulplanet.trip.common.utils.SpringContextHolder;
-import com.ulplanet.trip.modules.sys.dao.MenuDao;
-import com.ulplanet.trip.modules.sys.dao.RoleDao;
-import com.ulplanet.trip.modules.sys.dao.UserDao;
 import com.ulplanet.trip.modules.sys.entity.Menu;
-import com.ulplanet.trip.modules.sys.entity.Role;
 import com.ulplanet.trip.modules.sys.entity.User;
 import com.ulplanet.trip.modules.sys.security.SystemAuthorizingRealm.Principal;
+import com.ulplanet.trip.modules.sys.service.SystemService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
@@ -23,16 +19,7 @@ import java.util.List;
  */
 public class UserUtils {
 
-	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
-	private static RoleDao roleDao = SpringContextHolder.getBean(RoleDao.class);
-	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
-
-	public static final String USER_CACHE = "userCache";
-	public static final String USER_CACHE_ID_ = "id_";
-	public static final String USER_CACHE_LOGIN_NAME_ = "ln";
-
-	public static final String CACHE_ROLE_LIST = "roleList";
-	public static final String CACHE_MENU_LIST = "menuList";
+	private static SystemService systemService = SpringContextHolder.getBean(SystemService.class);
 
 	/**
 	 * 根据ID获取用户
@@ -40,56 +27,8 @@ public class UserUtils {
 	 * @return 取不到返回null
 	 */
 	public static User get(String id){
-		User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
-		if (user ==  null){
-			user = userDao.get(id);
-			if (user == null){
-				return null;
-			}
-			user.setRoleList(roleDao.findList(new Role(user)));
-			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-		}
-		return user;
-	}
-	
-	/**
-	 * 根据登录名获取用户
-	 * @param loginName
-	 * @return 取不到返回null
-	 */
-	public static User getByLoginName(String loginName){
-		User user = (User)CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + loginName);
-		if (user == null){
-			user = userDao.getByLoginName(new User(null, loginName));
-			if (user == null){
-				return null;
-			}
-			user.setRoleList(roleDao.findList(new Role(user)));
-			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-		}
-		return user;
-	}
-	
-	/**
-	 * 清除当前用户缓存
-	 */
-	public static void clearCache(){
-		removeCache(CACHE_ROLE_LIST);
-		removeCache(CACHE_MENU_LIST);
-		UserUtils.clearCache(getUser());
-	}
-	
-	/**
-	 * 清除指定用户缓存
-	 * @param user
-	 */
-	public static void clearCache(User user){
-		CacheUtils.remove(USER_CACHE, USER_CACHE_ID_ + user.getId());
-		CacheUtils.remove(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName());
-		CacheUtils.remove(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getOldLoginName());
-	}
+        return systemService.getUser(id);
+    }
 	
 	/**
 	 * 获取当前用户
@@ -108,46 +47,13 @@ public class UserUtils {
 		return new User();
 	}
 
-	/**
-	 * 获取当前用户角色列表
-	 * @return
-	 */
-	public static List<Role> getRoleList(){
-		@SuppressWarnings("unchecked")
-		List<Role> roleList = (List<Role>)getCache(CACHE_ROLE_LIST);
-		if (roleList == null){
-			User user = getUser();
-			if (user.isAdmin()){
-				roleList = roleDao.findAllList(new Role());
-			}else{
-				Role role = new Role();
-				roleList = roleDao.findList(role);
-			}
-			putCache(CACHE_ROLE_LIST, roleList);
-		}
-		return roleList;
-	}
-	
-	/**
+    /**
 	 * 获取当前用户授权菜单
 	 * @return
 	 */
-	public static List<Menu> getMenuList(){
-		@SuppressWarnings("unchecked")
-		List<Menu> menuList = (List<Menu>)getCache(CACHE_MENU_LIST);
-		if (menuList == null){
-			User user = getUser();
-			if (user.isAdmin()){
-				menuList = menuDao.findAllList(new Menu());
-			}else{
-				Menu m = new Menu();
-				m.setUserId(user.getId());
-				menuList = menuDao.findByUserId(m);
-			}
-			putCache(CACHE_MENU_LIST, menuList);
-		}
-		return menuList;
-	}
+    public static List<Menu> getMenuList() {
+        return systemService.findAllMenu(getUser());
+    }
 
 	/**
 	 * 获取授权主要对象
@@ -166,11 +72,8 @@ public class UserUtils {
 			if (principal != null){
 				return principal;
 			}
-//			subject.logout();
 		} catch (UnavailableSecurityManagerException e) {
-			
 		} catch (InvalidSessionException e){
-			
 		}
 		return null;
 	}
@@ -185,41 +88,10 @@ public class UserUtils {
 			if (session != null){
 				return session;
 			}
-//			subject.logout();
 		} catch (InvalidSessionException e){
 			
 		}
 		return null;
 	}
-	
-	// ============== User Cache ==============
-	
-	public static Object getCache(String key) {
-		return getCache(key, null);
-	}
-	
-	public static Object getCache(String key, Object defaultValue) {
-//		Object obj = getCacheMap().get(key);
-		Object obj = getSession().getAttribute(key);
-		return obj==null?defaultValue:obj;
-	}
 
-	public static void putCache(String key, Object value) {
-//		getCacheMap().put(key, value);
-		getSession().setAttribute(key, value);
-	}
-
-	public static void removeCache(String key) {
-//		getCacheMap().remove(key);
-		getSession().removeAttribute(key);
-	}
-	
-//	public static Map<String, Object> getCacheMap(){
-//		Principal principal = getPrincipal();
-//		if(principal!=null){
-//			return principal.getCacheMap();
-//		}
-//		return new HashMap<String, Object>();
-//	}
-	
 }

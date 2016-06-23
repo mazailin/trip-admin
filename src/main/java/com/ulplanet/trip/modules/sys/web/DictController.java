@@ -1,8 +1,9 @@
 package com.ulplanet.trip.modules.sys.web;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.ulplanet.trip.common.persistence.Page;
 import com.ulplanet.trip.common.utils.StringUtils;
 import com.ulplanet.trip.common.web.BaseController;
 import com.ulplanet.trip.modules.sys.entity.Dict;
@@ -27,7 +28,7 @@ import java.util.Map;
  * Created by zhangxd on 15/10/20.
  */
 @Controller
-@RequestMapping(value = "${adminPath}/sys/dict")
+@RequestMapping(value = "/sys/dict")
 public class DictController extends BaseController {
 
 	@Autowired
@@ -45,10 +46,11 @@ public class DictController extends BaseController {
 	@RequiresPermissions("sys:dict:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Dict dict, HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<String> typeList = dictService.findTypeList();
+        Page page = getPage(request, response);
+        List<String> typeList = dictService.findTypeList();
 		model.addAttribute("typeList", typeList);
-        Page<Dict> page = dictService.findPage(new Page<>(request, response), dict);
-        model.addAttribute("page", page);
+        PageInfo<Dict> pageInfo = dictService.findPage(page, dict);
+        model.addAttribute("page", pageInfo);
 		return "modules/sys/dictList";
 	}
 
@@ -67,7 +69,7 @@ public class DictController extends BaseController {
 		}
 		dictService.save(dict);
 		addMessage(redirectAttributes, "保存字典'" + dict.getLabel() + "'成功");
-		return "redirect:" + adminPath + "/sys/dict/?repage&type="+dict.getType();
+		return "redirect:/sys/dict/?repage&type="+dict.getType();
 	}
 	
 	@RequiresPermissions("sys:dict:edit")
@@ -75,7 +77,7 @@ public class DictController extends BaseController {
 	public String delete(Dict dict, RedirectAttributes redirectAttributes) {
 		dictService.delete(dict);
 		addMessage(redirectAttributes, "删除字典成功");
-		return "redirect:" + adminPath + "/sys/dict/?repage&type="+dict.getType();
+		return "redirect:/sys/dict/?repage&type="+dict.getType();
 	}
 	
 	@RequiresPermissions("user")

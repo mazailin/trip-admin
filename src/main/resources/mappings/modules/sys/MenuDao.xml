@@ -14,9 +14,7 @@
 		a.is_show,
 		a.permission,
 		a.remarks,
-		a.create_by AS "createBy.id",
 		a.create_date,
-		a.update_by AS "updateBy.id",
 		a.update_date,
 		p.name AS "parent.name"
 	</sql>
@@ -75,10 +73,8 @@
 			sort, 
 			is_show, 
 			permission, 
-			create_by, 
-			create_date, 
-			update_by, 
-			update_date, 
+			create_date,
+			update_date,
 			remarks
 		) VALUES (
 			#{id}, 
@@ -91,10 +87,8 @@
 			#{sort}, 
 			#{isShow}, 
 			#{permission}, 
-			#{createBy.id}, 
-			#{createDate}, 
-			#{updateBy.id}, 
-			#{updateDate}, 
+			#{createDate},
+			#{updateDate},
 			#{remarks}
 		)
 	</insert>
@@ -110,8 +104,7 @@
 			sort = #{sort}, 
 			is_show = #{isShow}, 
 			permission = #{permission}, 
-			update_by = #{updateBy.id}, 
-			update_date = #{updateDate}, 
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

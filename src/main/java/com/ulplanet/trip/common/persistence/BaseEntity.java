@@ -1,16 +1,9 @@
 package com.ulplanet.trip.common.persistence;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Maps;
-import com.ulplanet.trip.common.config.Global;
 import com.ulplanet.trip.common.utils.StringUtils;
-import com.ulplanet.trip.modules.sys.entity.User;
-import com.ulplanet.trip.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * Entity支持类
@@ -23,21 +16,6 @@ public abstract class BaseEntity<T> implements Serializable {
 	 * 实体编号（唯一标识）
 	 */
 	protected String id;
-	
-	/**
-	 * 当前用户
-	 */
-	protected User currentUser;
-	
-	/**
-	 * 当前实体分页对象
-	 */
-	protected Page<T> page;
-	
-	/**
-	 * 自定义SQL（SQL标识，SQL内容）
-	 */
-	protected Map<String, String> sqlMap;
 	
 	/**
 	 * 是否是新记录（默认：false），调用setIsNewRecord()设置新记录，使用自定义ID。
@@ -62,46 +40,7 @@ public abstract class BaseEntity<T> implements Serializable {
 		this.id = id;
 	}
 	
-	@JsonIgnore
-	@XmlTransient
-	public User getCurrentUser() {
-		if(currentUser == null){
-			currentUser = UserUtils.getUser();
-		}
-		return currentUser;
-	}
-	
-	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
-	}
 
-	@JsonIgnore
-	@XmlTransient
-	public Page<T> getPage() {
-		if (page == null){
-			page = new Page<T>();
-		}
-		return page;
-	}
-	
-	public Page<T> setPage(Page<T> page) {
-		this.page = page;
-		return page;
-	}
-
-	@JsonIgnore
-	@XmlTransient
-	public Map<String, String> getSqlMap() {
-		if (sqlMap == null){
-			sqlMap = Maps.newHashMap();
-		}
-		return sqlMap;
-	}
-
-	public void setSqlMap(Map<String, String> sqlMap) {
-		this.sqlMap = sqlMap;
-	}
-	
 	/**
 	 * 插入之前执行方法，子类实现
 	 */
@@ -129,14 +68,6 @@ public abstract class BaseEntity<T> implements Serializable {
 		this.isNewRecord = isNewRecord;
 	}
 
-	/**
-	 * 全局变量对象
-	 */
-	@JsonIgnore
-	public Global getGlobal() {
-		return Global.getInstance();
-	}
-	
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {

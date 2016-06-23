@@ -4,7 +4,6 @@ import com.ulplanet.trip.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * 字典Entity
@@ -33,7 +32,6 @@ public class Dict extends DataEntity<Dict> {
 		this.label = label;
 	}
 	
-	@XmlAttribute
 	@Length(min=1, max=100)
 	public String getValue() {
 		return value;
@@ -43,7 +41,6 @@ public class Dict extends DataEntity<Dict> {
 		this.value = value;
 	}
 	
-	@XmlAttribute
 	@Length(min=1, max=100)
 	public String getLabel() {
 		return label;
@@ -62,7 +59,6 @@ public class Dict extends DataEntity<Dict> {
 		this.type = type;
 	}
 
-	@XmlAttribute
 	@Length(min=0, max=100)
 	public String getDescription() {
 		return description;

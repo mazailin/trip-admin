@@ -12,13 +12,6 @@
   <uri>http://java.sun.com/jsp/jstl/functionss</uri>
 
   <function>
-    <description>获取管理路径</description>
-    <name>getAdminPath</name>
-    <function-class>com.ulplanet.trip.common.config.Global</function-class>
-    <function-signature>java.lang.String getAdminPath()</function-signature>
-    <example>${fns:getAdminPath()}</example>
-  </function>
-  <function>
     <description>获取网站URL后缀</description>
     <name>getUrlSuffix</name>
     <function-class>com.ulplanet.trip.common.config.Global</function-class>
@@ -72,15 +65,7 @@
     <function-signature>java.util.List getMenuList()</function-signature>
     <example>${fns:getMenuList()}</example>  
   </function>
-  
-  <function>
-    <description>获取当前用户缓存</description>
-    <name>getCache</name>
-    <function-class>com.ulplanet.trip.modules.sys.utils.UserUtils</function-class>
-    <function-signature>java.lang.Object getCache(java.lang.String, java.lang.Object)</function-signature>
-    <example>${fns:getCache(cacheName, defaultValue)}</example>  
-  </function>
-	
+
   <!-- DictUtils -->
   <function>
     <description>获取字典标签</description>

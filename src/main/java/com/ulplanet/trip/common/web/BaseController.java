@@ -1,13 +1,16 @@
 package com.ulplanet.trip.common.web;
 
+import com.github.pagehelper.Page;
 import com.ulplanet.trip.common.beanvalidator.BeanValidators;
+import com.ulplanet.trip.common.config.Global;
+import com.ulplanet.trip.common.utils.CookieUtils;
 import com.ulplanet.trip.common.utils.DateUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
@@ -32,18 +37,6 @@ public abstract class BaseController {
 	 */
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 管理基础路径
-	 */
-	@Value("${adminPath}")
-	protected String adminPath;
-	
-	/**
-	 * 前端URL后缀
-	 */
-	@Value("${urlSuffix}")
-	protected String urlSuffix;
-	
 	/**
 	 * 验证Bean实例对象
 	 */
@@ -135,7 +128,53 @@ public abstract class BaseController {
     public String authenticationException() {  
         return "error/403";
     }
-	
+
+    /**
+     * 构造方法
+     *
+     * @param request  传递 repage 参数，来记住页码
+     * @param response 用于设置 Cookie，记住页码
+     */
+    public Page getPage(HttpServletRequest request, HttpServletResponse response) {
+        return getPage(request, response, -2);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param request         传递 repage 参数，来记住页码
+     * @param response        用于设置 Cookie，记住页码
+     * @param defaultPageSize 默认分页大小，如果传递 0 则为不分页，返回所有数据
+     */
+    public Page getPage(HttpServletRequest request, HttpServletResponse response, int defaultPageSize) {
+        int pageNum = 1;
+        int pageSize = Integer.valueOf(Global.getConfig("page.pageSize"));
+
+        // 设置页码参数（传递repage参数，来记住页码）
+        String no = request.getParameter("pageNum");
+        if (StringUtils.isNumeric(no)) {
+            CookieUtils.setCookie(response, "pageNum", no);
+            pageNum = Integer.parseInt(no);
+        } else if (request.getParameter("repage") != null) {
+            no = CookieUtils.getCookie(request, "pageNum");
+            if (StringUtils.isNumeric(no)) {
+                pageNum = Integer.parseInt(no);
+            }
+        }
+        if (defaultPageSize != -2) {
+            pageSize = defaultPageSize;
+        }
+
+        Page page = new Page(pageNum, pageSize);
+
+        // 设置排序参数
+        String orderBy = request.getParameter("orderBy");
+        if (StringUtils.isNotBlank(orderBy)) {
+            page.setOrderBy(orderBy);
+        }
+        return page;
+    }
+
 	/**
 	 * 初始化数据绑定
 	 * 1. 将所有传递进来的String进行HTML编码，防止XSS攻击

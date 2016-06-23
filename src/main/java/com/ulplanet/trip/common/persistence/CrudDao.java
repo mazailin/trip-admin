@@ -37,14 +37,6 @@ public interface CrudDao<T> extends BaseDao {
 	List<T> findAllList(T entity);
 	
 	/**
-	 * 查询所有数据列表
-	 * @see List<T> findAllList(T entity)
-	 * @return
-	 */
-	@Deprecated
-	List<T> findAllList();
-	
-	/**
 	 * 插入数据
 	 * @param entity
 	 * @return
